@@ -1,0 +1,16 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" rx="40" fill="#09090B"/>
+  <rect x="48" y="48" width="1104" height="534" rx="28" fill="url(#paint0_linear_1_2)" fill-opacity="0.14" stroke="#27272A"/>
+  <path d="M863 111C799.5 111 748 162.5 748 226C748 289.5 799.5 341 863 341C926.5 341 978 289.5 978 226C978 162.5 926.5 111 863 111Z" fill="#D4A574" fill-opacity="0.16"/>
+  <path d="M247 386C182.383 386 130 438.383 130 503C130 567.617 182.383 620 247 620C311.617 620 364 567.617 364 503C364 438.383 311.617 386 247 386Z" fill="#D4A574" fill-opacity="0.08"/>
+  <text x="88" y="172" fill="#D4A574" font-family="Arial, sans-serif" font-size="24" letter-spacing="8">SHASHI PRATAP SINGH</text>
+  <text x="88" y="290" fill="#FAFAFA" font-family="Georgia, serif" font-size="78">Design Strategist</text>
+  <text x="88" y="374" fill="#FAFAFA" font-family="Georgia, serif" font-size="78">&amp; AI Systems Builder</text>
+  <text x="88" y="458" fill="#A1A1AA" font-family="Arial, sans-serif" font-size="28">Research-driven product stories, visual systems, and creative pipelines.</text>
+  <defs>
+    <linearGradient id="paint0_linear_1_2" x1="60" y1="62" x2="1072" y2="536" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D4A574"/>
+      <stop offset="1" stop-color="#18181B"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,14 @@
+import { NextResponse } from "next/server";
+
+import { uploadImageAction } from "@/lib/actions/upload";
+
+export async function POST(request: Request) {
+  const formData = await request.formData();
+  const result = await uploadImageAction(formData);
+
+  if (!result.success) {
+    return NextResponse.json({ error: result.error }, { status: 400 });
+  }
+
+  return NextResponse.json(result.data);
+}

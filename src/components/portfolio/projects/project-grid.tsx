@@ -31,8 +31,8 @@ export function ProjectGrid({ projects }: { projects: ProjectRecord[] }) {
             size="sm"
             className={
               tag === activeTag
-                ? "signal-accent rounded-full border border-transparent text-primary-foreground"
-                : "rounded-full border-white/8 bg-white/[0.02] text-muted-foreground hover:bg-white/[0.04]"
+                ? "rounded-full bg-primary text-primary-foreground"
+                : "rounded-full border-white/6 bg-transparent text-muted-foreground hover:text-foreground"
             }
             onClick={() => setActiveTag(tag)}
           >
@@ -41,7 +41,7 @@ export function ProjectGrid({ projects }: { projects: ProjectRecord[] }) {
         ))}
       </div>
       {filtered.length === 0 ? (
-        <div className="editorial-panel rounded-[32px] border-dashed p-12 text-center text-muted-foreground">
+        <div className="rounded-2xl border border-dashed border-white/6 p-12 text-center text-muted-foreground">
           No projects in this category yet.
         </div>
       ) : (

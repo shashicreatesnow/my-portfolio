@@ -40,24 +40,22 @@ export default async function CaseStudyPage({
       : null;
 
   return (
-    <article className="mx-auto max-w-7xl px-5 py-16 md:px-8">
-      <header className="editorial-panel space-y-8 rounded-[38px] p-6 md:p-8">
-        <div className="space-y-5">
-          <div className="portfolio-rule">
-            <p className="portfolio-kicker">Case Study</p>
-          </div>
+    <article className="mx-auto max-w-7xl px-5 pt-32 pb-24 md:px-8">
+      <header className="space-y-8">
+        <div className="max-w-4xl space-y-5">
+          <p className="portfolio-kicker">Case Study</p>
           <div className="flex flex-wrap gap-2">
             {entry.project.category_tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="rounded-full border border-white/8 bg-white/[0.04] text-[#d9d1c4]">
+              <Badge key={tag} variant="secondary" className="rounded-full text-xs">
                 {tag}
               </Badge>
             ))}
-            {hasValidToken && <Badge className="signal-accent rounded-full border border-transparent">Preview</Badge>}
+            {hasValidToken && <Badge className="rounded-full bg-primary text-primary-foreground">Preview</Badge>}
           </div>
-          <h1 className="max-w-4xl font-display text-5xl leading-[0.96] md:text-7xl">{entry.project.title}</h1>
-          <p className="max-w-3xl text-lg leading-8 text-muted-foreground">{entry.project.description}</p>
+          <h1 className="font-display text-4xl leading-[0.96] md:text-5xl">{entry.project.title}</h1>
+          <p className="max-w-3xl text-base leading-8 text-muted-foreground">{entry.project.description}</p>
         </div>
-        <div className="grid gap-4 rounded-[32px] border border-white/8 bg-white/[0.03] p-6 md:grid-cols-4">
+        <div className="grid gap-6 border-t border-white/6 pt-6 md:grid-cols-4">
           {entry.project.client_name && (
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Client</p>
@@ -84,7 +82,7 @@ export default async function CaseStudyPage({
           )}
         </div>
       </header>
-      <div className="mt-16 space-y-14">
+      <div className="mt-20 space-y-20">
         {await Promise.all(entry.blocks.map(async (block) => <BlockRenderer key={block.id} block={block} />))}
       </div>
       <ProjectNavigation previous={previous} next={next} />

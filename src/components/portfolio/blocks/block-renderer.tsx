@@ -50,14 +50,14 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
         <h3 className="font-display text-3xl leading-tight md:text-4xl">{content.text}</h3>
       )}
       {block.block_type === "quote" && (
-        <blockquote className="editorial-panel rounded-[28px] border-l-4 border-primary p-6">
+        <blockquote className="border-l-2 border-primary pl-6">
           <p className="font-display text-2xl italic leading-relaxed">{content.text}</p>
           {content.attribution && <footer className="mt-4 text-sm text-muted-foreground">{content.attribution}</footer>}
         </blockquote>
       )}
       {block.block_type === "image" && content.url && (
         <figure className="space-y-4">
-          <div className="editorial-panel relative min-h-96 overflow-hidden rounded-[32px]">
+          <div className="relative overflow-hidden rounded-xl">
             <Image src={content.url} alt={content.alt || ""} fill className="object-cover" />
           </div>
           {content.caption && <figcaption className="text-center text-sm text-muted-foreground">{content.caption}</figcaption>}
@@ -67,7 +67,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
         <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 scrollbar-hide">
           {(content.images || []).map((image: any, index: number) => (
             <figure key={index} className="w-[80%] flex-none snap-center space-y-2 md:w-[45%]">
-              <div className="editorial-panel relative aspect-[4/3] overflow-hidden rounded-[28px]">
+              <div className="editorial-panel relative aspect-[4/3] overflow-hidden rounded-2xl">
                 <Image src={image.url} alt={image.alt || ""} fill className="object-cover" />
               </div>
               {image.caption && <figcaption className="text-sm text-muted-foreground">{image.caption}</figcaption>}
@@ -79,7 +79,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
         <div style={{ columns: content.columns || 3, columnGap: "1rem" }}>
           {(content.images || []).map((image: any, index: number) => (
             <figure key={index} className="mb-4 space-y-2" style={{ breakInside: "avoid" }}>
-              <div className="editorial-panel relative overflow-hidden rounded-[28px]">
+              <div className="editorial-panel relative overflow-hidden rounded-2xl">
                 <Image src={image.url} alt={image.alt || ""} width={800} height={600} className="h-auto w-full object-cover" />
               </div>
               {image.caption && <figcaption className="text-sm text-muted-foreground">{image.caption}</figcaption>}
@@ -95,7 +95,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
         )}>
           {(content.images || []).map((image: any, index: number) => (
             <figure key={index} className="space-y-2">
-              <div className="editorial-panel relative aspect-[4/3] overflow-hidden rounded-[28px]">
+              <div className="editorial-panel relative aspect-[4/3] overflow-hidden rounded-2xl">
                 <Image src={image.url} alt={image.alt || ""} fill className="object-cover" />
               </div>
               {image.caption && <figcaption className="text-sm text-muted-foreground">{image.caption}</figcaption>}
@@ -105,20 +105,20 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
       )}
       {block.block_type === "callout" && (
         <div className={cn(
-          "rounded-[32px] p-8",
-          content.style === "subtle" ? "glass-quiet" :
-          content.style === "accent" ? "editorial-panel border-t-2 border-primary" :
-          "signal-accent border-l-4 border-primary"
+          "rounded-2xl p-8 editorial-panel",
+          content.style === "subtle" ? "" :
+          content.style === "accent" ? "border-t-2 border-primary" :
+          "border-l-2 border-primary"
         )}>
-          <p className="font-display text-5xl">{content.value}</p>
-          <p className={cn("mt-2 text-xl", content.style === "subtle" ? "text-muted-foreground" : "portfolio-meta")}>{content.label}</p>
+          <p className="font-display text-4xl">{content.value}</p>
+          <p className={cn("mt-2 text-lg", content.style === "subtle" ? "text-muted-foreground" : "portfolio-meta")}>{content.label}</p>
           {content.description && <p className="mt-4 text-sm text-muted-foreground">{content.description}</p>}
         </div>
       )}
       {block.block_type === "metric_row" && (
         <div className="grid gap-4 md:grid-cols-3">
           {(content.metrics || []).map((metric: any, index: number) => (
-            <div key={index} className="editorial-panel rounded-[28px] p-6">
+            <div key={index} className="editorial-panel rounded-2xl p-6">
               <p className="font-display text-4xl">
                 {metric.prefix}
                 {metric.value}
@@ -143,7 +143,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
           {(["before", "after"] as const).map((side) => (
             <figure key={side} className="space-y-3">
               <Badge variant="secondary" className="rounded-full border border-white/8 bg-white/[0.04] text-[#d9d1c4]">{side === "before" ? "Before" : "After"}</Badge>
-              <div className="editorial-panel relative min-h-80 overflow-hidden rounded-[28px]">
+              <div className="editorial-panel relative min-h-80 overflow-hidden rounded-2xl">
                 {content[side]?.url && (
                   <Image src={content[side].url} alt={content[side].alt || ""} fill className="object-cover" />
                 )}
@@ -156,14 +156,14 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
       {block.block_type === "annotated_image" && (
         <div className="space-y-4">
           {content.url && (
-            <div className="editorial-panel relative min-h-[32rem] overflow-hidden rounded-[32px]">
+            <div className="editorial-panel relative min-h-[32rem] overflow-hidden rounded-2xl">
               <Image src={content.url} alt={content.alt || ""} fill className="object-cover" />
               {(content.annotations || []).map((point: any, index: number) => (
                 <button
                   key={point.id}
                   type="button"
                   title={`${point.label}${point.description ? `: ${point.description}` : ""}`}
-                  className="absolute flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground shadow-[0_0_24px_var(--portfolio-glow)]"
+                  className="absolute flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground"
                   style={{ left: `${point.x}%`, top: `${point.y}%`, transform: "translate(-50%, -50%)" }}
                 >
                   {index + 1}
@@ -173,7 +173,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
           )}
           <div className="grid gap-3 md:grid-cols-2">
             {(content.annotations || []).map((point: any, index: number) => (
-              <div key={point.id} className="editorial-panel rounded-[24px] p-4">
+              <div key={point.id} className="editorial-panel rounded-xl p-4">
                 <p className="font-medium">
                   {index + 1}. {point.label}
                 </p>
@@ -185,7 +185,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
       )}
       {block.block_type === "video" && content.url && (
         <div className="space-y-4">
-          <div className="editorial-panel aspect-video overflow-hidden rounded-[32px]">
+          <div className="editorial-panel aspect-video overflow-hidden rounded-2xl">
             <iframe
               className="h-full w-full"
               src={getEmbedUrl(content.url, content.provider)}
@@ -200,7 +200,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
       {(block.block_type === "columns_2" || block.block_type === "columns_3") && (
         <div className={cn("grid gap-6", block.block_type === "columns_3" ? "md:grid-cols-3" : "md:grid-cols-2")}>
           {(content.columns || []).map((column: any, index: number) => (
-            <div key={index} className="editorial-panel space-y-4 rounded-[28px] p-5">
+            <div key={index} className="editorial-panel space-y-4 rounded-2xl p-5">
               {(column.blocks || []).map((nestedBlock: any) => (
                 <div key={nestedBlock.id} className="space-y-2">
                   {nestedBlock.block_type === "text" && (
@@ -210,12 +210,12 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
                     <h4 className="font-display text-2xl">{nestedBlock.content.text}</h4>
                   ) : null}
                   {nestedBlock.block_type === "image" && nestedBlock.content.url ? (
-                    <div className="relative min-h-48 overflow-hidden rounded-[20px]">
+                    <div className="relative min-h-48 overflow-hidden rounded-xl">
                       <Image src={nestedBlock.content.url} alt={nestedBlock.content.alt || ""} fill className="object-cover" />
                     </div>
                   ) : null}
                   {nestedBlock.block_type === "callout" && (
-                    <div className="signal-accent rounded-[20px] p-4">
+                    <div className="editorial-panel rounded-xl p-4">
                       <p className="font-display text-3xl">{nestedBlock.content.value}</p>
                       <p className="text-sm text-muted-foreground">{nestedBlock.content.label}</p>
                     </div>
@@ -276,7 +276,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
         </div>
       )}
       {block.block_type === "toggle" && content.title && (
-        <details className="editorial-panel overflow-hidden rounded-[28px]">
+        <details className="editorial-panel overflow-hidden rounded-2xl">
           <summary className="flex cursor-pointer items-center gap-3 p-6 font-display text-xl [&::marker]:hidden [&::-webkit-details-marker]:hidden">
             <svg className="h-5 w-5 shrink-0 transition-transform [[open]>&]:rotate-90" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
@@ -290,7 +290,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
         </details>
       )}
       {block.block_type === "table" && (content.rows || []).length > 0 && (
-        <div className="editorial-panel overflow-hidden rounded-[28px]">
+        <div className="editorial-panel overflow-hidden rounded-2xl">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               {content.has_header !== false && (content.rows || []).length > 0 && (
@@ -318,7 +318,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
       {block.block_type === "embed" && content.url && (
         <div className="space-y-4">
           <div className={cn(
-            "editorial-panel overflow-hidden rounded-[32px]",
+            "editorial-panel overflow-hidden rounded-2xl",
             content.aspect_ratio === "square" && "aspect-square",
             content.aspect_ratio === "tall" && "aspect-[9/16]",
             content.aspect_ratio !== "square" && content.aspect_ratio !== "tall" && "aspect-video",
@@ -341,7 +341,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
           download
           target="_blank"
           rel="noopener noreferrer"
-          className="editorial-panel flex items-center gap-4 rounded-[28px] p-6 transition-colors hover:border-primary/30"
+          className="editorial-panel flex items-center gap-4 rounded-2xl p-6 transition-colors hover:border-primary/30"
         >
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <Download className="h-5 w-5 text-primary" />
@@ -356,7 +356,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
         </a>
       )}
       {block.block_type === "code" && (
-        <div className="editorial-panel overflow-hidden rounded-[28px] bg-[#0d1117]">
+        <div className="editorial-panel overflow-hidden rounded-2xl bg-[#0d1117]">
           <CodeMarkup code={content.code || ""} language={content.language || "text"} />
           {content.caption && <p className="border-t border-white/10 px-4 py-3 text-sm text-muted-foreground">{content.caption}</p>}
         </div>

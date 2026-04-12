@@ -115,7 +115,7 @@ function SortableBlock({
     <Card
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      className="rounded-[32px] border border-border bg-card/80 p-5"
+      className="rounded-2xl border border-border bg-card/80 p-5"
     >
       <div className="mb-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -176,7 +176,7 @@ function ColumnEditor({
   return (
     <div className={`grid gap-4 ${value.column_count === "3" ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
       {value.columns.map((column, columnIndex) => (
-        <div key={columnIndex} className="space-y-3 rounded-[24px] border border-border bg-background p-4">
+        <div key={columnIndex} className="space-y-3 rounded-xl border border-border bg-background p-4">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium">Column {columnIndex + 1}</p>
             <BlockTypePicker
@@ -418,7 +418,7 @@ function BlockFields({
         )}
         <div className="space-y-3">
           {annotations.map((point: any, index: number) => (
-            <div key={point.id} className="grid gap-3 rounded-[24px] border border-border p-4">
+            <div key={point.id} className="grid gap-3 rounded-xl border border-border p-4">
               <div className="flex items-center justify-between">
                 <p className="font-medium">Annotation {index + 1}</p>
                 <Button
@@ -516,7 +516,7 @@ function BlockFields({
         />
         <div className="grid gap-3 md:grid-cols-2">
           {(content.images || []).map((image: any, index: number) => (
-            <div key={`${image.url}-${index}`} className="space-y-2 rounded-[24px] border border-border p-3">
+            <div key={`${image.url}-${index}`} className="space-y-2 rounded-xl border border-border p-3">
               <Input
                 value={image.url}
                 onChange={(event) =>

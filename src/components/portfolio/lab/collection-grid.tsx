@@ -33,8 +33,8 @@ export function CollectionGrid({ items }: { items: CollectionRecord[] }) {
             size="sm"
             className={
               tag === activeTag
-                ? "signal-accent rounded-full border border-transparent text-primary-foreground"
-                : "rounded-full border-white/8 bg-white/[0.02] text-muted-foreground hover:bg-white/[0.04]"
+                ? "rounded-full bg-primary text-primary-foreground"
+                : "rounded-full border-white/6 bg-transparent text-muted-foreground hover:text-foreground"
             }
             onClick={() => setActiveTag(tag)}
           >
@@ -47,10 +47,10 @@ export function CollectionGrid({ items }: { items: CollectionRecord[] }) {
           <button
             key={item.id}
             type="button"
-            className="editorial-panel mb-6 block w-full overflow-hidden rounded-[30px] text-left transition hover:-translate-y-1"
+            className="mb-6 block w-full overflow-hidden rounded-2xl border border-white/6 bg-white/[0.02] text-left transition hover:opacity-90"
             onClick={() => setSelected(item)}
           >
-            <div className="relative aspect-[4/5] overflow-hidden rounded-b-[24px]">
+            <div className="relative aspect-[4/5] overflow-hidden">
               <Image src={item.image_url} alt={item.caption || ""} fill className="object-cover" />
             </div>
             {item.caption && <p className="p-4 text-sm text-muted-foreground">{item.caption}</p>}
@@ -61,14 +61,14 @@ export function CollectionGrid({ items }: { items: CollectionRecord[] }) {
         <DialogContent className="max-w-4xl border-white/10 bg-[rgba(10,10,11,0.96)]">
           {selected && (
             <div className="space-y-4">
-              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[28px]">
+              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl">
                 <Image src={selected.image_url} alt={selected.caption || ""} fill className="object-contain" />
               </div>
               <div className="space-y-2">
                 <p className="text-lg">{selected.caption}</p>
                 <div className="flex flex-wrap gap-2">
                   {selected.tags.map((tag) => (
-                    <Button key={tag} type="button" variant="outline" size="sm" className="rounded-full border-white/8 bg-white/[0.02]">
+                    <Button key={tag} type="button" variant="outline" size="sm" className="rounded-full border-white/6">
                       {tag}
                     </Button>
                   ))}

@@ -50,7 +50,7 @@ export function BeforeAfterSlider({
     <div className="space-y-4">
       <div
         ref={containerRef}
-        className="editorial-panel relative aspect-video cursor-col-resize select-none overflow-hidden rounded-[32px]"
+        className="relative aspect-video cursor-col-resize select-none overflow-hidden rounded-2xl border border-white/6"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}

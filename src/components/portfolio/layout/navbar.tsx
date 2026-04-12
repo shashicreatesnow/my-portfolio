@@ -29,21 +29,16 @@ export function Navbar({
         scrolled && "border-b border-white/5 bg-background/80 backdrop-blur-md",
       )}
     >
-      <div
-        className={cn(
-          "mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 md:px-8",
-        )}
-      >
-        <Link href="/" className="flex items-center gap-3">
-          <span className="h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_22px_var(--portfolio-glow)]" />
-          <span className="font-display text-[1.75rem] tracking-tight">Shashi Pratap Singh</span>
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 md:px-8">
+        <Link href="/" className="font-display text-xl tracking-tight">
+          Shashi Pratap Singh
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
           {items.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-full px-4 py-2 text-sm text-muted-foreground transition hover:bg-white/4 hover:text-foreground"
+              className="rounded-full px-4 py-2 text-sm text-muted-foreground transition hover:text-foreground"
             >
               {item.label}
             </Link>
@@ -66,7 +61,7 @@ export function Navbar({
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-2xl px-4 py-3 text-sm text-muted-foreground hover:bg-white/4 hover:text-foreground"
+                className="rounded-2xl px-4 py-3 text-sm text-muted-foreground hover:text-foreground"
                 onClick={() => setOpen(false)}
               >
                 {item.label}

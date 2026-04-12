@@ -24,14 +24,9 @@ export function AdminSidebar() {
 
   return (
     <aside className="hidden w-60 shrink-0 border-r border-border bg-card p-5 lg:flex lg:flex-col">
-      <Link href="/admin/projects" className="mb-8 flex items-center gap-3 px-2">
-        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground">
-          <Settings className="h-5 w-5" />
-        </div>
-        <div>
-          <p className="font-semibold">Shashi Admin</p>
-          <p className="text-xs text-muted-foreground">Portfolio control room</p>
-        </div>
+      <Link href="/admin/projects" className="mb-8 px-2">
+        <p className="font-semibold">Shashi Admin</p>
+        <p className="text-xs text-muted-foreground">Portfolio</p>
       </Link>
 
       <nav className="space-y-2">
@@ -54,8 +49,7 @@ export function AdminSidebar() {
         })}
       </nav>
 
-      <div className="mt-auto rounded-[24px] border border-border bg-secondary/60 p-4 text-sm text-muted-foreground">
-        <p className="mb-3 font-medium text-foreground">Live portfolio</p>
+      <div className="mt-auto rounded-xl border border-border p-4 text-sm text-muted-foreground">
         <Link href="/" className="inline-flex items-center gap-2 text-primary">
           View site
           <ExternalLink className="h-4 w-4" />

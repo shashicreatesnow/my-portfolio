@@ -3,14 +3,18 @@
 import Image from "next/image";
 import { codeToHtml } from "shiki";
 
+import { Download } from "lucide-react";
+
 import type { ProjectBlockRecord } from "@/lib/types/blocks";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils/cn";
+import { getEmbedUrl } from "@/lib/utils/video";
+import { BeforeAfterSlider } from "./before-after-slider";
 
 function widthClass(blockType: ProjectBlockRecord["block_type"], content: Record<string, any>) {
   if (blockType === "image" && content.display === "full-width") return "max-w-none";
   if (blockType === "image" && content.display === "small") return "mx-auto max-w-xl";
-  if (["gallery", "metric_row", "before_after", "annotated_image", "columns_2", "columns_3"].includes(blockType))
+  if (["gallery", "metric_row", "before_after", "annotated_image", "columns_2", "columns_3", "table", "embed"].includes(blockType))
     return "mx-auto max-w-5xl";
   if (blockType === "spacer") return "max-w-none";
   return "mx-auto max-w-3xl";
@@ -36,6 +40,9 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
           dangerouslySetInnerHTML={{ __html: content.html || "" }}
         />
       )}
+      {block.block_type === "heading1" && (
+        <h1 className="font-display text-5xl leading-tight md:text-6xl">{content.text}</h1>
+      )}
       {block.block_type === "heading2" && (
         <h2 className="font-display text-4xl leading-tight md:text-5xl">{content.text}</h2>
       )}
@@ -56,8 +63,36 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
           {content.caption && <figcaption className="text-center text-sm text-muted-foreground">{content.caption}</figcaption>}
         </figure>
       )}
-      {block.block_type === "gallery" && (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      {block.block_type === "gallery" && content.layout === "carousel" && (
+        <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 scrollbar-hide">
+          {(content.images || []).map((image: any, index: number) => (
+            <figure key={index} className="w-[80%] flex-none snap-center space-y-2 md:w-[45%]">
+              <div className="editorial-panel relative aspect-[4/3] overflow-hidden rounded-[28px]">
+                <Image src={image.url} alt={image.alt || ""} fill className="object-cover" />
+              </div>
+              {image.caption && <figcaption className="text-sm text-muted-foreground">{image.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      )}
+      {block.block_type === "gallery" && content.layout === "masonry" && (
+        <div style={{ columns: content.columns || 3, columnGap: "1rem" }}>
+          {(content.images || []).map((image: any, index: number) => (
+            <figure key={index} className="mb-4 space-y-2" style={{ breakInside: "avoid" }}>
+              <div className="editorial-panel relative overflow-hidden rounded-[28px]">
+                <Image src={image.url} alt={image.alt || ""} width={800} height={600} className="h-auto w-full object-cover" />
+              </div>
+              {image.caption && <figcaption className="text-sm text-muted-foreground">{image.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      )}
+      {block.block_type === "gallery" && content.layout !== "carousel" && content.layout !== "masonry" && (
+        <div className={cn("grid gap-4",
+          content.columns === 2 ? "md:grid-cols-2" :
+          content.columns === 4 ? "md:grid-cols-2 xl:grid-cols-4" :
+          "md:grid-cols-2 xl:grid-cols-3"
+        )}>
           {(content.images || []).map((image: any, index: number) => (
             <figure key={index} className="space-y-2">
               <div className="editorial-panel relative aspect-[4/3] overflow-hidden rounded-[28px]">
@@ -69,9 +104,14 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
         </div>
       )}
       {block.block_type === "callout" && (
-        <div className="editorial-panel rounded-[32px] p-8">
+        <div className={cn(
+          "rounded-[32px] p-8",
+          content.style === "subtle" ? "glass-quiet" :
+          content.style === "accent" ? "editorial-panel border-t-2 border-primary" :
+          "signal-accent border-l-4 border-primary"
+        )}>
           <p className="font-display text-5xl">{content.value}</p>
-          <p className="portfolio-meta mt-2 text-xl">{content.label}</p>
+          <p className={cn("mt-2 text-xl", content.style === "subtle" ? "text-muted-foreground" : "portfolio-meta")}>{content.label}</p>
           {content.description && <p className="mt-4 text-sm text-muted-foreground">{content.description}</p>}
         </div>
       )}
@@ -89,7 +129,16 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
           ))}
         </div>
       )}
-      {block.block_type === "before_after" && (
+      {block.block_type === "before_after" && content.mode === "slider" && (
+        <BeforeAfterSlider
+          beforeUrl={content.before?.url}
+          beforeAlt={content.before?.alt}
+          afterUrl={content.after?.url}
+          afterAlt={content.after?.alt}
+          caption={content.caption}
+        />
+      )}
+      {block.block_type === "before_after" && content.mode !== "slider" && (
         <div className="grid gap-4 md:grid-cols-2">
           {(["before", "after"] as const).map((side) => (
             <figure key={side} className="space-y-3">
@@ -139,7 +188,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
           <div className="editorial-panel aspect-video overflow-hidden rounded-[32px]">
             <iframe
               className="h-full w-full"
-              src={content.url}
+              src={getEmbedUrl(content.url, content.provider)}
               title={content.caption || "Video embed"}
               loading="lazy"
               allowFullScreen
@@ -171,6 +220,21 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
                       <p className="text-sm text-muted-foreground">{nestedBlock.content.label}</p>
                     </div>
                   )}
+                  {nestedBlock.block_type === "list" && (
+                    nestedBlock.content.list_type === "numbered" ? (
+                      <ol className="list-decimal space-y-1 pl-5 text-sm text-muted-foreground">
+                        {(nestedBlock.content.items || []).filter((item: any) => item.text).map((item: any) => (
+                          <li key={item.id}>{item.text}</li>
+                        ))}
+                      </ol>
+                    ) : (
+                      <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+                        {(nestedBlock.content.items || []).filter((item: any) => item.text).map((item: any) => (
+                          <li key={item.id}>{item.text}</li>
+                        ))}
+                      </ul>
+                    )
+                  )}
                 </div>
               ))}
             </div>
@@ -193,6 +257,103 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
                     : 120,
           }}
         />
+      )}
+      {block.block_type === "list" && (
+        <div className="prose-block portfolio-copy text-[1.05rem]">
+          {content.list_type === "numbered" ? (
+            <ol className="list-decimal space-y-2 pl-6">
+              {(content.items || []).filter((item: any) => item.text).map((item: any) => (
+                <li key={item.id}>{item.text}</li>
+              ))}
+            </ol>
+          ) : (
+            <ul className="list-disc space-y-2 pl-6">
+              {(content.items || []).filter((item: any) => item.text).map((item: any) => (
+                <li key={item.id}>{item.text}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+      {block.block_type === "toggle" && content.title && (
+        <details className="editorial-panel overflow-hidden rounded-[28px]">
+          <summary className="flex cursor-pointer items-center gap-3 p-6 font-display text-xl [&::marker]:hidden [&::-webkit-details-marker]:hidden">
+            <svg className="h-5 w-5 shrink-0 transition-transform [[open]>&]:rotate-90" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+            </svg>
+            {content.title}
+          </summary>
+          <div
+            className="prose-block portfolio-copy border-t border-white/8 px-6 pb-6 pt-4 text-[1.05rem]"
+            dangerouslySetInnerHTML={{ __html: content.content_html || "" }}
+          />
+        </details>
+      )}
+      {block.block_type === "table" && (content.rows || []).length > 0 && (
+        <div className="editorial-panel overflow-hidden rounded-[28px]">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              {content.has_header !== false && (content.rows || []).length > 0 && (
+                <thead>
+                  <tr className="border-b border-white/10">
+                    {content.rows[0].map((cell: string, i: number) => (
+                      <th key={i} className="px-4 py-3 text-left font-medium">{cell}</th>
+                    ))}
+                  </tr>
+                </thead>
+              )}
+              <tbody>
+                {(content.rows || []).slice(content.has_header !== false ? 1 : 0).map((row: string[], ri: number) => (
+                  <tr key={ri} className="border-b border-white/5 last:border-b-0">
+                    {row.map((cell: string, ci: number) => (
+                      <td key={ci} className="px-4 py-3 text-muted-foreground">{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+      {block.block_type === "embed" && content.url && (
+        <div className="space-y-4">
+          <div className={cn(
+            "editorial-panel overflow-hidden rounded-[32px]",
+            content.aspect_ratio === "square" && "aspect-square",
+            content.aspect_ratio === "tall" && "aspect-[9/16]",
+            content.aspect_ratio !== "square" && content.aspect_ratio !== "tall" && "aspect-video",
+          )}>
+            <iframe
+              className="h-full w-full"
+              src={content.url}
+              title={content.caption || "Embed"}
+              loading="lazy"
+              allowFullScreen
+              sandbox="allow-scripts allow-same-origin allow-popups"
+            />
+          </div>
+          {content.caption && <p className="text-sm text-muted-foreground">{content.caption}</p>}
+        </div>
+      )}
+      {block.block_type === "file" && content.file_url && (
+        <a
+          href={content.file_url}
+          download
+          target="_blank"
+          rel="noopener noreferrer"
+          className="editorial-panel flex items-center gap-4 rounded-[28px] p-6 transition-colors hover:border-primary/30"
+        >
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+            <Download className="h-5 w-5 text-primary" />
+          </div>
+          <div className="flex-1">
+            <p className="font-medium">{content.file_name || "Download"}</p>
+            {content.description && <p className="mt-1 text-sm text-muted-foreground">{content.description}</p>}
+          </div>
+          {content.file_size && (
+            <span className="text-sm text-muted-foreground">{content.file_size}</span>
+          )}
+        </a>
       )}
       {block.block_type === "code" && (
         <div className="editorial-panel overflow-hidden rounded-[28px] bg-[#0d1117]">

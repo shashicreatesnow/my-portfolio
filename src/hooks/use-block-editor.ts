@@ -7,6 +7,8 @@ import type { BlockType, ProjectBlockRecord } from "@/lib/types/blocks";
 
 export function getDefaultBlockContent(blockType: BlockType) {
   switch (blockType) {
+    case "heading1":
+      return { text: "", level: "h1" };
     case "heading2":
       return { text: "", level: "h2" };
     case "heading3":
@@ -44,10 +46,29 @@ export function getDefaultBlockContent(blockType: BlockType) {
     case "metric_row":
       return {
         metrics: [
-          { value: "", label: "" },
-          { value: "", label: "" },
+          { value: "", label: "", prefix: "", suffix: "" },
+          { value: "", label: "", prefix: "", suffix: "" },
         ],
       };
+    case "list":
+      return {
+        list_type: "bullet",
+        items: [{ id: crypto.randomUUID(), text: "" }],
+      };
+    case "toggle":
+      return { title: "", content_html: "" };
+    case "table":
+      return {
+        has_header: true,
+        rows: [
+          ["Header 1", "Header 2", "Header 3"],
+          ["", "", ""],
+        ],
+      };
+    case "embed":
+      return { url: "", platform: "generic", caption: "", aspect_ratio: "video" };
+    case "file":
+      return { file_name: "", description: "", file_url: "", file_size: "" };
     case "code":
       return { code: "", language: "text", caption: "" };
     case "text":

@@ -236,6 +236,124 @@ select {
   font-weight: 600;
 }
 
+.prose-block em {
+  font-style: italic;
+}
+
+.prose-block u {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose-block s,
+.prose-block del {
+  text-decoration: line-through;
+}
+
+.prose-block a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.2s;
+}
+
+.prose-block a:hover {
+  opacity: 0.8;
+}
+
+.prose-block code {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 0.15em 0.35em;
+  font-size: 0.9em;
+  font-family: var(--font-mono, monospace);
+}
+
+.prose-block h1 {
+  font-family: var(--font-display), serif;
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+
+.prose-block ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  color: var(--muted-foreground);
+  line-height: 1.8;
+}
+
+.prose-block ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  color: var(--muted-foreground);
+  line-height: 1.8;
+}
+
+.prose-block li {
+  margin-bottom: 0.35rem;
+}
+
+.prose-block li p {
+  margin: 0;
+}
+
+/* Tiptap editor styles */
+.prose-editor:focus {
+  outline: none;
+  border-color: var(--ring);
+}
+
+.prose-editor p {
+  margin-bottom: 0.5rem;
+}
+
+.prose-editor p:last-child {
+  margin-bottom: 0;
+}
+
+.prose-editor h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.prose-editor ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-editor ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-editor li p {
+  margin: 0;
+}
+
+.prose-editor a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+}
+
+.prose-editor code {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+  padding: 0.15em 0.35em;
+  font-size: 0.9em;
+}
+
+.prose-editor .is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: hsl(var(--muted-foreground));
+  pointer-events: none;
+  height: 0;
+}
+
 .grid-pattern::before {
   content: "";
   position: absolute;
@@ -248,6 +366,15 @@ select {
   background-size: 48px 48px;
   mask-image: radial-gradient(circle at center, black 38%, transparent 86%);
   z-index: 0;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .story-fade {

@@ -2,21 +2,27 @@ import type { LucideIcon } from "lucide-react";
 
 export type BlockType =
   | "text"
+  | "heading1"
   | "heading2"
   | "heading3"
   | "quote"
+  | "list"
+  | "toggle"
   | "image"
   | "gallery"
   | "before_after"
   | "annotated_image"
   | "video"
+  | "embed"
   | "columns_2"
   | "columns_3"
   | "divider"
   | "spacer"
   | "callout"
   | "metric_row"
-  | "code";
+  | "table"
+  | "code"
+  | "file";
 
 export type BlockCategory = "Text" | "Media" | "Layout" | "Data";
 
@@ -24,6 +30,11 @@ export interface BlockConfig {
   label: string;
   category: BlockCategory;
   icon: LucideIcon;
+}
+
+export interface ListItem {
+  id: string;
+  text: string;
 }
 
 export interface AnnotationPoint {
@@ -43,7 +54,7 @@ export interface GalleryImage {
 
 export interface ColumnNestedBlock {
   id: string;
-  block_type: "text" | "heading2" | "heading3" | "image" | "callout";
+  block_type: "text" | "heading2" | "heading3" | "image" | "callout" | "list";
   content: Record<string, unknown>;
 }
 

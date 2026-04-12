@@ -6,7 +6,7 @@ export const textBlockContent = z.object({
 
 export const headingBlockContent = z.object({
   text: z.string().default(""),
-  level: z.enum(["h2", "h3"]).default("h2"),
+  level: z.enum(["h1", "h2", "h3"]).default("h2"),
 });
 
 export const quoteBlockContent = z.object({
@@ -90,9 +90,43 @@ export const videoBlockContent = z.object({
   caption: z.string().optional(),
 });
 
+export const listItemSchema = z.object({
+  id: z.string(),
+  text: z.string().default(""),
+});
+
+export const listBlockContent = z.object({
+  list_type: z.enum(["bullet", "numbered"]).default("bullet"),
+  items: z.array(listItemSchema).default([]),
+});
+
+export const toggleBlockContent = z.object({
+  title: z.string().default(""),
+  content_html: z.string().default(""),
+});
+
+export const tableBlockContent = z.object({
+  has_header: z.boolean().default(true),
+  rows: z.array(z.array(z.string())).default([]),
+});
+
+export const embedBlockContent = z.object({
+  url: z.string().default(""),
+  platform: z.enum(["twitter", "figma", "codepen", "generic"]).default("generic"),
+  caption: z.string().optional(),
+  aspect_ratio: z.enum(["video", "square", "tall"]).default("video"),
+});
+
+export const fileBlockContent = z.object({
+  file_name: z.string().default(""),
+  description: z.string().optional(),
+  file_url: z.string().default(""),
+  file_size: z.string().optional(),
+});
+
 export const columnBlockSchema = z.object({
   id: z.string(),
-  block_type: z.enum(["text", "heading2", "heading3", "image", "callout"]),
+  block_type: z.enum(["text", "heading2", "heading3", "image", "callout", "list"]),
   content: z.record(z.string(), z.any()),
 });
 
@@ -123,19 +157,25 @@ export const codeBlockContent = z.object({
 
 export const blockContentSchemas = {
   text: textBlockContent,
+  heading1: headingBlockContent,
   heading2: headingBlockContent,
   heading3: headingBlockContent,
   quote: quoteBlockContent,
+  list: listBlockContent,
+  toggle: toggleBlockContent,
   image: imageBlockContent,
   gallery: galleryBlockContent,
   before_after: beforeAfterBlockContent,
   annotated_image: annotatedImageBlockContent,
   video: videoBlockContent,
+  embed: embedBlockContent,
   columns_2: columnsBlockContent,
   columns_3: columnsBlockContent,
   divider: dividerBlockContent,
   spacer: spacerBlockContent,
   callout: calloutBlockContent,
   metric_row: metricRowBlockContent,
+  table: tableBlockContent,
   code: codeBlockContent,
+  file: fileBlockContent,
 };

@@ -156,7 +156,7 @@ export function SettingsTabs({ settings }: { settings: typeof defaultSiteSetting
         <Card>
           <CardContent className="space-y-4 p-6">
             {navigationFieldArray.fields.map((field, index) => (
-              <div key={field.id} className="grid gap-3 rounded-[24px] border border-border p-4 md:grid-cols-[1fr_1fr_auto]">
+              <div key={field.id} className="grid gap-3 rounded-xl border border-border p-4 md:grid-cols-[1fr_1fr_auto]">
                 <Input {...navigationForm.register(`items.${index}.label`)} placeholder="Label" />
                 <Input {...navigationForm.register(`items.${index}.href`)} placeholder="/route" />
                 <Button type="button" variant="ghost" onClick={() => navigationFieldArray.remove(index)}>

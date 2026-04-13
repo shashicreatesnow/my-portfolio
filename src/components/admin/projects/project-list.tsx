@@ -86,7 +86,7 @@ export function ProjectList({ projects }: { projects: ProjectRecord[] }) {
           {filteredProjects.map((project) => (
             <div
               key={project.id}
-              className="grid gap-4 rounded-[28px] border border-border bg-background p-5 md:grid-cols-[1fr_auto]"
+              className="grid gap-4 rounded-2xl border border-border bg-background p-5 md:grid-cols-[1fr_auto]"
             >
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center gap-3">
@@ -207,7 +207,7 @@ export function ProjectList({ projects }: { projects: ProjectRecord[] }) {
             </div>
           ))}
           {filteredProjects.length === 0 && (
-            <div className="rounded-[28px] border border-dashed border-border p-10 text-center text-sm text-muted-foreground">
+            <div className="rounded-2xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">
               No projects match this view yet.
             </div>
           )}

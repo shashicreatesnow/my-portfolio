@@ -78,7 +78,7 @@ export function CollectionManager({ collections }: { collections: CollectionReco
         {collections.map((item) => (
           <Card key={item.id}>
             <CardContent className="space-y-4 p-4">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-[24px]">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
                 <Image src={item.image_url} alt={item.caption || ""} fill className="object-cover" />
               </div>
               <Input

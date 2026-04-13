@@ -14,7 +14,7 @@ export default async function HomePage() {
 
   return (
     <div className="w-full">
-      <section className="pt-48 pb-32 md:pt-56 md:pb-40">
+      <section className="grid-pattern story-fade relative pt-48 pb-32 md:pt-56 md:pb-40">
         <div className="mx-auto max-w-7xl px-5 md:px-8">
           <div className="max-w-3xl space-y-8">
             <p className="portfolio-kicker">Design systems thinking</p>

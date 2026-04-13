@@ -384,7 +384,7 @@ function BlockFields({
         />
         {content.url && (
           <div
-            className="relative overflow-hidden rounded-[28px] border border-dashed border-border bg-secondary/30 p-4"
+            className="relative overflow-hidden rounded-2xl border border-dashed border-border bg-secondary/30 p-4"
             onClick={(event) => {
               const target = event.currentTarget.getBoundingClientRect();
               const x = ((event.clientX - target.left) / target.width) * 100;
@@ -404,7 +404,7 @@ function BlockFields({
               });
             }}
           >
-            <img src={content.url} alt="" className="max-h-[28rem] w-full rounded-[20px] object-cover" />
+            <img src={content.url} alt="" className="max-h-[28rem] w-full rounded-xl object-cover" />
             {annotations.map((point: any, index: number) => (
               <span
                 key={point.id}

@@ -11,7 +11,7 @@ export function ProjectNavigation({
   next?: ProjectRecord | null;
 }) {
   return (
-    <div className="editorial-panel mt-20 flex flex-col gap-5 rounded-[30px] px-6 py-7 md:flex-row md:items-center md:justify-between">
+    <div className="editorial-panel mt-20 flex flex-col gap-5 rounded-2xl px-6 py-7 md:flex-row md:items-center md:justify-between">
       <Link href="/works" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" />
         Back to all works

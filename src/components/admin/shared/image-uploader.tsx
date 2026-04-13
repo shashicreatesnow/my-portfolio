@@ -37,7 +37,7 @@ export function ImageUploader({
 
   return (
     <div className="space-y-3">
-      <label className="flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-[28px] border border-dashed border-border bg-secondary/40 p-4 text-center">
+      <label className="flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-secondary/40 p-4 text-center">
         {value ? (
           <div className="relative h-40 w-full overflow-hidden rounded-3xl">
             <Image src={value} alt="" fill className="object-cover" />

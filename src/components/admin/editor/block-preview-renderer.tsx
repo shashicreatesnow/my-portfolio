@@ -1,0 +1,301 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @next/next/no-img-element */
+
+"use client";
+
+import { Download } from "lucide-react";
+
+import type { ProjectBlockRecord } from "@/lib/types/blocks";
+import { cn } from "@/lib/utils/cn";
+import { getEmbedUrl } from "@/lib/utils/video";
+
+function widthClass(blockType: ProjectBlockRecord["block_type"], content: Record<string, any>) {
+  if (blockType === "image" && content.display === "full-width") return "max-w-none";
+  if (blockType === "image" && content.display === "small") return "mx-auto max-w-xl";
+  if (["gallery", "metric_row", "before_after", "annotated_image", "columns_2", "columns_3", "table", "embed"].includes(blockType))
+    return "mx-auto max-w-5xl";
+  if (blockType === "spacer") return "max-w-none";
+  return "mx-auto max-w-3xl";
+}
+
+export function BlockPreviewRenderer({ block }: { block: ProjectBlockRecord }) {
+  const content = block.content as Record<string, any>;
+
+  return (
+    <section className={cn("w-full", widthClass(block.block_type, content))}>
+      {block.block_type === "text" && (
+        <div
+          className="prose-block portfolio-copy text-[1.05rem]"
+          dangerouslySetInnerHTML={{ __html: content.html || "" }}
+        />
+      )}
+      {block.block_type === "heading1" && (
+        <h1 className="font-display text-5xl leading-tight md:text-6xl">{content.text}</h1>
+      )}
+      {block.block_type === "heading2" && (
+        <h2 className="font-display text-4xl leading-tight md:text-5xl">{content.text}</h2>
+      )}
+      {block.block_type === "heading3" && (
+        <h3 className="font-display text-3xl leading-tight md:text-4xl">{content.text}</h3>
+      )}
+      {block.block_type === "quote" && (
+        <blockquote className="border-l-2 border-primary pl-6">
+          <p className="font-display text-2xl italic leading-relaxed">{content.text}</p>
+          {content.attribution && <footer className="mt-4 text-sm text-muted-foreground">{content.attribution}</footer>}
+        </blockquote>
+      )}
+      {block.block_type === "image" && content.url && (
+        <figure className="space-y-4">
+          <div className="relative overflow-hidden rounded-xl">
+            <img src={content.url} alt={content.alt || ""} className="w-full object-cover" />
+          </div>
+          {content.caption && <figcaption className="text-center text-sm text-muted-foreground">{content.caption}</figcaption>}
+        </figure>
+      )}
+      {block.block_type === "gallery" && (
+        <div className={cn("grid gap-4",
+          content.layout === "carousel" ? "flex snap-x snap-mandatory overflow-x-auto pb-4 scrollbar-hide" :
+          content.columns === 2 ? "md:grid-cols-2" :
+          content.columns === 4 ? "md:grid-cols-2 xl:grid-cols-4" :
+          "md:grid-cols-2 xl:grid-cols-3"
+        )}>
+          {(content.images || []).map((image: any, index: number) => (
+            <figure key={index} className={cn("space-y-2", content.layout === "carousel" && "w-[80%] flex-none snap-center md:w-[45%]")}>
+              <div className="editorial-panel relative aspect-[4/3] overflow-hidden rounded-2xl">
+                <img src={image.url} alt={image.alt || ""} className="h-full w-full object-cover" />
+              </div>
+              {image.caption && <figcaption className="text-sm text-muted-foreground">{image.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      )}
+      {block.block_type === "callout" && (
+        <div className={cn(
+          "rounded-2xl p-8 editorial-panel",
+          content.style === "subtle" ? "" :
+          content.style === "accent" ? "border-t-2 border-primary" :
+          "border-l-2 border-primary"
+        )}>
+          <p className="font-display text-4xl">{content.value}</p>
+          <p className={cn("mt-2 text-lg", content.style === "subtle" ? "text-muted-foreground" : "portfolio-meta")}>{content.label}</p>
+          {content.description && <p className="mt-4 text-sm text-muted-foreground">{content.description}</p>}
+        </div>
+      )}
+      {block.block_type === "metric_row" && (
+        <div className="grid gap-4 md:grid-cols-3">
+          {(content.metrics || []).map((metric: any, index: number) => (
+            <div key={index} className="editorial-panel rounded-2xl p-6">
+              <p className="font-display text-4xl">
+                {metric.prefix}
+                {metric.value}
+                {metric.suffix}
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">{metric.label}</p>
+            </div>
+          ))}
+        </div>
+      )}
+      {block.block_type === "before_after" && (
+        <div className="grid gap-4 md:grid-cols-2">
+          {(["before", "after"] as const).map((side) => (
+            <figure key={side} className="space-y-3">
+              <span className="inline-block rounded-full border border-white/8 bg-white/[0.04] px-3 py-1 text-xs text-[#d9d1c4]">
+                {side === "before" ? "Before" : "After"}
+              </span>
+              <div className="editorial-panel relative min-h-48 overflow-hidden rounded-2xl">
+                {content[side]?.url && (
+                  <img src={content[side].url} alt={content[side].alt || ""} className="w-full object-cover" />
+                )}
+              </div>
+              {content[side]?.caption && <figcaption className="text-sm text-muted-foreground">{content[side].caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      )}
+      {block.block_type === "annotated_image" && content.url && (
+        <div className="space-y-4">
+          <div className="editorial-panel relative overflow-hidden rounded-2xl">
+            <img src={content.url} alt={content.alt || ""} className="w-full object-cover" />
+            {(content.annotations || []).map((point: any, index: number) => (
+              <span
+                key={point.id}
+                className="absolute flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground"
+                style={{ left: `${point.x}%`, top: `${point.y}%`, transform: "translate(-50%, -50%)" }}
+              >
+                {index + 1}
+              </span>
+            ))}
+          </div>
+          <div className="grid gap-3 md:grid-cols-2">
+            {(content.annotations || []).map((point: any, index: number) => (
+              <div key={point.id} className="editorial-panel rounded-xl p-4">
+                <p className="font-medium">{index + 1}. {point.label}</p>
+                {point.description && <p className="mt-2 text-sm text-muted-foreground">{point.description}</p>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {block.block_type === "video" && content.url && (
+        <div className="space-y-4">
+          <div className="editorial-panel aspect-video overflow-hidden rounded-2xl">
+            <iframe
+              className="h-full w-full"
+              src={getEmbedUrl(content.url, content.provider)}
+              title={content.caption || "Video embed"}
+              loading="lazy"
+              allowFullScreen
+            />
+          </div>
+          {content.caption && <p className="text-sm text-muted-foreground">{content.caption}</p>}
+        </div>
+      )}
+      {(block.block_type === "columns_2" || block.block_type === "columns_3") && (
+        <div className={cn("grid gap-6", block.block_type === "columns_3" ? "md:grid-cols-3" : "md:grid-cols-2")}>
+          {(content.columns || []).map((column: any, index: number) => (
+            <div key={index} className="editorial-panel space-y-4 rounded-2xl p-5">
+              {(column.blocks || []).map((nestedBlock: any) => (
+                <div key={nestedBlock.id} className="space-y-2">
+                  {nestedBlock.block_type === "text" && (
+                    <div dangerouslySetInnerHTML={{ __html: nestedBlock.content.html || "" }} />
+                  )}
+                  {(nestedBlock.block_type === "heading2" || nestedBlock.block_type === "heading3") && (
+                    <h4 className="font-display text-2xl">{nestedBlock.content.text}</h4>
+                  )}
+                  {nestedBlock.block_type === "image" && nestedBlock.content.url && (
+                    <div className="overflow-hidden rounded-xl">
+                      <img src={nestedBlock.content.url} alt={nestedBlock.content.alt || ""} className="w-full object-cover" />
+                    </div>
+                  )}
+                  {nestedBlock.block_type === "callout" && (
+                    <div className="editorial-panel rounded-xl p-4">
+                      <p className="font-display text-3xl">{nestedBlock.content.value}</p>
+                      <p className="text-sm text-muted-foreground">{nestedBlock.content.label}</p>
+                    </div>
+                  )}
+                  {nestedBlock.block_type === "list" && (
+                    nestedBlock.content.list_type === "numbered" ? (
+                      <ol className="list-decimal space-y-1 pl-5 text-sm text-muted-foreground">
+                        {(nestedBlock.content.items || []).filter((item: any) => item.text).map((item: any) => (
+                          <li key={item.id}>{item.text}</li>
+                        ))}
+                      </ol>
+                    ) : (
+                      <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+                        {(nestedBlock.content.items || []).filter((item: any) => item.text).map((item: any) => (
+                          <li key={item.id}>{item.text}</li>
+                        ))}
+                      </ul>
+                    )
+                  )}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+      {block.block_type === "divider" && (
+        <hr className={cn("border-white/10", content.style === "dotted" && "border-dashed", content.style === "thick" && "border-2")} />
+      )}
+      {block.block_type === "spacer" && (
+        <div style={{ height: content.size === "small" ? 24 : content.size === "medium" ? 48 : content.size === "large" ? 80 : 120 }} />
+      )}
+      {block.block_type === "list" && (
+        <div className="prose-block portfolio-copy text-[1.05rem]">
+          {content.list_type === "numbered" ? (
+            <ol className="list-decimal space-y-2 pl-6">
+              {(content.items || []).filter((item: any) => item.text).map((item: any) => (
+                <li key={item.id}>{item.text}</li>
+              ))}
+            </ol>
+          ) : (
+            <ul className="list-disc space-y-2 pl-6">
+              {(content.items || []).filter((item: any) => item.text).map((item: any) => (
+                <li key={item.id}>{item.text}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+      {block.block_type === "toggle" && content.title && (
+        <details className="editorial-panel overflow-hidden rounded-2xl">
+          <summary className="flex cursor-pointer items-center gap-3 p-6 font-display text-xl [&::marker]:hidden [&::-webkit-details-marker]:hidden">
+            <svg className="h-5 w-5 shrink-0 transition-transform [[open]>&]:rotate-90" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+            </svg>
+            {content.title}
+          </summary>
+          <div
+            className="prose-block portfolio-copy border-t border-white/8 px-6 pb-6 pt-4 text-[1.05rem]"
+            dangerouslySetInnerHTML={{ __html: content.content_html || "" }}
+          />
+        </details>
+      )}
+      {block.block_type === "table" && (content.rows || []).length > 0 && (
+        <div className="editorial-panel overflow-hidden rounded-2xl">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              {content.has_header !== false && (content.rows || []).length > 0 && (
+                <thead>
+                  <tr className="border-b border-white/10">
+                    {content.rows[0].map((cell: string, i: number) => (
+                      <th key={i} className="px-4 py-3 text-left font-medium">{cell}</th>
+                    ))}
+                  </tr>
+                </thead>
+              )}
+              <tbody>
+                {(content.rows || []).slice(content.has_header !== false ? 1 : 0).map((row: string[], ri: number) => (
+                  <tr key={ri} className="border-b border-white/5 last:border-b-0">
+                    {row.map((cell: string, ci: number) => (
+                      <td key={ci} className="px-4 py-3 text-muted-foreground">{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+      {block.block_type === "embed" && content.url && (
+        <div className="space-y-4">
+          <div className={cn(
+            "editorial-panel overflow-hidden rounded-2xl",
+            content.aspect_ratio === "square" && "aspect-square",
+            content.aspect_ratio === "tall" && "aspect-[9/16]",
+            content.aspect_ratio !== "square" && content.aspect_ratio !== "tall" && "aspect-video",
+          )}>
+            <iframe
+              className="h-full w-full"
+              src={content.url}
+              title={content.caption || "Embed"}
+              loading="lazy"
+              allowFullScreen
+              sandbox="allow-scripts allow-same-origin allow-popups"
+            />
+          </div>
+          {content.caption && <p className="text-sm text-muted-foreground">{content.caption}</p>}
+        </div>
+      )}
+      {block.block_type === "file" && content.file_url && (
+        <div className="editorial-panel flex items-center gap-4 rounded-2xl p-6">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+            <Download className="h-5 w-5 text-primary" />
+          </div>
+          <div className="flex-1">
+            <p className="font-medium">{content.file_name || "Download"}</p>
+            {content.description && <p className="mt-1 text-sm text-muted-foreground">{content.description}</p>}
+          </div>
+          {content.file_size && <span className="text-sm text-muted-foreground">{content.file_size}</span>}
+        </div>
+      )}
+      {block.block_type === "code" && (
+        <div className="overflow-hidden rounded-2xl bg-[#0d1117]">
+          <pre className="overflow-x-auto p-4 text-sm text-[#c9d1d9]">
+            <code>{content.code || ""}</code>
+          </pre>
+          {content.caption && <p className="border-t border-white/10 px-4 py-3 text-sm text-muted-foreground">{content.caption}</p>}
+        </div>
+      )}
+    </section>
+  );
+}

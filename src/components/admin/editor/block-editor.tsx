@@ -22,6 +22,8 @@ import {
   ChevronDown,
   ChevronUp,
   Copy,
+  Eye,
+  EyeOff,
   GripVertical,
   Loader2,
   Plus,
@@ -41,6 +43,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { ImageUploader } from "@/components/admin/shared/image-uploader";
 import { RichTextEditor } from "@/components/admin/editor/editors/rich-text-editor";
+import { PreviewPanel } from "@/components/admin/editor/preview-panel";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -1163,6 +1166,7 @@ export function BlockEditor({
   className?: string;
 }) {
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved">("idle");
+  const [showPreview, setShowPreview] = useState(false);
   const [isPending, startTransition] = useTransition();
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
   const editor = useBlockEditor(initialBlocks, projectId);
@@ -1221,8 +1225,20 @@ export function BlockEditor({
           <Button type="button" variant="outline" size="sm" onClick={saveNow} disabled={isPending}>
             Save now
           </Button>
+          <Button
+            type="button"
+            variant={showPreview ? "secondary" : "outline"}
+            size="sm"
+            onClick={() => setShowPreview((v) => !v)}
+            title={showPreview ? "Hide preview" : "Show preview"}
+          >
+            {showPreview ? <EyeOff className="mr-2 h-4 w-4" /> : <Eye className="mr-2 h-4 w-4" />}
+            Preview
+          </Button>
         </div>
       </div>
+      <div className={showPreview ? "grid gap-6 lg:grid-cols-2" : ""}>
+      <div>
       {editor.blocks.length === 0 ? (
         <Card className="flex min-h-72 flex-col items-center justify-center gap-4 border-dashed text-center">
           <p className="font-display text-3xl">Start building your case study</p>
@@ -1265,6 +1281,13 @@ export function BlockEditor({
           <BlockTypePicker onSelect={(type) => editor.addBlock(type)} />
         </div>
       )}
+      </div>
+      {showPreview && (
+        <div className="sticky top-20 h-[calc(100vh-6rem)]">
+          <PreviewPanel blocks={editor.blocks} />
+        </div>
+      )}
+      </div>
     </div>
   );
 }

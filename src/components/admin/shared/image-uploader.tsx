@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Clipboard, Loader2, Upload, X } from "lucide-react";
 import { toast } from "sonner";
@@ -22,12 +22,10 @@ export function ImageUploader({
 }) {
   const { upload, uploading } = useImageUpload();
   const [hovered, setHovered] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const zoneRef = useRef<HTMLLabelElement>(null);
 
   async function handleFile(file: File | null) {
-    if (!file) {
-      return;
-    }
+    if (!file) return;
 
     try {
       const payload = await upload({ file, context, projectId });
@@ -38,32 +36,36 @@ export function ImageUploader({
     }
   }
 
-  const handlePaste = useCallback(
-    (e: React.ClipboardEvent) => {
+  useEffect(() => {
+    if (!hovered) return;
+
+    function onPaste(e: ClipboardEvent) {
       const items = e.clipboardData?.items;
       if (!items) return;
 
       for (const item of items) {
         if (item.type.startsWith("image/")) {
           e.preventDefault();
+          e.stopPropagation();
           const file = item.getAsFile();
           if (file) handleFile(file);
           return;
         }
       }
-    },
-    [context, projectId],
-  );
+    }
+
+    window.addEventListener("paste", onPaste);
+    return () => window.removeEventListener("paste", onPaste);
+  });
 
   return (
-    <div
-      ref={containerRef}
-      className="space-y-3"
-      onPaste={handlePaste}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <label className="relative flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-secondary/40 p-4 text-center transition-colors hover:border-primary/40 hover:bg-secondary/60">
+    <div className="space-y-3">
+      <label
+        ref={zoneRef}
+        className="relative flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-secondary/40 p-4 text-center transition-colors hover:border-primary/40 hover:bg-secondary/60"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
         {value ? (
           <div className="relative h-40 w-full overflow-hidden rounded-3xl">
             <Image src={value} alt="" fill className="object-cover" />

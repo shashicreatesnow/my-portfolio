@@ -1,7 +1,6 @@
 # Ritam — CMS Block Plan
 
-> This is the exact block-by-block plan for creating the combined case study in the admin panel.
-> Every block maps to a block type in the CMS. Where images go, the source file is listed.
+> Block-by-block plan for the combined case study. Add these in order in the admin panel.
 
 ---
 
@@ -14,7 +13,7 @@
 - **Role:** Lead Product Designer
 - **Timeline:** 4 weeks (2025)
 - **Industry:** News & Media
-- **Cover Image:** Use `ritam-images/01-hero.png` (phone in hand)
+- **Cover Image:** The hero shot — hand holding iPhone showing Ritam home screen
 
 ---
 
@@ -23,9 +22,7 @@
 ---
 
 ### Block 1 — `image` (full-width)
-**Display:** full-width
-**Image:** `ritam-images/01-hero.png`
-**Alt:** Ritam news app displayed on iPhone held in hand, showing home screen with breaking news and article cards
+The hero shot — hand holding iPhone with the Ritam app home screen (breaking news, categories, article cards). The "Ritam" wordmark is on the left, "the news app." tagline on the right.
 **Caption:** —
 
 ---
@@ -60,7 +57,7 @@ Ritam is an established Indian news organization transitioning to digital-first.
 ---
 
 ### Block 7 — `heading2`
-**Text:** Understanding the Challenge
+Understanding the Challenge
 
 ---
 
@@ -91,9 +88,7 @@ Ritam's existing web presence wasn't translating to mobile behavior patterns. Us
 ---
 
 ### Block 12 — `image`
-**Display:** default
-**Image:** `ritam-images/03.png`
-**Alt:** Understanding the challenge — business context and objectives for Ritam app redesign
+The "Understanding the challenge" slide — bullet points about Ritam's context (transitioning to digital-first, diverse readership, crowded marketplace) with a dark card showing Business Objectives.
 **Caption:** Business objectives: increase daily active users, boost discovery, make the app feel personal
 
 ---
@@ -104,7 +99,7 @@ Ritam's existing web presence wasn't translating to mobile behavior patterns. Us
 ---
 
 ### Block 14 — `heading2`
-**Text:** Architecture I Built
+Architecture I Built
 
 ---
 
@@ -113,10 +108,8 @@ Before touching any screen, I mapped the entire information architecture — eve
 
 ---
 
-### Block 16 — `image`
-**Display:** full-width
-**Image:** `ritam-images/05.png`
-**Alt:** Complete information architecture flow diagram for Ritam app showing all screens and navigation paths
+### Block 16 — `image` (full-width)
+The full architecture flow diagram — colorful flowchart showing all screens and navigation paths. Onboarding on the left, Home in the center, all five tabs branching out, with Article/Shorts/News flows and the Donate flow with receipt on the right.
 **Caption:** Full architecture mapping — every screen, every flow, every connection
 
 ---
@@ -127,7 +120,6 @@ Before touching any screen, I mapped the entire information architecture — eve
 ---
 
 ### Block 18 — `divider`
-**Style:** default
 
 ---
 
@@ -137,7 +129,7 @@ Before touching any screen, I mapped the entire information architecture — eve
 ---
 
 ### Block 20 — `heading1`
-**Text:** The Consumer Experience
+The Consumer Experience
 
 ---
 
@@ -152,7 +144,7 @@ The app needed to feel fresh and dynamic with each visit while maintaining consi
 ---
 
 ### Block 23 — `heading2`
-**Text:** Onboarding
+Onboarding
 
 ---
 
@@ -162,9 +154,7 @@ Minimal steps — complete onboarding in under 60 seconds. Clean, uncluttered sc
 ---
 
 ### Block 25 — `image`
-**Display:** default
-**Image:** `ritam-images/06.png`
-**Alt:** Onboarding design approach showing key principles and screen mockups for welcome, sign up, and login
+The onboarding overview slide — left side has Design Approach bullets and Key Principles, right side shows three phone screens: the welcome screen with illustration, "Read Latest Articles" screen, and Log In screen.
 **Caption:** Onboarding — minimal friction to first meaningful interaction
 
 ---
@@ -177,9 +167,12 @@ Minimal steps — complete onboarding in under 60 seconds. Clean, uncluttered sc
 ### Block 27 — `gallery`
 **Layout:** grid
 **Columns:** 2
-**Images:**
-1. `ritam-images/07.png` — Alt: "Sign up flow — 4 screens from name entry to language selection" / Caption: "Sign up flow"
-2. `ritam-images/08.png` — Alt: "Log in flow — 3 screens with OTP verification and notification chips" / Caption: "Log in flow"
+
+1. **Sign up flow** — 4 phone screens side by side: empty form, filled form, OTP entry, language selection (with dark mode screen)
+   Caption: "Sign up flow"
+
+2. **Log in flow** — 3 phone screens side by side: mobile number entry, number filled, OTP verification. Plus notification chips on the right showing "OTP Sent Successfully", "Signed up successfully", "Logged in successfully"
+   Caption: "Log in flow"
 
 ---
 
@@ -189,7 +182,7 @@ Minimal steps — complete onboarding in under 60 seconds. Clean, uncluttered sc
 ---
 
 ### Block 29 — `heading2`
-**Text:** Home Screen & Feed System
+Home Screen & Feed System
 
 ---
 
@@ -199,9 +192,7 @@ The home screen is the primary entry point into Ritam's content. It needed to gi
 ---
 
 ### Block 31 — `image`
-**Display:** default
-**Image:** `ritam-images/09.png`
-**Alt:** Home screen design showing breaking news hero, category chips, and article feed
+The home screen slide — left side has Purpose bullet points, right side shows the full home screen mockup: header with Ritam logo and notification bell, category chips (All News, National, Technology, Health), a breaking news hero card about Jupiter's moons, and an Articles section with horizontal scrolling cards. Bottom tab bar visible.
 **Caption:** Home screen — breaking news, categories, and a dynamic article feed
 
 ---
@@ -212,9 +203,7 @@ The home screen is the primary entry point into Ritam's content. It needed to gi
 ---
 
 ### Block 33 — `image`
-**Display:** default
-**Image:** `ritam-images/10.png`
-**Alt:** Three card types — Articles Card for long reads, News Card for short content, Shorts for video
+The Cards & Feed slide — shows the three card types: Articles Card (large card with image, headline, source, time), News Card (smaller card with overlay text), and Shorts (small square with play icon). Right side has Feed Structure bullet points about card-based layout, content density, filter icons.
 **Caption:** Three card types designed for three content formats
 
 ---
@@ -225,14 +214,12 @@ The home screen is the primary entry point into Ritam's content. It needed to gi
 ---
 
 ### Block 35 — `heading2`
-**Text:** Navigation
+Navigation
 
 ---
 
 ### Block 36 — `image`
-**Display:** default
-**Image:** `ritam-images/11.png`
-**Alt:** Navigation system — 5-tab bottom navbar and slide-in burger menu with profile and settings
+The navigation slide — left side shows the bottom navbar with 5 icons (Home, Discover, Shorts, News, Donate) and bullet points about thumb-friendly positioning. Right side shows the burger menu mockup — dark slide-in panel with Profile, Home, Notifications, Saved, Surveys, Language options and bullet points about smooth animation.
 **Caption:** Bottom navbar for core tabs, burger menu for secondary features
 
 ---
@@ -243,7 +230,7 @@ The home screen is the primary entry point into Ritam's content. It needed to gi
 ---
 
 ### Block 38 — `heading2`
-**Text:** Discover & Search
+Discover & Search
 
 ---
 
@@ -255,9 +242,12 @@ The discover page uses a grid-based feed for browsing multiple content types at 
 ### Block 40 — `gallery`
 **Layout:** grid
 **Columns:** 2
-**Images:**
-1. `ritam-images/12.png` — Alt: "Discover page with grid feed, filters, and category chips" / Caption: "Discover"
-2. `ritam-images/13.png` — Alt: "Search flow — recent searches, suggestions, and filtered results" / Caption: "Search"
+
+1. **Discover** — The discover slide showing Features bullets on the left, and four phone screens on the right: two showing grid feeds with different filters, and two smaller screens showing filtered views with category chips at the top.
+   Caption: "Discover"
+
+2. **Search** — The search flow slide with 3 phone screens: first shows search bar with recent searches and "You should try" suggestion chips, second shows typing with trending suggestions, third shows search results in a grid layout filtered by category.
+   Caption: "Search"
 
 ---
 
@@ -267,7 +257,7 @@ The discover page uses a grid-based feed for browsing multiple content types at 
 ---
 
 ### Block 42 — `heading2`
-**Text:** Reading Experiences
+Reading Experiences
 
 ---
 
@@ -279,10 +269,15 @@ I designed three distinct reading experiences: long-form articles with sticky he
 ### Block 44 — `gallery`
 **Layout:** grid
 **Columns:** 3
-**Images:**
-1. `ritam-images/14.png` — Alt: "Article view with scrollable long read, likes, comments, and sticky headline" / Caption: "Article View"
-2. `ritam-images/15.png` — Alt: "News view with 3D flip card animation and comment section" / Caption: "News View"
-3. `ritam-images/16.png` — Alt: "Shorts view — vertical video feed with engagement features" / Caption: "Shorts View"
+
+1. **Article View** — Features bullets on the left, two phone screens on the right: one showing a full article with image, headline, body text, and engagement icons (share, bookmark, etc.), another showing the article with comment section open.
+   Caption: "Article View"
+
+2. **News View** — Features bullets on the left (3D flip animation, comments), two phone screens on the right: one showing a news card about Jupiter's moons with full text and engagement bar, another showing the same with comments.
+   Caption: "News View"
+
+3. **Shorts View** — Features bullets on the left (scrollable, both directions), two phone screens: one showing a full-screen vertical video about "Viksit Bharat's Tech Revolution under PM Modi" with source bar, another with comments open.
+   Caption: "Shorts View"
 
 ---
 
@@ -294,9 +289,12 @@ I designed three distinct reading experiences: long-form articles with sticky he
 ### Block 46 — `gallery`
 **Layout:** grid
 **Columns:** 2
-**Images:**
-1. `ritam-images/17.png` — Alt: "Donate page with minimalistic form and success animation" / Caption: "Donate"
-2. `ritam-images/18.png` — Alt: "Profile, Notifications, Saved Content, and Surveys pages" / Caption: "Supporting Pages"
+
+1. **Donate** — Features bullets on the left (minimalistic form, payment animation), two phone screens: one showing the donate form (Name, Mobile, PAN, Donation Amount with preset amounts), another showing "Donation Successful" with Donate Again and Download Receipt buttons.
+   Caption: "Donate"
+
+2. **Supporting Pages** — Four phone screens side by side: Profile (name, photo, mobile, save), Notifications (chronological list), Saved Content (grid of saved articles), Surveys (multiple choice questions).
+   Caption: "Supporting Pages"
 
 ---
 
@@ -306,7 +304,6 @@ I designed three distinct reading experiences: long-form articles with sticky he
 ---
 
 ### Block 48 — `divider`
-**Style:** default
 
 ---
 
@@ -316,7 +313,7 @@ I designed three distinct reading experiences: long-form articles with sticky he
 ---
 
 ### Block 50 — `heading1`
-**Text:** The Operations Backbone
+The Operations Backbone
 
 ---
 
@@ -331,9 +328,7 @@ A consumer app is only as good as the tools powering it. I designed Ritam's admi
 ---
 
 ### Block 53 — `image` (full-width)
-**Display:** full-width
-**Image:** `ritam-admin/01-hero.png`
-**Alt:** Ritam Admin Panel displayed on laptop showing dashboard with stats, graphs, and content shortcuts
+The admin panel hero — laptop sitting on stacked stone slabs, screen showing the Ritam Admin Panel dashboard with orange sidebar, stat cards, download graph, and top content table. "Ritam" wordmark on the left, "Admin Panel" on the right.
 **Caption:** —
 
 ---
@@ -344,7 +339,7 @@ A consumer app is only as good as the tools powering it. I designed Ritam's admi
 ---
 
 ### Block 55 — `heading2`
-**Text:** Dashboard
+Dashboard
 
 ---
 
@@ -354,9 +349,7 @@ The dashboard gives editors and managers a single view of everything that matter
 ---
 
 ### Block 57 — `image`
-**Display:** default
-**Image:** `ritam-admin/04.png`
-**Alt:** Annotated dashboard screenshot showing navigation menu, stat cards, graphs, page shortcuts, and top content
+The annotated dashboard slide — full dashboard screenshot inside a rounded card with orange callout labels pointing to: "Navigation Menu" (left sidebar), "Header with search & Profile" (top bar), "Different Stat Graphs" (stat cards and charts), "Page Shortcuts" (action buttons), "Top Content Shortcut" (content table at bottom).
 **Caption:** Dashboard — annotated to show key design decisions
 
 ---
@@ -367,7 +360,7 @@ The dashboard gives editors and managers a single view of everything that matter
 ---
 
 ### Block 59 — `heading2`
-**Text:** Content Management
+Content Management
 
 ---
 
@@ -379,9 +372,12 @@ The content page manages three content types — Articles, Shorts, and News — 
 ### Block 61 — `gallery`
 **Layout:** grid
 **Columns:** 2
-**Images:**
-1. `ritam-admin/05.png` — Alt: "Content page with three tabs, filters, content cards, and action buttons" / Caption: "Content management — unified view for all content types"
-2. `ritam-admin/06.png` — Alt: "UX decisions — status indicators, card format, search filters, batch actions dropdown" / Caption: "UX decisions that speed up editorial workflows"
+
+1. **Content page** — Annotated screenshot showing the content table with callout labels: "Three types of content" (Articles/Shorts/News tabs), "Filters" (filter dropdowns), "Content Cards" (table rows), "Important Actions" (action buttons at top right), "Add New Content" button.
+   Caption: "Content management — unified view for all content types"
+
+2. **UX decisions** — Detail annotations showing: a single content card row with "Indicator of Status Published (Green) Unpublished (Red)" label, "To select any content piece" checkbox, filter dropdown with "Filters with inbuilt search", and an Actions dropdown showing Publish/Unpublish/Delete with "Actions dropdown to select and do these actions on multiple cards at once."
+   Caption: "UX decisions that speed up editorial workflows"
 
 ---
 
@@ -391,7 +387,7 @@ The content page manages three content types — Articles, Shorts, and News — 
 ---
 
 ### Block 63 — `heading2`
-**Text:** Text Editor & Content Creation
+Text Editor & Content Creation
 
 ---
 
@@ -403,9 +399,12 @@ I designed a custom text editor with everything an editor needs: rich text forma
 ### Block 65 — `gallery`
 **Layout:** grid
 **Columns:** 2
-**Images:**
-1. `ritam-admin/07.png` — Alt: "Interactive text editor with rich text field, info tokens, visibility actions, and metadata sidebar" / Caption: "Custom text editor — built for editorial speed"
-2. `ritam-admin/08.png` — Alt: "UX decisions in text editor — category dropdowns, language overlays, demographic controls" / Caption: "UX details — multi-language, categories, targeting"
+
+1. **Text editor** — Annotated screenshot showing the article editor with callout labels: "Important info tokens" (date, reading time), "Text editing field" (main content area with formatted article), "Visibility Actions" (Publish/Preview/Save Draft buttons in orange), "Other Important Options" (News Group, Author's Name, Category, Content Language sidebar).
+   Caption: "Custom text editor — built for editorial speed"
+
+2. **Editor UX decisions** — Detail annotations showing: category dropdown with checkmarks and "Dropdown to assign categories", green category chips with "A section to show all category selections & remove them if necessary", "Add article in new language" link, Content Language dropdown, and Demographic Visibility controls.
+   Caption: "UX details — multi-language, categories, targeting"
 
 ---
 
@@ -415,7 +414,7 @@ I designed a custom text editor with everything an editor needs: rich text forma
 ---
 
 ### Block 67 — `heading2`
-**Text:** Content Crawler
+Content Crawler
 
 ---
 
@@ -425,9 +424,7 @@ One of the most impactful features: a built-in crawler that lets editors search 
 ---
 
 ### Block 69 — `image`
-**Display:** default
-**Image:** `ritam-admin/09.png`
-**Alt:** Content crawler with tag search, crawled results list, and import options — Summarize All, Summarize Selected, Import All
+The crawler slide — annotated screenshot showing: a simple Tag input with "Crawl" button on the left labeled "Search for any content by tag(topic)", crawled results list in the center showing article titles with authors and dates labeled "Crawled Results", and three orange action buttons at the bottom: "Summarize All", "Summarize Selected", "Import All Summarized" labeled "Import options".
 **Caption:** Content crawler — search, preview, summarize, and import in minutes
 
 ---
@@ -438,7 +435,7 @@ One of the most impactful features: a built-in crawler that lets editors search 
 ---
 
 ### Block 71 — `heading2`
-**Text:** Moderation & Engagement
+Moderation & Engagement
 
 ---
 
@@ -450,10 +447,15 @@ The Engagement section handles two critical functions: push notifications (compo
 ### Block 73 — `gallery`
 **Layout:** grid
 **Columns:** 3
-**Images:**
-1. `ritam-admin/10.png` — Alt: "Whitelisting page — domain list with visibility toggles" / Caption: "Content Visibility"
-2. `ritam-admin/11.png` — Alt: "Notifications — compose with title, message, target URL, and user targeting" / Caption: "Push Notifications"
-3. `ritam-admin/12.png` — Alt: "Comments — filter and moderate all user comments with show/hide toggle" / Caption: "Comment Moderation"
+
+1. **Content Visibility** — Annotated whitelisting page showing a domains table with red/green visibility toggles for each source. Labels point to "Content Cards" (domain rows) and "Visibility Toggle" (the toggle switches).
+   Caption: "Content Visibility"
+
+2. **Push Notifications** — Annotated engagement page showing the Notifications tab with a compose form on the left (Title, Message, On Tap URL, Target User) and "All Notifications" history list on the right. Labels: "Push New Notification" and "View Previous Notifications".
+   Caption: "Push Notifications"
+
+3. **Comment Moderation** — Annotated engagement page showing the Comments tab with filter bar (Author, News Group, Tags) and a list of user comments with Show/Hide buttons. Labels: "Filter Comments", "See all user comments", "Manage Comments".
+   Caption: "Comment Moderation"
 
 ---
 
@@ -463,7 +465,7 @@ The Engagement section handles two critical functions: push notifications (compo
 ---
 
 ### Block 75 — `heading2`
-**Text:** Access Control & Settings
+Access Control & Settings
 
 ---
 
@@ -475,10 +477,15 @@ The settings section gives managers full control over who can do what. Team & Ro
 ### Block 77 — `gallery`
 **Layout:** grid
 **Columns:** 3
-**Images:**
-1. `ritam-admin/13.png` — Alt: "Team & Roles — member list with role badges and permission management panel" / Caption: "Team & Roles"
-2. `ritam-admin/14.png` — Alt: "Content Settings — manage news categories and feed languages as chips" / Caption: "Categories & Languages"
-3. `ritam-admin/15.png` — Alt: "Audit Log — activity tracking with user, action, date, and timestamp" / Caption: "Audit Log"
+
+1. **Team & Roles** — Annotated settings page showing Team Members list on the left (names with role badges and "x minutes ago" timestamps) and Roles panel on the right (Super Admin, Admin, Author, Parker, Content Manager with assigned users). Labels: "See Members and Modify" and "Manage Permissions".
+   Caption: "Team & Roles"
+
+2. **Categories & Languages** — Annotated Content Settings page showing News Groups as orange chip tags (Sports, News, Trade, Arts, Adventure, etc.) with add/remove buttons, and Feed Languages below as orange chips (Spanish, Marathi, Malayalam, Hindi, etc.). Labels: "Manage Categories" and "Manage Languages".
+   Caption: "Categories & Languages"
+
+3. **Audit Log** — Annotated Audit Log page showing a table of user activities with columns: user name, ID, date, time, hours. Orange action buttons on the right. Label: "Click Here to see the activities done by the shown user."
+   Caption: "Audit Log"
 
 ---
 
@@ -488,7 +495,6 @@ The settings section gives managers full control over who can do what. Team & Ro
 ---
 
 ### Block 79 — `divider`
-**Style:** default
 
 ---
 
@@ -498,7 +504,7 @@ The settings section gives managers full control over who can do what. Team & Ro
 ---
 
 ### Block 81 — `heading1`
-**Text:** The Design System
+The Design System
 
 ---
 
@@ -513,9 +519,7 @@ A shared design system ties the consumer app and admin panel together. I built i
 ---
 
 ### Block 84 — `image`
-**Display:** default
-**Image:** `ritam-images/19.png`
-**Alt:** Color system — Primary #1B1C20 (dark), Secondary #D97D54 (warm orange), Accent #86BCBE (teal) with usage rationale
+The Colors Used slide — three large color swatch cards side by side: Primary #1B1C20 (dark charcoal), Secondary #D97D54 (warm orange), Accent #86BCBE (soft teal). Below each card are bullet points explaining why that color was chosen (readability, warmth/trust, cognitive stress reduction).
 **Caption:** Three colors, each chosen for a specific psychological and functional reason
 
 ---
@@ -526,9 +530,7 @@ A shared design system ties the consumer app and admin panel together. I built i
 ---
 
 ### Block 86 — `image`
-**Display:** default
-**Image:** `ritam-images/20.png`
-**Alt:** Full color token system — primary, secondary, accent, greys, and grey-teal scales with hex values
+The Color Tokens slide — full token system laid out in columns: Primary scale (100-400), Secondary 800, Accent 700, Greys (1000-900), Grey-teal scale (1000-300). Each token shows a colored circle and its hex value.
 **Caption:** Color tokens — scalable from day one
 
 ---
@@ -539,9 +541,7 @@ A shared design system ties the consumer app and admin panel together. I built i
 ---
 
 ### Block 88 — `image`
-**Display:** default
-**Image:** `ritam-images/21.png`
-**Alt:** Typography system — Raleway (primary, sharp/modern) and Open Sans (secondary, reading comfort) with sizes and rationale
+The Typography slide — two-column layout: Raleway (Primary Font) on the left with Bold/Semibold weights, sizes 12-48, and "Why did I use it?" rationale bullets. Open Sans (Secondary Font) on the right with Regular/Bold weights, sizes 12-20, and its own rationale bullets.
 **Caption:** Raleway for impact, Open Sans for reading comfort
 
 ---
@@ -552,9 +552,7 @@ A shared design system ties the consumer app and admin panel together. I built i
 ---
 
 ### Block 90 — `image`
-**Display:** default
-**Image:** `ritam-images/22.png`
-**Alt:** Accessibility considerations — WCAG AA, touch targets 48x48px, color blindness, no zooming required
+The Accessibility Considerations slide — bullet list on light gradient background: WCAG AA standards, low vision/color blindness readability, 48x48px touch targets, no zooming required, scaled text, logical navigation hierarchy, genuinely usable for blind/low-vision users.
 **Caption:** Accessibility was a design constraint, not an afterthought
 
 ---
@@ -565,7 +563,6 @@ A shared design system ties the consumer app and admin panel together. I built i
 ---
 
 ### Block 92 — `divider`
-**Style:** default
 
 ---
 
@@ -575,7 +572,7 @@ A shared design system ties the consumer app and admin panel together. I built i
 ---
 
 ### Block 94 — `heading1`
-**Text:** Outcomes
+Outcomes
 
 ---
 
@@ -610,18 +607,18 @@ A shared design system ties the consumer app and admin panel together. I built i
 ---
 
 ### Block 99 — `heading2`
-**Text:** What I Learned
+What I Learned
 
 ---
 
 ### Block 100 — `list`
 **Type:** numbered
-- Early setup of tokens and components enables fast, consistent updates across designs
-- Combine algorithmic relevance with user control and content diversity to avoid echo chambers
-- Showing users why they see certain content enhances credibility and engagement
-- Micro-interactions, spacing, and typography subtly shape user trust and perceived professionalism
-- Clear font hierarchy guides attention and improves readability without explicit cues
-- Fast, adaptable interfaces aren't just technical wins — they define the overall experience
+1. Early setup of tokens and components enables fast, consistent updates across designs
+2. Combine algorithmic relevance with user control and content diversity to avoid echo chambers
+3. Showing users why they see certain content enhances credibility and engagement
+4. Micro-interactions, spacing, and typography subtly shape user trust and perceived professionalism
+5. Clear font hierarchy guides attention and improves readability without explicit cues
+6. Fast, adaptable interfaces aren't just technical wins — they define the overall experience
 
 ---
 
@@ -637,33 +634,3 @@ A shared design system ties the consumer app and admin panel together. I built i
 ---
 
 *END OF BLOCKS*
-
----
-
-## Summary
-
-| Metric | Count |
-|--------|-------|
-| Total blocks | 102 |
-| Images used | 22 (of 41 available) |
-| Galleries | 7 |
-| Text blocks | 14 |
-| Headings | 11 |
-| Spacers | 24 |
-| Dividers | 4 |
-| Metric rows | 2 |
-| Lists | 3 |
-| Quotes | 1 |
-
-## Images NOT used (and why)
-
-| File | Reason |
-|------|--------|
-| `ritam-images/02.png` | Table of contents — not needed in CMS format |
-| `ritam-images/04.png` | Challenges to solve — content covered in text blocks |
-| `ritam-admin/02.png` | "The Challenge" text card — content covered in text blocks |
-| `ritam-admin/03.png` | "This is how I did it" — filler transition |
-| `ritam-images/24.png` | Thank you slide — not needed |
-| `ritam-admin/16.png` | Outcomes text card — content covered in list block |
-| `ritam-admin/17.png` | Thank you slide — not needed |
-| `ritam-images/23.png` | "What did I learn" text — content covered in numbered list block |

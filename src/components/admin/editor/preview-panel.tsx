@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Monitor, Smartphone, Tablet } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Monitor, Smartphone, Tablet, X } from "lucide-react";
 
 import type { ProjectBlockRecord } from "@/lib/types/blocks";
 import { Button } from "@/components/ui/button";
@@ -13,36 +13,62 @@ const breakpoints = [
   { key: "mobile", label: "Mobile", width: 375, icon: Smartphone },
 ] as const;
 
-export function PreviewPanel({ blocks }: { blocks: ProjectBlockRecord[] }) {
+export function PreviewOverlay({
+  blocks,
+  onClose,
+}: {
+  blocks: ProjectBlockRecord[];
+  onClose: () => void;
+}) {
   const [active, setActive] = useState<"desktop" | "tablet" | "mobile">("desktop");
   const bp = breakpoints.find((b) => b.key === active)!;
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+
+    window.addEventListener("keydown", handleKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKey);
+    };
+  }, [onClose]);
+
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card">
-      {/* Breakpoint toolbar */}
-      <div className="flex items-center justify-between border-b border-border px-4 py-3">
-        <div className="flex items-center gap-1">
-          {breakpoints.map((b) => {
-            const Icon = b.icon;
-            return (
-              <Button
-                key={b.key}
-                type="button"
-                variant={active === b.key ? "secondary" : "ghost"}
-                size="sm"
-                onClick={() => setActive(b.key)}
-                title={b.label}
-              >
-                <Icon className="h-4 w-4" />
-              </Button>
-            );
-          })}
+    <div className="fixed inset-0 z-50 flex flex-col bg-background/95 backdrop-blur-sm">
+      {/* Toolbar */}
+      <div className="flex items-center justify-between border-b border-border px-6 py-3">
+        <div className="flex items-center gap-3">
+          <p className="text-sm font-medium">Preview</p>
+          <div className="flex items-center gap-1">
+            {breakpoints.map((b) => {
+              const Icon = b.icon;
+              return (
+                <Button
+                  key={b.key}
+                  type="button"
+                  variant={active === b.key ? "secondary" : "ghost"}
+                  size="sm"
+                  onClick={() => setActive(b.key)}
+                  title={b.label}
+                >
+                  <Icon className="h-4 w-4" />
+                </Button>
+              );
+            })}
+          </div>
+          <span className="text-xs text-muted-foreground">{bp.width}px</span>
         </div>
-        <span className="text-xs text-muted-foreground">{bp.width}px</span>
+        <Button type="button" variant="ghost" size="icon" onClick={onClose} title="Close preview (Esc)">
+          <X className="h-5 w-5" />
+        </Button>
       </div>
 
       {/* Preview viewport */}
-      <div className="flex-1 overflow-auto bg-muted/30 p-4">
+      <div className="flex-1 overflow-auto bg-muted/30 p-6">
         <div
           className="dark portfolio-shell mx-auto min-h-full rounded-xl bg-background text-foreground"
           style={{ maxWidth: bp.width }}

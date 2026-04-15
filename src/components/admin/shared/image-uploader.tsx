@@ -1,7 +1,8 @@
 "use client";
 
+import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
-import { Loader2, Upload, X } from "lucide-react";
+import { Clipboard, Loader2, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,8 @@ export function ImageUploader({
   projectId?: string;
 }) {
   const { upload, uploading } = useImageUpload();
+  const [hovered, setHovered] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   async function handleFile(file: File | null) {
     if (!file) {
@@ -35,9 +38,32 @@ export function ImageUploader({
     }
   }
 
+  const handlePaste = useCallback(
+    (e: React.ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (const item of items) {
+        if (item.type.startsWith("image/")) {
+          e.preventDefault();
+          const file = item.getAsFile();
+          if (file) handleFile(file);
+          return;
+        }
+      }
+    },
+    [context, projectId],
+  );
+
   return (
-    <div className="space-y-3">
-      <label className="flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-secondary/40 p-4 text-center">
+    <div
+      ref={containerRef}
+      className="space-y-3"
+      onPaste={handlePaste}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <label className="relative flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-secondary/40 p-4 text-center transition-colors hover:border-primary/40 hover:bg-secondary/60">
         {value ? (
           <div className="relative h-40 w-full overflow-hidden rounded-3xl">
             <Image src={value} alt="" fill className="object-cover" />
@@ -46,11 +72,17 @@ export function ImageUploader({
           <>
             {uploading ? (
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            ) : hovered ? (
+              <Clipboard className="h-5 w-5 text-primary" />
             ) : (
               <Upload className="h-5 w-5 text-muted-foreground" />
             )}
             <span className="mt-3 text-sm text-muted-foreground">
-              Drop an image here or click to browse
+              {uploading
+                ? "Uploading..."
+                : hovered
+                  ? "Paste image (⌘V) or click to browse"
+                  : "Drop an image here or click to browse"}
             </span>
           </>
         )}

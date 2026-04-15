@@ -1,9 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 
 import type { BlockType, ProjectBlockRecord } from "@/lib/types/blocks";
+
+const MAX_HISTORY = 50;
 
 export function getDefaultBlockContent(blockType: BlockType) {
   switch (blockType) {
@@ -89,19 +91,32 @@ export function createBlock(blockType: BlockType, projectId?: string): ProjectBl
 
 export function useBlockEditor(initialBlocks: ProjectBlockRecord[], projectId?: string) {
   const [blocks, setBlocks] = useState<ProjectBlockRecord[]>(initialBlocks);
+  const historyRef = useRef<ProjectBlockRecord[][]>([]);
+  const futureRef = useRef<ProjectBlockRecord[][]>([]);
 
   const orderedBlocks = useMemo(
     () => blocks.map((block, index) => ({ ...block, sort_order: index })),
     [blocks],
   );
 
+  function pushHistory(current: ProjectBlockRecord[]) {
+    historyRef.current = [...historyRef.current.slice(-(MAX_HISTORY - 1)), current];
+    futureRef.current = [];
+  }
+
+  function withHistory(updater: (current: ProjectBlockRecord[]) => ProjectBlockRecord[]) {
+    setBlocks((current) => {
+      pushHistory(current);
+      return updater(current);
+    });
+  }
+
   function addBlock(blockType: BlockType, index?: number) {
     const nextBlock = createBlock(blockType, projectId);
-    setBlocks((current) => {
+    withHistory((current) => {
       if (index === undefined || index < 0 || index >= current.length) {
         return [...current, nextBlock];
       }
-
       const clone = [...current];
       clone.splice(index, 0, nextBlock);
       return clone;
@@ -109,39 +124,54 @@ export function useBlockEditor(initialBlocks: ProjectBlockRecord[], projectId?: 
   }
 
   function updateBlock(id: string, content: Record<string, unknown>) {
-    setBlocks((current) =>
+    withHistory((current) =>
       current.map((block) => (block.id === id ? { ...block, content } : block)),
     );
   }
 
   function deleteBlock(id: string) {
-    setBlocks((current) => current.filter((block) => block.id !== id));
+    withHistory((current) => current.filter((block) => block.id !== id));
   }
 
   function duplicateBlock(id: string) {
-    setBlocks((current) => {
-      const index = current.findIndex((block) => block.id === id);
-      if (index === -1) {
-        return current;
-      }
-
-      const duplicate = {
-        ...current[index],
-        id: crypto.randomUUID(),
-      };
+    withHistory((current) => {
+      const idx = current.findIndex((block) => block.id === id);
+      if (idx === -1) return current;
+      const duplicate = { ...current[idx], id: crypto.randomUUID() };
       const clone = [...current];
-      clone.splice(index + 1, 0, duplicate);
+      clone.splice(idx + 1, 0, duplicate);
       return clone;
     });
   }
 
   function moveBlock(from: number, to: number) {
-    setBlocks((current) => arrayMove(current, from, to));
+    withHistory((current) => arrayMove(current, from, to));
   }
 
   function replaceBlocks(nextBlocks: ProjectBlockRecord[]) {
-    setBlocks(nextBlocks);
+    withHistory(() => nextBlocks);
   }
+
+  const undo = useCallback(() => {
+    const prev = historyRef.current.pop();
+    if (!prev) return;
+    setBlocks((current) => {
+      futureRef.current = [...futureRef.current, current];
+      return prev;
+    });
+  }, []);
+
+  const redo = useCallback(() => {
+    const next = futureRef.current.pop();
+    if (!next) return;
+    setBlocks((current) => {
+      historyRef.current = [...historyRef.current, current];
+      return next;
+    });
+  }, []);
+
+  const canUndo = historyRef.current.length > 0;
+  const canRedo = futureRef.current.length > 0;
 
   return {
     blocks: orderedBlocks,
@@ -151,5 +181,9 @@ export function useBlockEditor(initialBlocks: ProjectBlockRecord[], projectId?: 
     duplicateBlock,
     moveBlock,
     replaceBlocks,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
   };
 }

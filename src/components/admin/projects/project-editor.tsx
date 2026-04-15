@@ -22,31 +22,35 @@ export function ProjectEditor({
 
   return (
     <div className={isPending ? "opacity-95" : ""}>
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_24rem]">
-        <BlockEditor
-          initialBlocks={blocks}
-          projectId={project.id}
-          onSave={(nextBlocks) =>
-            new Promise<void>((resolve, reject) => {
-              startTransition(async () => {
-                const result = await saveProjectBlocksAction(
-                  project.id,
-                  project.slug,
-                  nextBlocks,
-                );
+      <div className="grid h-[calc(100vh-6rem)] gap-6 xl:grid-cols-[minmax(0,1fr)_24rem]">
+        <div className="overflow-y-auto pr-1">
+          <BlockEditor
+            initialBlocks={blocks}
+            projectId={project.id}
+            onSave={(nextBlocks) =>
+              new Promise<void>((resolve, reject) => {
+                startTransition(async () => {
+                  const result = await saveProjectBlocksAction(
+                    project.id,
+                    project.slug,
+                    nextBlocks,
+                  );
 
-                if (!result.success) {
-                  toast.error(result.error || "Could not save blocks");
-                  reject(new Error(result.error));
-                  return;
-                }
+                  if (!result.success) {
+                    toast.error(result.error || "Could not save blocks");
+                    reject(new Error(result.error));
+                    return;
+                  }
 
-                resolve();
-              });
-            })
-          }
-        />
-        <ProjectMetadataForm project={project} previewHref={previewHref} />
+                  resolve();
+                });
+              })
+            }
+          />
+        </div>
+        <div className="overflow-y-auto">
+          <ProjectMetadataForm project={project} previewHref={previewHref} />
+        </div>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import {
   closestCenter,
   DndContext,
@@ -23,7 +23,6 @@ import {
   ChevronUp,
   Copy,
   Eye,
-  EyeOff,
   GripVertical,
   Loader2,
   Plus,
@@ -43,7 +42,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { ImageUploader } from "@/components/admin/shared/image-uploader";
 import { RichTextEditor } from "@/components/admin/editor/editors/rich-text-editor";
-import { PreviewPanel } from "@/components/admin/editor/preview-panel";
+import { PreviewOverlay } from "@/components/admin/editor/preview-panel";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -1171,6 +1170,33 @@ export function BlockEditor({
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
   const editor = useBlockEditor(initialBlocks, projectId);
 
+  const closePreview = useCallback(() => setShowPreview(false), []);
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (!e.metaKey || e.key !== "z") return;
+
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable)
+      )
+        return;
+
+      e.preventDefault();
+      if (e.shiftKey) {
+        editor.redo();
+      } else {
+        editor.undo();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [editor.undo, editor.redo]);
+
   const ids = useMemo(() => editor.blocks.map((block) => block.id), [editor.blocks]);
 
   useAutoSave({
@@ -1227,17 +1253,17 @@ export function BlockEditor({
           </Button>
           <Button
             type="button"
-            variant={showPreview ? "secondary" : "outline"}
+            variant="outline"
             size="sm"
-            onClick={() => setShowPreview((v) => !v)}
-            title={showPreview ? "Hide preview" : "Show preview"}
+            onClick={() => setShowPreview(true)}
+            title="Open preview"
           >
-            {showPreview ? <EyeOff className="mr-2 h-4 w-4" /> : <Eye className="mr-2 h-4 w-4" />}
+            <Eye className="mr-2 h-4 w-4" />
             Preview
           </Button>
         </div>
       </div>
-      <div className={showPreview ? "grid gap-6 lg:grid-cols-2" : ""}>
+      {showPreview && <PreviewOverlay blocks={editor.blocks} onClose={closePreview} />}
       <div>
       {editor.blocks.length === 0 ? (
         <Card className="flex min-h-72 flex-col items-center justify-center gap-4 border-dashed text-center">
@@ -1279,12 +1305,6 @@ export function BlockEditor({
       {editor.blocks.length > 0 && (
         <div className="mt-5 flex justify-center">
           <BlockTypePicker onSelect={(type) => editor.addBlock(type)} />
-        </div>
-      )}
-      </div>
-      {showPreview && (
-        <div className="sticky top-20 h-[calc(100vh-6rem)]">
-          <PreviewPanel blocks={editor.blocks} />
         </div>
       )}
       </div>

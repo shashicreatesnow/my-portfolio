@@ -94,7 +94,7 @@ export function ProjectMetadataForm({
   }
 
   return (
-    <Card className="sticky top-24">
+    <Card>
       <CardHeader>
         <CardTitle>Project Details</CardTitle>
       </CardHeader>

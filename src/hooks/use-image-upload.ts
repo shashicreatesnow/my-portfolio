@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { createClient } from "@/lib/supabase/client";
+
 export function useImageUpload() {
   const [uploading, setUploading] = useState(false);
 
@@ -17,24 +19,32 @@ export function useImageUpload() {
     setUploading(true);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("context", context);
-      if (projectId) {
-        formData.append("projectId", projectId);
-      }
+      const supabase = createClient();
+      const ext = file.name.split(".").pop() || "png";
+      const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, "-");
+      const fileName = `${Date.now()}-${safeName}`;
+      const folder = projectId || "shared";
+      const path = `${context}/${folder}/${fileName}`;
 
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const { error } = await supabase.storage
+        .from("portfolio-images")
+        .upload(path, file, {
+          contentType: file.type,
+          upsert: true,
+        });
 
-      const payload = await response.json();
-      if (!response.ok) {
-        throw new Error(payload.error || "Upload failed.");
-      }
+      if (error) throw error;
 
-      return payload;
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("portfolio-images").getPublicUrl(path);
+
+      return {
+        url: publicUrl,
+        width: null,
+        height: null,
+        blur_hash: null,
+      };
     } finally {
       setUploading(false);
     }

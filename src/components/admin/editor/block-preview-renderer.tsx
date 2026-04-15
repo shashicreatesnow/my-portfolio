@@ -58,7 +58,7 @@ export function BlockPreviewRenderer({ block }: { block: ProjectBlockRecord }) {
           content.columns === 4 ? "md:grid-cols-2 xl:grid-cols-4" :
           "md:grid-cols-2 xl:grid-cols-3"
         )}>
-          {(content.images || []).map((image: any, index: number) => (
+          {(content.images || []).filter((i: any) => i.url).map((image: any, index: number) => (
             <figure key={index} className={cn("space-y-2", content.layout === "carousel" && "w-[80%] flex-none snap-center md:w-[45%]")}>
               <div className="editorial-panel relative aspect-[4/3] overflow-hidden rounded-2xl">
                 <img src={image.url} alt={image.alt || ""} className="h-full w-full object-cover" />

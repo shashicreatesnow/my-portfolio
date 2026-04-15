@@ -57,7 +57,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
       )}
       {block.block_type === "image" && content.url && (
         <figure className="space-y-4">
-          <div className="relative overflow-hidden rounded-xl">
+          <div className="relative aspect-[16/10] overflow-hidden rounded-xl">
             <Image src={content.url} alt={content.alt || ""} fill className="object-cover" />
           </div>
           {content.caption && <figcaption className="text-center text-sm text-muted-foreground">{content.caption}</figcaption>}
@@ -65,7 +65,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
       )}
       {block.block_type === "gallery" && content.layout === "carousel" && (
         <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 scrollbar-hide">
-          {(content.images || []).map((image: any, index: number) => (
+          {(content.images || []).filter((i: any) => i.url).map((image: any, index: number) => (
             <figure key={index} className="w-[80%] flex-none snap-center space-y-2 md:w-[45%]">
               <div className="editorial-panel relative aspect-[4/3] overflow-hidden rounded-2xl">
                 <Image src={image.url} alt={image.alt || ""} fill className="object-cover" />
@@ -77,7 +77,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
       )}
       {block.block_type === "gallery" && content.layout === "masonry" && (
         <div style={{ columns: content.columns || 3, columnGap: "1rem" }}>
-          {(content.images || []).map((image: any, index: number) => (
+          {(content.images || []).filter((i: any) => i.url).map((image: any, index: number) => (
             <figure key={index} className="mb-4 space-y-2" style={{ breakInside: "avoid" }}>
               <div className="editorial-panel relative overflow-hidden rounded-2xl">
                 <Image src={image.url} alt={image.alt || ""} width={800} height={600} className="h-auto w-full object-cover" />
@@ -93,7 +93,7 @@ export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
           content.columns === 4 ? "md:grid-cols-2 xl:grid-cols-4" :
           "md:grid-cols-2 xl:grid-cols-3"
         )}>
-          {(content.images || []).map((image: any, index: number) => (
+          {(content.images || []).filter((i: any) => i.url).map((image: any, index: number) => (
             <figure key={index} className="space-y-2">
               <div className="editorial-panel relative aspect-[4/3] overflow-hidden rounded-2xl">
                 <Image src={image.url} alt={image.alt || ""} fill className="object-cover" />

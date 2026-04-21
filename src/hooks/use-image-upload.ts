@@ -7,7 +7,25 @@ import { createClient } from "@/lib/supabase/client";
 const CONVERTIBLE_TYPES = ["image/png", "image/jpeg", "image/jpg"];
 const WEBP_QUALITY = 0.85;
 
-function toWebP(file: File): Promise<File> {
+function isHeic(file: File) {
+  const byType = /heic|heif/i.test(file.type);
+  const byName = /\.(heic|heif)$/i.test(file.name);
+  return byType || byName;
+}
+
+async function heicToJpeg(file: File): Promise<File> {
+  const heic2any = (await import("heic2any")).default;
+  const blob = await heic2any({
+    blob: file,
+    toType: "image/jpeg",
+    quality: 0.95,
+  });
+  const out = Array.isArray(blob) ? blob[0] : blob;
+  const baseName = file.name.replace(/\.(heic|heif)$/i, "");
+  return new File([out], `${baseName}.jpg`, { type: "image/jpeg" });
+}
+
+function pngOrJpegToWebP(file: File): Promise<File> {
   return new Promise((resolve, reject) => {
     if (!CONVERTIBLE_TYPES.includes(file.type)) {
       resolve(file);
@@ -56,6 +74,14 @@ function toWebP(file: File): Promise<File> {
   });
 }
 
+async function optimizeImage(file: File): Promise<File> {
+  if (isHeic(file)) {
+    const jpeg = await heicToJpeg(file);
+    return pngOrJpegToWebP(jpeg);
+  }
+  return pngOrJpegToWebP(file);
+}
+
 export function useImageUpload() {
   const [uploading, setUploading] = useState(false);
 
@@ -71,17 +97,17 @@ export function useImageUpload() {
     setUploading(true);
 
     try {
-      const converted = await toWebP(file);
+      const optimized = await optimizeImage(file);
       const supabase = createClient();
-      const safeName = converted.name.replace(/[^a-zA-Z0-9.-]/g, "-");
+      const safeName = optimized.name.replace(/[^a-zA-Z0-9.-]/g, "-");
       const fileName = `${Date.now()}-${safeName}`;
       const folder = projectId || "shared";
       const path = `${context}/${folder}/${fileName}`;
 
       const { error } = await supabase.storage
         .from("portfolio-images")
-        .upload(path, converted, {
-          contentType: converted.type,
+        .upload(path, optimized, {
+          contentType: optimized.type,
           upsert: true,
         });
 

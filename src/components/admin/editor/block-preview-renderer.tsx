@@ -7,6 +7,7 @@ import { Download } from "lucide-react";
 import type { ProjectBlockRecord } from "@/lib/types/blocks";
 import { cn } from "@/lib/utils/cn";
 import { getEmbedUrl } from "@/lib/utils/video";
+import { spacingClass } from "@/components/portfolio/blocks/block-renderer";
 
 function widthClass(blockType: ProjectBlockRecord["block_type"], content: Record<string, any>) {
   if (blockType === "image" && content.display === "full-width") return "max-w-none";
@@ -17,11 +18,11 @@ function widthClass(blockType: ProjectBlockRecord["block_type"], content: Record
   return "mx-auto max-w-3xl";
 }
 
-export function BlockPreviewRenderer({ block }: { block: ProjectBlockRecord }) {
+export function BlockPreviewRenderer({ block, index = 0 }: { block: ProjectBlockRecord; index?: number }) {
   const content = block.content as Record<string, any>;
 
   return (
-    <section className={cn("w-full", widthClass(block.block_type, content))}>
+    <section className={cn("w-full", widthClass(block.block_type, content), spacingClass(block.block_type, index))}>
       {block.block_type === "text" && (
         <div
           className="prose-block portfolio-copy text-[1.05rem]"

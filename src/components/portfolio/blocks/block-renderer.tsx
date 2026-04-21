@@ -20,6 +20,16 @@ function widthClass(blockType: ProjectBlockRecord["block_type"], content: Record
   return "mx-auto max-w-3xl";
 }
 
+export function spacingClass(blockType: ProjectBlockRecord["block_type"], index: number) {
+  if (index === 0) return "";
+  if (blockType === "heading1") return "mt-40";
+  if (blockType === "divider") return "mt-32";
+  if (blockType === "heading2") return "mt-24";
+  if (blockType === "heading3") return "mt-16";
+  if (["image", "gallery", "before_after", "annotated_image", "video", "embed", "metric_row"].includes(blockType)) return "mt-14";
+  return "mt-10";
+}
+
 async function CodeMarkup({ code, language }: { code: string; language: string }) {
   const html = await codeToHtml(code || "", {
     lang: language || "text",
@@ -29,11 +39,11 @@ async function CodeMarkup({ code, language }: { code: string; language: string }
   return <div dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
-export async function BlockRenderer({ block }: { block: ProjectBlockRecord }) {
+export async function BlockRenderer({ block, index = 0 }: { block: ProjectBlockRecord; index?: number }) {
   const content = block.content as Record<string, any>;
 
   return (
-    <section className={cn("w-full", widthClass(block.block_type, content))}>
+    <section className={cn("w-full", widthClass(block.block_type, content), spacingClass(block.block_type, index))}>
       {block.block_type === "text" && (
         <div
           className="prose-block portfolio-copy text-[1.05rem]"

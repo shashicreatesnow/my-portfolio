@@ -73,14 +73,14 @@ export function PreviewOverlay({
           className="dark portfolio-shell mx-auto min-h-full rounded-xl bg-background text-foreground"
           style={{ maxWidth: bp.width }}
         >
-          <div className="space-y-20 px-5 py-10 md:px-8">
+          <div className="px-5 py-10 md:px-8">
             {blocks.length === 0 ? (
               <p className="py-20 text-center text-sm text-muted-foreground">
                 Add blocks to see a preview
               </p>
             ) : (
-              blocks.map((block) => (
-                <BlockPreviewRenderer key={block.id} block={block} />
+              blocks.map((block, index) => (
+                <BlockPreviewRenderer key={block.id} block={block} index={index} />
               ))
             )}
           </div>

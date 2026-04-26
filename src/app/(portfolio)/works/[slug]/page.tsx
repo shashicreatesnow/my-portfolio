@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { BlockRenderer } from "@/components/portfolio/blocks/block-renderer";
 import { Badge } from "@/components/ui/badge";
 import { ProjectNavigation } from "@/components/portfolio/projects/project-navigation";
+import { SectionNavigator, type Section } from "@/components/portfolio/projects/section-navigator";
 import { getProjectBySlug, getProjectPreviewBySlug, getPublishedProjects } from "@/lib/queries/projects";
 import { verifyPreviewToken } from "@/lib/utils/preview-token";
 
@@ -39,8 +40,19 @@ export default async function CaseStudyPage({
       ? publishedProjects[currentIndex + 1]
       : null;
 
+  const sections: Section[] = entry.blocks
+    .filter((b) => b.block_type === "heading1" || b.block_type === "heading2" || b.block_type === "heading3")
+    .map((b) => ({
+      id: `section-${b.id}`,
+      text: ((b.content as { text?: string }).text ?? "").trim(),
+      level: Number(b.block_type.replace("heading", "")) as 1 | 2 | 3,
+    }))
+    .filter((s) => s.text.length > 0);
+
   return (
-    <article className="mx-auto max-w-7xl px-5 pt-32 pb-24 md:px-8">
+    <>
+      <SectionNavigator sections={sections} />
+      <article className="mx-auto max-w-7xl px-5 pt-32 pb-24 md:px-8">
       <header className="space-y-8">
         <div className="max-w-4xl space-y-5">
           <p className="portfolio-kicker">Case Study</p>
@@ -96,5 +108,6 @@ export default async function CaseStudyPage({
       </div>
       <ProjectNavigation previous={previous} next={next} />
     </article>
+    </>
   );
 }

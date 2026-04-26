@@ -108,13 +108,13 @@ export async function BlockRenderer({
         />
       )}
       {block.block_type === "heading1" && (
-        <h1 className="font-display text-5xl leading-none md:text-6xl">{content.text}</h1>
+        <h1 id={`section-${block.id}`} className="scroll-mt-28 font-display text-5xl leading-none md:text-6xl">{content.text}</h1>
       )}
       {block.block_type === "heading2" && (
-        <h2 className="font-display text-4xl leading-none md:text-5xl">{content.text}</h2>
+        <h2 id={`section-${block.id}`} className="scroll-mt-28 font-display text-4xl leading-none md:text-5xl">{content.text}</h2>
       )}
       {block.block_type === "heading3" && (
-        <h3 className="font-display text-3xl leading-none md:text-4xl">{content.text}</h3>
+        <h3 id={`section-${block.id}`} className="scroll-mt-28 font-display text-3xl leading-none md:text-4xl">{content.text}</h3>
       )}
       {block.block_type === "quote" && (
         <blockquote className="border-l-2 border-primary pl-6">

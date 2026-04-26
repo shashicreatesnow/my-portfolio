@@ -50,20 +50,20 @@ export function spacingClass(
   }
 
   // After a heading, the next block hugs the heading (typography-style).
-  // mt-0 — the heading's own line-box bleed already provides the visual gap.
+  // Small breathing space so glyphs don't touch, but still clearly grouped.
   if (prevType === "heading1") {
     if (HEADING_TYPES.includes(blockType)) return "mt-10"; // h1 → h2 still some break
-    if (VISUAL_TYPES.includes(blockType)) return "mt-4";
-    return "mt-0";
+    if (VISUAL_TYPES.includes(blockType)) return "mt-5";
+    return "mt-3";
   }
   if (prevType === "heading2") {
     if (HEADING_TYPES.includes(blockType)) return "mt-8";
-    if (VISUAL_TYPES.includes(blockType)) return "mt-3";
-    return "mt-0";
+    if (VISUAL_TYPES.includes(blockType)) return "mt-4";
+    return "mt-2";
   }
   if (prevType === "heading3") {
-    if (VISUAL_TYPES.includes(blockType)) return "mt-2";
-    return "mt-0";
+    if (VISUAL_TYPES.includes(blockType)) return "mt-3";
+    return "mt-1";
   }
 
   // Big section breaks (heading or divider following content)

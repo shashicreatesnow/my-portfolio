@@ -197,7 +197,16 @@ select {
 
 .portfolio-copy {
   color: var(--muted-foreground);
-  line-height: 1.85;
+  line-height: 1.65;
+}
+
+/* First child inside a prose-block has no extra leading whitespace
+   so headings (one section above) hug the first line of text. */
+.prose-block > *:first-child {
+  margin-top: 0;
+}
+.portfolio-copy > *:first-child {
+  margin-top: 0;
 }
 
 .portfolio-meta {
@@ -221,7 +230,12 @@ select {
 
 .prose-block p {
   color: var(--muted-foreground);
-  line-height: 1.8;
+  line-height: 1.65;
+  margin: 0 0 0.85rem 0;
+}
+
+.prose-block p:last-child {
+  margin-bottom: 0;
 }
 
 .prose-block strong {

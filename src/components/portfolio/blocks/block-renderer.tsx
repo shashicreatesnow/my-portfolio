@@ -49,33 +49,34 @@ export function spacingClass(
     return "mt-8";
   }
 
-  // After a heading, the next block hugs the heading (typography-style)
+  // After a heading, the next block hugs the heading (typography-style).
+  // mt-0 — the heading's own line-box bleed already provides the visual gap.
   if (prevType === "heading1") {
     if (HEADING_TYPES.includes(blockType)) return "mt-10"; // h1 → h2 still some break
-    if (VISUAL_TYPES.includes(blockType)) return "mt-6";
-    return "mt-3";
+    if (VISUAL_TYPES.includes(blockType)) return "mt-4";
+    return "mt-0";
   }
   if (prevType === "heading2") {
     if (HEADING_TYPES.includes(blockType)) return "mt-8";
-    if (VISUAL_TYPES.includes(blockType)) return "mt-4";
-    return "mt-2";
+    if (VISUAL_TYPES.includes(blockType)) return "mt-3";
+    return "mt-0";
   }
   if (prevType === "heading3") {
-    if (VISUAL_TYPES.includes(blockType)) return "mt-3";
-    return "mt-1";
+    if (VISUAL_TYPES.includes(blockType)) return "mt-2";
+    return "mt-0";
   }
 
   // Big section breaks (heading or divider following content)
-  if (blockType === "heading1") return "mt-40";
-  if (blockType === "divider") return "mt-32";
-  if (blockType === "heading2") return "mt-24";
-  if (blockType === "heading3") return "mt-16";
+  if (blockType === "heading1") return "mt-56";
+  if (blockType === "divider") return "mt-40";
+  if (blockType === "heading2") return "mt-36";
+  if (blockType === "heading3") return "mt-24";
 
   // Visual content gets a bit more room
-  if (VISUAL_TYPES.includes(blockType)) return "mt-12";
+  if (VISUAL_TYPES.includes(blockType)) return "mt-10";
 
   // Default content rhythm (text → text, list → text, etc.)
-  return "mt-8";
+  return "mt-6";
 }
 
 async function CodeMarkup({ code, language }: { code: string; language: string }) {

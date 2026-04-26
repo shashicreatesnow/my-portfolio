@@ -83,7 +83,16 @@ export default async function CaseStudyPage({
         </div>
       </header>
       <div className="mt-20">
-        {await Promise.all(entry.blocks.map(async (block, index) => <BlockRenderer key={block.id} block={block} index={index} />))}
+        {await Promise.all(
+          entry.blocks.map(async (block, index) => (
+            <BlockRenderer
+              key={block.id}
+              block={block}
+              index={index}
+              prevType={index > 0 ? entry.blocks[index - 1].block_type : null}
+            />
+          )),
+        )}
       </div>
       <ProjectNavigation previous={previous} next={next} />
     </article>

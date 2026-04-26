@@ -18,11 +18,19 @@ function widthClass(blockType: ProjectBlockRecord["block_type"], content: Record
   return "mx-auto max-w-3xl";
 }
 
-export function BlockPreviewRenderer({ block, index = 0 }: { block: ProjectBlockRecord; index?: number }) {
+export function BlockPreviewRenderer({
+  block,
+  index = 0,
+  prevType = null,
+}: {
+  block: ProjectBlockRecord;
+  index?: number;
+  prevType?: ProjectBlockRecord["block_type"] | null;
+}) {
   const content = block.content as Record<string, any>;
 
   return (
-    <section className={cn("w-full", widthClass(block.block_type, content), spacingClass(block.block_type, index))}>
+    <section className={cn("w-full", widthClass(block.block_type, content), spacingClass(block.block_type, index, prevType))}>
       {block.block_type === "text" && (
         <div
           className="prose-block portfolio-copy text-[1.05rem]"

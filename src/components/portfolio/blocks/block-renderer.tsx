@@ -20,14 +20,62 @@ function widthClass(blockType: ProjectBlockRecord["block_type"], content: Record
   return "mx-auto max-w-3xl";
 }
 
-export function spacingClass(blockType: ProjectBlockRecord["block_type"], index: number) {
+type BlockType = ProjectBlockRecord["block_type"];
+
+const HEADING_TYPES: BlockType[] = ["heading1", "heading2", "heading3"];
+const VISUAL_TYPES: BlockType[] = [
+  "image",
+  "gallery",
+  "before_after",
+  "annotated_image",
+  "video",
+  "embed",
+  "metric_row",
+];
+
+export function spacingClass(
+  blockType: BlockType,
+  index: number,
+  prevType: BlockType | null = null,
+) {
+  // First block — no top margin
   if (index === 0) return "";
+
+  // After a divider, everything is already spaced — keep gaps modest
+  if (prevType === "divider") {
+    if (blockType === "heading1") return "mt-12";
+    if (blockType === "heading2") return "mt-10";
+    if (blockType === "heading3") return "mt-8";
+    return "mt-8";
+  }
+
+  // After a heading, the next block hugs the heading (typography-style)
+  if (prevType === "heading1") {
+    if (HEADING_TYPES.includes(blockType)) return "mt-12"; // h1 → h2 still some break
+    if (VISUAL_TYPES.includes(blockType)) return "mt-8";
+    return "mt-6";
+  }
+  if (prevType === "heading2") {
+    if (HEADING_TYPES.includes(blockType)) return "mt-10";
+    if (VISUAL_TYPES.includes(blockType)) return "mt-6";
+    return "mt-4";
+  }
+  if (prevType === "heading3") {
+    if (VISUAL_TYPES.includes(blockType)) return "mt-5";
+    return "mt-3";
+  }
+
+  // Big section breaks (heading or divider following content)
   if (blockType === "heading1") return "mt-40";
   if (blockType === "divider") return "mt-32";
   if (blockType === "heading2") return "mt-24";
   if (blockType === "heading3") return "mt-16";
-  if (["image", "gallery", "before_after", "annotated_image", "video", "embed", "metric_row"].includes(blockType)) return "mt-14";
-  return "mt-10";
+
+  // Visual content gets a bit more room
+  if (VISUAL_TYPES.includes(blockType)) return "mt-12";
+
+  // Default content rhythm (text → text, list → text, etc.)
+  return "mt-8";
 }
 
 async function CodeMarkup({ code, language }: { code: string; language: string }) {
@@ -39,11 +87,19 @@ async function CodeMarkup({ code, language }: { code: string; language: string }
   return <div dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
-export async function BlockRenderer({ block, index = 0 }: { block: ProjectBlockRecord; index?: number }) {
+export async function BlockRenderer({
+  block,
+  index = 0,
+  prevType = null,
+}: {
+  block: ProjectBlockRecord;
+  index?: number;
+  prevType?: ProjectBlockRecord["block_type"] | null;
+}) {
   const content = block.content as Record<string, any>;
 
   return (
-    <section className={cn("w-full", widthClass(block.block_type, content), spacingClass(block.block_type, index))}>
+    <section className={cn("w-full", widthClass(block.block_type, content), spacingClass(block.block_type, index, prevType))}>
       {block.block_type === "text" && (
         <div
           className="prose-block portfolio-copy text-[1.05rem]"

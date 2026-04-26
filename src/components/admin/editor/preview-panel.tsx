@@ -80,7 +80,12 @@ export function PreviewOverlay({
               </p>
             ) : (
               blocks.map((block, index) => (
-                <BlockPreviewRenderer key={block.id} block={block} index={index} />
+                <BlockPreviewRenderer
+                  key={block.id}
+                  block={block}
+                  index={index}
+                  prevType={index > 0 ? blocks[index - 1].block_type : null}
+                />
               ))
             )}
           </div>

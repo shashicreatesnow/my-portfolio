@@ -51,18 +51,18 @@ export function spacingClass(
 
   // After a heading, the next block hugs the heading (typography-style)
   if (prevType === "heading1") {
-    if (HEADING_TYPES.includes(blockType)) return "mt-12"; // h1 → h2 still some break
-    if (VISUAL_TYPES.includes(blockType)) return "mt-8";
-    return "mt-6";
+    if (HEADING_TYPES.includes(blockType)) return "mt-10"; // h1 → h2 still some break
+    if (VISUAL_TYPES.includes(blockType)) return "mt-6";
+    return "mt-3";
   }
   if (prevType === "heading2") {
-    if (HEADING_TYPES.includes(blockType)) return "mt-10";
-    if (VISUAL_TYPES.includes(blockType)) return "mt-6";
-    return "mt-4";
+    if (HEADING_TYPES.includes(blockType)) return "mt-8";
+    if (VISUAL_TYPES.includes(blockType)) return "mt-4";
+    return "mt-2";
   }
   if (prevType === "heading3") {
-    if (VISUAL_TYPES.includes(blockType)) return "mt-5";
-    return "mt-3";
+    if (VISUAL_TYPES.includes(blockType)) return "mt-3";
+    return "mt-1";
   }
 
   // Big section breaks (heading or divider following content)
@@ -107,13 +107,13 @@ export async function BlockRenderer({
         />
       )}
       {block.block_type === "heading1" && (
-        <h1 className="font-display text-5xl leading-tight md:text-6xl">{content.text}</h1>
+        <h1 className="font-display text-5xl leading-[1.05] md:text-6xl">{content.text}</h1>
       )}
       {block.block_type === "heading2" && (
-        <h2 className="font-display text-4xl leading-tight md:text-5xl">{content.text}</h2>
+        <h2 className="font-display text-4xl leading-[1.05] md:text-5xl">{content.text}</h2>
       )}
       {block.block_type === "heading3" && (
-        <h3 className="font-display text-3xl leading-tight md:text-4xl">{content.text}</h3>
+        <h3 className="font-display text-3xl leading-[1.1] md:text-4xl">{content.text}</h3>
       )}
       {block.block_type === "quote" && (
         <blockquote className="border-l-2 border-primary pl-6">

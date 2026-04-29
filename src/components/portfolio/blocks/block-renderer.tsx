@@ -11,6 +11,16 @@ import { cn } from "@/lib/utils/cn";
 import { getEmbedUrl } from "@/lib/utils/video";
 import { BeforeAfterSlider } from "./before-after-slider";
 
+function galleryAspectClass(ratio?: string) {
+  switch (ratio) {
+    case "square": return "aspect-square";
+    case "portrait": return "aspect-[3/4]";
+    case "tall": return "aspect-[9/16]";
+    case "landscape": return "aspect-[4/3]";
+    default: return "aspect-[4/3]";
+  }
+}
+
 function widthClass(blockType: ProjectBlockRecord["block_type"], content: Record<string, any>) {
   if (blockType === "image" && content.display === "full-width") return "max-w-none";
   if (blockType === "image" && content.display === "small") return "mx-auto max-w-xl";
@@ -134,7 +144,7 @@ export async function BlockRenderer({
         <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 scrollbar-hide">
           {(content.images || []).filter((i: any) => i.url).map((image: any, index: number) => (
             <figure key={index} className="w-[80%] flex-none snap-center space-y-2 md:w-[45%]">
-              <div className="editorial-panel relative aspect-[4/3] overflow-hidden rounded-2xl">
+              <div className={cn("editorial-panel relative overflow-hidden rounded-2xl", galleryAspectClass(content.aspect_ratio))}>
                 <Image src={image.url} alt={image.alt || ""} fill className="object-cover" />
               </div>
               {image.caption && <figcaption className="text-sm text-muted-foreground">{image.caption}</figcaption>}
@@ -162,7 +172,7 @@ export async function BlockRenderer({
         )}>
           {(content.images || []).filter((i: any) => i.url).map((image: any, index: number) => (
             <figure key={index} className="space-y-2">
-              <div className="editorial-panel relative aspect-[4/3] overflow-hidden rounded-2xl">
+              <div className={cn("editorial-panel relative overflow-hidden rounded-2xl", galleryAspectClass(content.aspect_ratio))}>
                 <Image src={image.url} alt={image.alt || ""} fill className="object-cover" />
               </div>
               {image.caption && <figcaption className="text-sm text-muted-foreground">{image.caption}</figcaption>}

@@ -505,6 +505,23 @@ function BlockFields({
             </div>
           )}
         </div>
+        {content.layout !== "masonry" && (
+          <div className="space-y-1">
+            <Label>Frame shape</Label>
+            <Select
+              value={content.aspect_ratio || "landscape"}
+              onValueChange={(v) => onChange({ ...content, aspect_ratio: v })}
+            >
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="landscape">Landscape (4:3) — default</SelectItem>
+                <SelectItem value="square">Square (1:1)</SelectItem>
+                <SelectItem value="portrait">Portrait (3:4) — for thumbnails</SelectItem>
+                <SelectItem value="tall">Tall (9:16) — phone style</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         <ImageUploader
           context="blocks"
           projectId={projectId}

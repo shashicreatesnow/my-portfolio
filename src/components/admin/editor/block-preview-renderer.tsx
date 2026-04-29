@@ -18,6 +18,16 @@ function widthClass(blockType: ProjectBlockRecord["block_type"], content: Record
   return "mx-auto max-w-3xl";
 }
 
+function galleryAspectClass(ratio?: string) {
+  switch (ratio) {
+    case "square": return "aspect-square";
+    case "portrait": return "aspect-[3/4]";
+    case "tall": return "aspect-[9/16]";
+    case "landscape": return "aspect-[4/3]";
+    default: return "aspect-[4/3]";
+  }
+}
+
 export function BlockPreviewRenderer({
   block,
   index = 0,
@@ -69,7 +79,7 @@ export function BlockPreviewRenderer({
         )}>
           {(content.images || []).filter((i: any) => i.url).map((image: any, index: number) => (
             <figure key={index} className={cn("space-y-2", content.layout === "carousel" && "w-[80%] flex-none snap-center md:w-[45%]")}>
-              <div className="editorial-panel relative aspect-[4/3] overflow-hidden rounded-2xl">
+              <div className={cn("editorial-panel relative overflow-hidden rounded-2xl", galleryAspectClass(content.aspect_ratio))}>
                 <img src={image.url} alt={image.alt || ""} className="h-full w-full object-cover" />
               </div>
               {image.caption && <figcaption className="text-sm text-muted-foreground">{image.caption}</figcaption>}

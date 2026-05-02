@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Shashi — Agentic Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #07081A;
+    --ink-2: #0E0F22;
+    --paper: #EDE7DA;
+    --warm: #E9C7A0;
+    --glow: #F4D9B0;
+    --violet: #2A1E4A;
+    --teal: #0F2A3A;
+    --rose: #3A1830;
+    --serif: "Fraunces", "Tiempos Headline", Georgia, serif;
+    --sans: "Inter", system-ui, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--sans);
+    color:var(--paper);
+    background: #05060F;
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+    letter-spacing:.01em;
+  }
+
+  /* ===== STAGE ===== */
+  .stage{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    background:
+      radial-gradient(120% 80% at 50% 110%, #1B0E2A 0%, #0A0A1C 45%, #05060F 75%, #03030A 100%);
+  }
+
+  /* faint star field */
+  .stars, .stars::before, .stars::after{
+    position:absolute; inset:0; pointer-events:none;
+  }
+  .stars{
+    background:
+      radial-gradient(1px 1px at 12% 18%, #fff 99%, transparent 100%),
+      radial-gradient(1px 1px at 82% 9%, #fff 99%, transparent 100%),
+      radial-gradient(1px 1px at 33% 7%, #fff 99%, transparent 100%),
+      radial-gradient(1px 1px at 67% 22%, #fff 99%, transparent 100%),
+      radial-gradient(1px 1px at 90% 30%, #fff 99%, transparent 100%),
+      radial-gradient(1px 1px at 22% 35%, #fff 99%, transparent 100%),
+      radial-gradient(1px 1px at 48% 12%, #fff 99%, transparent 100%),
+      radial-gradient(1px 1px at 58% 28%, #fff 99%, transparent 100%),
+      radial-gradient(0.7px 0.7px at 5% 26%, #fff 99%, transparent 100%),
+      radial-gradient(0.7px 0.7px at 75% 4%, #fff 99%, transparent 100%);
+    opacity:.55;
+    mix-blend-mode:screen;
+  }
+
+  /* atmospheric color washes */
+  .aurora{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(60% 40% at 18% 35%, rgba(80,40,140,.55), transparent 60%),
+      radial-gradient(50% 35% at 82% 30%, rgba(180,90,60,.32), transparent 65%),
+      radial-gradient(70% 50% at 50% 65%, rgba(244,217,176,.10), transparent 70%);
+    filter: blur(12px);
+    mix-blend-mode:screen;
+  }
+
+  /* horizon glow behind monolith — wide warm halo at the horizon line */
+  .horizon-glow{
+    position:absolute;
+    left:50%; top:78%;
+    width:160vmin; height:80vmin;
+    transform:translate(-50%,-50%);
+    background: radial-gradient(ellipse at 50% 50%,
+      rgba(255,210,160,.55) 0%,
+      rgba(232,150,100,.28) 14%,
+      rgba(160,80,140,.18) 32%,
+      rgba(40,20,60,.08) 55%,
+      rgba(20,10,40,0) 75%);
+    filter: blur(20px);
+    mix-blend-mode:screen;
+    pointer-events:none;
+  }
+
+  /* thin horizontal light strip at the horizon */
+  .horizon-line{
+    position:absolute;
+    left:0; right:0;
+    top:78%;
+    height:2px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255,220,180,.0) 15%,
+      rgba(255,220,180,.55) 50%,
+      rgba(255,220,180,.0) 85%,
+      transparent 100%);
+    filter: blur(.6px);
+    box-shadow: 0 0 24px rgba(255,210,160,.45);
+    mix-blend-mode:screen;
+    pointer-events:none;
+  }
+
+  /* the orb — small setting sun/moon at the horizon */
+  .orb{
+    position:absolute;
+    left:50%; top:78%;
+    transform:translate(-50%,-50%);
+    width:96px; height:96px;
+    border-radius:50%;
+    background:
+      radial-gradient(circle at 42% 40%, #FFF6E0 0%, #F4D5A6 22%, #E69A66 50%, #8C3D60 82%, #2A1230 100%);
+    box-shadow:
+      0 0 50px 8px rgba(255,210,160,.55),
+      0 0 140px 30px rgba(232,150,90,.40),
+      0 0 280px 70px rgba(140,70,140,.30),
+      0 0 480px 140px rgba(80,40,120,.18),
+      inset -6px -10px 26px rgba(40,15,50,.55),
+      inset 5px 7px 22px rgba(255,240,210,.35);
+  }
+  /* faint planetary ring — softer, more atmospheric */
+  .ring{
+    position:absolute;
+    left:50%; top:78%;
+    transform:translate(-50%,-50%) rotate(-8deg);
+    width:520px; height:80px;
+    border-radius:50%;
+    border:1px solid rgba(244,217,176,.10);
+    mix-blend-mode:screen;
+    pointer-events:none;
+    opacity:.6;
+  }
+  .ring.r2{
+    width:760px; height:120px;
+    border-color: rgba(244,217,176,.05);
+    transform:translate(-50%,-50%) rotate(-8deg);
+    opacity:.5;
+  }
+
+  /* fog band across mid */
+  .fog{
+    position:absolute;
+    left:-10%; right:-10%;
+    top:55%;
+    height:34vh;
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(120,80,140,.10) 25%,
+      rgba(200,140,100,.10) 55%,
+      rgba(20,10,30,.0) 100%);
+    filter: blur(40px);
+    mix-blend-mode:screen;
+    pointer-events:none;
+  }
+
+  /* layered mountain silhouettes */
+  .range{
+    position:absolute; left:-5%; right:-5%; bottom:0;
+    pointer-events:none;
+  }
+  .range svg{display:block; width:110%;}
+
+  .range.back   { bottom:8vh;  opacity:.65; filter: blur(2.5px); }
+  .range.mid    { bottom:3vh;  opacity:.9;  filter: blur(.8px); }
+  .range.front  { bottom:0;    opacity:1;   }
+
+  /* soft haze blending mountain tops into sky */
+  .horizon-haze{
+    position:absolute;
+    left:-5%; right:-5%;
+    top:70%;
+    height:18vh;
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(255,200,160,.06) 30%,
+      rgba(160,90,140,.10) 65%,
+      rgba(20,10,30,0) 100%);
+    filter: blur(24px);
+    mix-blend-mode:screen;
+    pointer-events:none;
+  }
+
+  /* ground gradient at very bottom */
+  .ground{
+    position:absolute; left:0; right:0; bottom:0;
+    height:18vh;
+    background: linear-gradient(180deg, rgba(5,6,15,0) 0%, #03030A 70%, #000 100%);
+    pointer-events:none;
+  }
+
+  /* subtle film grain */
+  .grain{
+    position:absolute; inset:-50%;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity:.10;
+    mix-blend-mode:overlay;
+    pointer-events:none;
+  }
+  /* vignette */
+  .vignette{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(120% 90% at 50% 55%, transparent 45%, rgba(0,0,0,.55) 80%, rgba(0,0,0,.92) 100%),
+      linear-gradient(180deg, rgba(0,0,0,.45) 0%, transparent 22%, transparent 70%, rgba(0,0,0,.55) 100%);
+    pointer-events:none;
+  }
+
+  /* ===== NAV ===== */
+  nav{
+    position:absolute; top:0; left:0; right:0;
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 26px 38px;
+    z-index:10;
+    font-size:11px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color: rgba(237,231,218,.72);
+    font-weight:500;
+  }
+  nav .mark{ display:flex; align-items:center; gap:10px; }
+  nav .dot{ width:6px; height:6px; border-radius:50%; background:var(--warm); box-shadow:0 0 10px var(--warm); }
+  nav a{
+    color: rgba(237,231,218,.72);
+    text-decoration:none;
+    transition:color .25s ease;
+  }
+  nav a:hover{ color: var(--paper); }
+
+  /* ===== TYPOGRAPHY OVERLAY ===== */
+  .copy{
+    position:absolute;
+    left:0; right:0;
+    top:30%;
+    text-align:center;
+    z-index:9;
+    padding: 0 6vw;
+    pointer-events:none;
+  }
+  h1{
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(34px, 5.6vw, 86px);
+    line-height: 1.05;
+    letter-spacing: -.012em;
+    color: #F4ECDC;
+    text-shadow:
+      0 1px 0 rgba(0,0,0,.25),
+      0 0 30px rgba(244,217,176,.15),
+      0 0 80px rgba(120,80,160,.20);
+    max-width: 18ch;
+    margin: 0 auto;
+  }
+  h1 em{
+    font-style: italic;
+    color:#FBE9C8;
+  }
+
+  .kicker{
+    margin-top: 22px;
+    font-size: 10.5px;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    color: rgba(237,231,218,.55);
+  }
+  .kicker .sep{ display:inline-block; width:18px; height:1px; background:rgba(237,231,218,.4); vertical-align:middle; margin:0 10px; }
+
+  /* ===== FOOTER ===== */
+  footer{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    z-index:10;
+    padding: 18px 38px 22px;
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:10.5px;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+    color: rgba(237,231,218,.45);
+    border-top:1px solid rgba(237,231,218,.08);
+  }
+  footer a{
+    color: rgba(237,231,218,.7);
+    text-decoration:none;
+  }
+  footer a:hover{ color: var(--paper); }
+
+  /* shimmer for entry link */
+  .enter{
+    position:relative;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .enter .arrow{
+    display:inline-block;
+    transition: transform .3s ease;
+  }
+  nav a.enter:hover .arrow{ transform: translateX(4px); }
+</style>
+</head>
+<body>
+  <div class="stage">
+
+    <!-- atmospheric layers -->
+    <div class="aurora"></div>
+    <div class="stars"></div>
+    <div class="fog"></div>
+
+    <!-- centerpiece -->
+    <div class="horizon-glow"></div>
+    <div class="ring r2"></div>
+    <div class="ring"></div>
+    <div class="orb"></div>
+    <div class="horizon-line"></div>
+
+    <!-- mountain ranges (layered silhouettes) -->
+    <div class="range back">
+      <svg viewBox="0 0 1600 240" preserveAspectRatio="none">
+        <path d="M0,240 L0,160 L90,135 L210,170 L320,110 L450,150 L580,100 L700,145 L820,95 L960,140 L1080,105 L1210,150 L1340,115 L1470,155 L1600,125 L1600,240 Z"
+          fill="#1F1438" />
+      </svg>
+    </div>
+
+    <div class="range mid">
+      <svg viewBox="0 0 1600 240" preserveAspectRatio="none">
+        <path d="M0,240 L0,180 L70,140 L160,200 L240,120 L330,180 L430,110 L520,170 L620,90 L740,160 L820,100 L940,170 L1040,115 L1160,180 L1260,130 L1380,190 L1500,140 L1600,200 L1600,240 Z"
+          fill="#0C0820" />
+      </svg>
+    </div>
+
+    <div class="range front">
+      <svg viewBox="0 0 1600 240" preserveAspectRatio="none">
+        <path d="M0,240 L0,215 L140,200 L300,225 L460,205 L620,228 L760,210 L900,225 L1060,212 L1220,228 L1380,215 L1500,225 L1600,218 L1600,240 Z"
+          fill="#02020A" />
+      </svg>
+    </div>
+
+    <!-- atmospheric haze right at the horizon -->
+    <div class="horizon-haze"></div>
+
+    <div class="ground"></div>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+
+    <!-- NAV -->
+    <nav>
+      <div class="mark">
+        <span class="dot"></span>
+        <span>Shashi</span>
+      </div>
+      <a href="#" class="enter">Enter <span class="arrow">→</span></a>
+    </nav>
+
+    <!-- HEADLINE -->
+    <div class="copy">
+      <h1>Working at the edge of <em>design</em> and <em>intelligence.</em></h1>
+      <div class="kicker">Bengaluru <span class="sep"></span> Selected work, selected agents</div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <span>© 2026 — Shashi</span>
+      <a href="#" class="enter">Enter portfolio <span class="arrow">→</span></a>
+    </footer>
+
+  </div>
+</body>
+</html>

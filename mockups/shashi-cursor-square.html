@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shashi — Landing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=Caveat:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:    #F2EBDD;
+    --ink:      #1a1a1a;
+    --ink-mid:  #4a4541;
+    --ink-soft: #968B7C;
+    --ink-faint:#C7BFB0;
+    --accent:   #B85C38;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* paper grain */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Stage */
+  .stage {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+  }
+
+  /* Top nav */
+  .nav {
+    position: absolute;
+    top: 32px; left: 0; right: 0;
+    padding: 0 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 10;
+  }
+  .nav .mark {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--ink);
+  }
+  .nav .links {
+    display: flex; gap: 32px;
+    font-size: 13px;
+    color: var(--ink-mid);
+  }
+  .nav .links a:hover { color: var(--ink); }
+
+  /* Status pill — top center under nav */
+  .status {
+    position: absolute;
+    top: 84px; left: 50%; transform: translateX(-50%);
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    z-index: 10;
+  }
+  .pulse {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 0 0 rgba(184,92,56,0.6);
+    animation: pulse 2.4s ease-out infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(184,92,56,0.5); }
+    70%  { box-shadow: 0 0 0 10px rgba(184,92,56,0); }
+    100% { box-shadow: 0 0 0 0 rgba(184,92,56,0); }
+  }
+
+  /* The scribble + square SVG fills the whole stage */
+  .canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Hero text — sits OVER the canvas, but tucked toward bottom-left for asymmetry */
+  .hero {
+    position: absolute;
+    left: 48px;
+    bottom: 96px;
+    max-width: 560px;
+    z-index: 5;
+  }
+  .hero .kicker {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: clamp(40px, 5.4vw, 76px);
+    line-height: 0.98;
+    color: var(--ink);
+    letter-spacing: -0.015em;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 2px;
+    margin: 0 -4px 0 -2px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .hero .sub {
+    margin-top: 22px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-mid);
+    max-width: 460px;
+  }
+
+  /* Bottom-right CTA */
+  .cta-box {
+    position: absolute;
+    right: 48px;
+    bottom: 96px;
+    text-align: right;
+    z-index: 5;
+  }
+  .cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Caveat', cursive;
+    font-weight: 400;
+    font-size: 26px;
+    color: var(--ink);
+    transition: gap .2s, color .2s;
+    cursor: pointer;
+  }
+  .cta::after {
+    content: '→';
+    color: var(--accent);
+    font-family: 'Inter', sans-serif;
+    font-size: 22px;
+  }
+  .cta:hover { gap: 18px; color: var(--accent); }
+  .cta-meta {
+    display: block;
+    margin-top: 6px;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* Bottom thin status row */
+  .footer {
+    position: absolute;
+    bottom: 32px; left: 0; right: 0;
+    padding: 0 48px;
+    display: flex; justify-content: space-between;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    z-index: 10;
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- Nav -->
+  <nav class="nav">
+    <a href="#" class="mark">Shashi</a>
+    <div class="links">
+      <a href="#">Work</a>
+      <a href="#">Agents</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Status -->
+  <div class="status"><span class="pulse"></span>Available for select work</div>
+
+  <!-- The scribble + rotating square canvas -->
+  <svg class="canvas" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="4" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2"/>
+      </filter>
+      <filter id="rough-light" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="2" seed="9" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.6"/>
+      </filter>
+      <!-- Clip to confine the woven pattern to inside the square area -->
+      <clipPath id="weave-clip">
+        <rect x="552" y="282" width="336" height="336"/>
+      </clipPath>
+    </defs>
+
+    <!--
+      Composition:
+        - Two horizontal scribble strands enter from each side and run across the screen
+        - Where they cross at center, they weave a basket-weave square (horizontal
+          strands going left-right, vertical strands going top-bottom, alternating
+          over/under via tiny gaps in the strokes)
+        - The woven square rotates as a unit
+    -->
+
+    <!-- The continuous LEFT-side strand (stays static, horizontal, exits the square on the right) -->
+    <g filter="url(#rough)">
+      <path
+        d="M -80 458
+           C 100 430, 240 490, 380 458
+           S 500 420, 560 458"
+        stroke="#1a1a1a" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.9"/>
+      <path
+        d="M 280 458
+           c -10 -26, 26 -40, 34 -14
+           c 4 10, -10 22, -20 12"
+        stroke="#1a1a1a" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.55"/>
+    </g>
+
+    <!-- The continuous RIGHT-side strand (mirrors) -->
+    <g filter="url(#rough-light)">
+      <path
+        d="M 1520 458
+           C 1340 488, 1200 410, 1060 458
+           S 940 500, 880 458"
+        stroke="#1a1a1a" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.9"/>
+      <path
+        d="M 1160 458
+           c 10 26, -26 40, -34 14
+           c -4 -10, 10 -22, 20 -12"
+        stroke="#1a1a1a" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.55"/>
+    </g>
+
+    <!-- ROTATING WOVEN SQUARE — the basket weave the strands form at center -->
+    <g class="spinner">
+
+      <!-- HORIZONTAL strands inside the square (the "warp" — 6 of them at varied y positions) -->
+      <g filter="url(#rough)" clip-path="url(#weave-clip)">
+        <path d="M 540 318 q 80 8, 168 0 t 168 -2" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.9"/>
+        <path d="M 540 374 q 80 -10, 168 0 t 168 4" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.9"/>
+        <path d="M 540 430 q 80 6, 168 -2 t 168 0" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.9"/>
+        <path d="M 540 486 q 80 -8, 168 2 t 168 -2" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.9"/>
+        <path d="M 540 542 q 80 4, 168 0 t 168 -4" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.9"/>
+        <path d="M 540 596 q 80 -6, 168 2 t 168 0" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.9"/>
+      </g>
+
+      <!-- VERTICAL strands (the "weft" — 6 of them, drawn AFTER horizontals so they appear on top, with gaps to fake over/under) -->
+      <g filter="url(#rough-light)" clip-path="url(#weave-clip)">
+        <!-- Each vertical strand is split into segments where it would pass UNDER a horizontal — those segments are simply omitted (we draw little caps to show the over/under).
+             To keep the SVG readable we draw 4 sub-segments per vertical strand, with gaps where it goes "under" a horizontal.
+             Y-bands of horizontals: 318, 374, 430, 486, 542, 596. Gap is +-7px on each side of those y values. -->
+
+        <!-- Vertical x=588 -->
+        <path d="M 588 290 V 311" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 588 325 V 367" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 588 381 V 423" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 588 437 V 479" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 588 493 V 535" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 588 549 V 589" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 588 603 V 612" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+        <!-- Vertical x=644 — offset half-step (alternating over/under pattern of basket weave) -->
+        <path d="M 644 290 V 367" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 644 381 V 423" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 644 437 V 479" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 644 493 V 535" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 644 549 V 589" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 644 603 V 612" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+        <!-- Vertical x=700 -->
+        <path d="M 700 290 V 311" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 700 325 V 367" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 700 381 V 423" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 700 437 V 479" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 700 493 V 535" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 700 549 V 589" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 700 603 V 612" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+        <!-- Vertical x=756 — alternating offset -->
+        <path d="M 756 290 V 367" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 756 381 V 423" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 756 437 V 479" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 756 493 V 535" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 756 549 V 589" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 756 603 V 612" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+        <!-- Vertical x=812 -->
+        <path d="M 812 290 V 311" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 812 325 V 367" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 812 381 V 423" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 812 437 V 479" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 812 493 V 535" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 812 549 V 589" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 812 603 V 612" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+        <!-- Vertical x=856 — alternating -->
+        <path d="M 856 290 V 367" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 856 381 V 423" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 856 437 V 479" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 856 493 V 535" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 856 549 V 589" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M 856 603 V 612" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      </g>
+
+      <!-- Square outline so the woven mesh has clear boundaries -->
+      <g filter="url(#rough)">
+        <path
+          d="M 552 282 L 888 282 L 888 618 L 552 618 L 552 282"
+          stroke="#1a1a1a" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+    </g>
+
+    <!-- Static accents that DON'T rotate -->
+    <g opacity="0.6">
+      <circle cx="720" cy="220" r="2" fill="#1a1a1a"/>
+      <circle cx="688" cy="208" r="1.4" fill="#1a1a1a"/>
+      <circle cx="754" cy="206" r="1.4" fill="#1a1a1a"/>
+    </g>
+    <path
+      d="M 580 700 q 140 -14, 280 0"
+      stroke="#B85C38" stroke-width="1.8" fill="none"
+      stroke-dasharray="2 7" stroke-linecap="round" opacity="0.7"/>
+  </svg>
+
+  <!-- Hero (bottom-left for asymmetric editorial feel) -->
+  <div class="hero">
+    <div class="kicker">Shashi · Bengaluru · v3.1</div>
+    <h1>Designs systems<br><em>that AI can run.</em></h1>
+    <p class="sub">An agentic designer at Eloelo. Instructs AI for a living, builds the agents that ship the work, and grounds it all in product, brand &amp; graphic design.</p>
+  </div>
+
+  <!-- Bottom-right CTA -->
+  <div class="cta-box">
+    <a href="#" class="cta">enter the work</a>
+    <span class="cta-meta">12 projects · 833 thumbnails · 4.5 mo</span>
+  </div>
+
+  <!-- Footer status -->
+  <div class="footer">
+    <span>2026 — selected work</span>
+    <span>IST 14:42 · sunny in BLR</span>
+  </div>
+
+</div>
+
+<style>
+  /* Rotation lives at the bottom so it overrides correctly */
+  .spinner {
+    animation: spin 28s linear infinite;
+    transform-origin: 720px 450px;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+</style>
+</body>
+</html>

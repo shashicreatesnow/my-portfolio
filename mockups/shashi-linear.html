@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Shashi — Agentic Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#08090a;
+    --bg-elev:#0c0d0f;
+    --border:rgba(255,255,255,0.08);
+    --border-strong:rgba(255,255,255,0.14);
+    --fg-95:rgba(255,255,255,0.95);
+    --fg-60:rgba(255,255,255,0.60);
+    --fg-40:rgba(255,255,255,0.40);
+    --fg-30:rgba(255,255,255,0.30);
+    --accent:#EEF38C;
+    --serif:"Instrument Serif", "Times New Roman", serif;
+    --sans:"Geist", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    --mono:"Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --container: 1240px;
+    --pad-x: clamp(20px, 4vw, 56px);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html, body{background:var(--bg); color:var(--fg-95);}
+  body{
+    font-family:var(--sans);
+    font-size:15px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    text-rendering:optimizeLegibility;
+    font-feature-settings:"ss01","cv11";
+    overflow-x:hidden;
+  }
+
+  /* faint top vignette so the bg doesn't read as flat */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, rgba(255,255,255,0.04), transparent 60%),
+      radial-gradient(800px 400px at 90% 0%, rgba(238,243,140,0.025), transparent 60%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  a{color:inherit; text-decoration:none;}
+  ::selection{background:var(--accent); color:#000;}
+
+  .wrap{
+    max-width:var(--container);
+    margin:0 auto;
+    padding:0 var(--pad-x);
+    position:relative;
+    z-index:1;
+  }
+
+  /* ── NAV ─────────────────────────────────────────────────── */
+  nav{
+    position:sticky; top:0;
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    background:rgba(8,9,10,0.72);
+    border-bottom:1px solid var(--border);
+    z-index:50;
+  }
+  .nav-row{
+    display:flex; align-items:center; justify-content:space-between;
+    height:60px;
+  }
+  .mark{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:var(--mono);
+    font-size:12.5px;
+    letter-spacing:0.02em;
+    color:var(--fg-95);
+  }
+  .mark .dot{
+    width:18px; height:18px; border-radius:5px;
+    background:linear-gradient(135deg, #fff 0%, #b8b8b8 100%);
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#000; font-size:11px; font-weight:600;
+    box-shadow:0 0 0 1px rgba(255,255,255,0.18), 0 1px 0 rgba(255,255,255,0.25) inset;
+  }
+  .nav-links{
+    display:flex; align-items:center; gap:30px;
+    font-size:13px;
+    color:var(--fg-60);
+  }
+  .nav-links a{transition:color .18s ease;}
+  .nav-links a:hover{color:var(--fg-95);}
+  .nav-links .pill{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:6px 11px; border:1px solid var(--border-strong);
+    border-radius:999px;
+    color:var(--fg-95);
+    font-family:var(--mono); font-size:11.5px; letter-spacing:0.02em;
+  }
+  .nav-links .pill .ring{
+    width:6px; height:6px; border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 10px var(--accent);
+  }
+
+  /* ── HERO ────────────────────────────────────────────────── */
+  .hero{
+    padding:clamp(56px, 11vh, 130px) 0 clamp(72px, 12vh, 140px);
+    position:relative;
+  }
+  .kicker{
+    display:inline-flex; align-items:center; gap:14px;
+    font-family:var(--mono);
+    font-size:11.5px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--fg-60);
+    margin-bottom:38px;
+    padding:6px 12px 6px 10px;
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:rgba(255,255,255,0.015);
+  }
+  .kicker .bar{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 12px rgba(238,243,140,0.55);
+  }
+  .kicker .accent-text{ color:var(--accent); }
+  .kicker .divider{ color:var(--fg-30); }
+
+  h1.hero-h{
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:clamp(60px, 9.4vw, 124px);
+    line-height:0.96;
+    letter-spacing:-0.028em;
+    color:var(--fg-95);
+    max-width:13ch;
+    margin-bottom:38px;
+  }
+  h1.hero-h em{
+    font-style:italic;
+    color:var(--fg-95);
+  }
+  h1.hero-h .muted{
+    color:var(--fg-40);
+    font-style:normal;
+  }
+
+  .sub{
+    font-family:var(--sans);
+    font-size:17px;
+    line-height:1.55;
+    color:var(--fg-60);
+    max-width:520px;
+    margin-bottom:44px;
+    font-weight:400;
+  }
+  .sub strong{ color:var(--fg-95); font-weight:500; }
+
+  .cta-row{
+    display:flex; align-items:center; gap:28px;
+    flex-wrap:wrap;
+  }
+  .cta-primary{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:var(--sans);
+    font-size:14px; font-weight:500;
+    color:var(--fg-95);
+    padding:10px 16px 10px 18px;
+    border:1px solid var(--border-strong);
+    border-radius:999px;
+    background:rgba(255,255,255,0.02);
+    transition:background .2s ease, border-color .2s ease, transform .2s ease;
+    position:relative;
+  }
+  .cta-primary::before{
+    content:"";
+    position:absolute; left:14px; bottom:-1px; height:2px;
+    width:calc(100% - 28px);
+    background:var(--accent);
+    box-shadow:0 0 16px rgba(238,243,140,0.5);
+    border-radius:2px;
+  }
+  .cta-primary:hover{
+    background:rgba(255,255,255,0.04);
+    border-color:rgba(255,255,255,0.22);
+  }
+  .cta-primary .arrow{transition:transform .25s ease;}
+  .cta-primary:hover .arrow{transform:translateX(4px);}
+  .cta-secondary{
+    font-family:var(--sans);
+    font-size:14px; font-weight:400;
+    color:var(--fg-60);
+    transition:color .2s ease;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .cta-secondary:hover{color:var(--fg-95);}
+
+  /* meta line above kicker — tiny status */
+  .status{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:var(--fg-40);
+    letter-spacing:0.02em;
+    margin-bottom:18px;
+  }
+
+  /* ── PRACTICE SECTION ────────────────────────────────────── */
+  .section-head{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    border-top:1px solid var(--border);
+    padding-top:32px;
+    margin-bottom:40px;
+    gap:48px;
+  }
+  .section-head > div:first-child{ flex:1; min-width:0; }
+  .section-label{
+    font-family:var(--mono);
+    font-size:11.5px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--fg-40);
+  }
+  .section-title{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:clamp(26px, 2.6vw, 36px);
+    color:var(--fg-95);
+    letter-spacing:-0.012em;
+    line-height:1.1;
+  }
+  .section-meta{
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:var(--fg-30);
+    letter-spacing:0.04em;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:1px;
+    background:var(--border);
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  @media (max-width: 980px){
+    .grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px){
+    .grid{ grid-template-columns: 1fr; }
+  }
+
+  .card{
+    background:var(--bg-elev);
+    padding:30px 28px 32px;
+    display:flex; flex-direction:column;
+    min-height:300px;
+    position:relative;
+    transition: background .25s ease;
+  }
+  .card:hover{ background:#101114; }
+
+  .card .glyph{
+    width:38px; height:38px;
+    border:1px solid var(--border-strong);
+    border-radius:9px;
+    display:inline-flex; align-items:center; justify-content:center;
+    color:var(--fg-95);
+    margin-bottom:auto;
+    background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .card.feature .glyph{
+    border-color: rgba(238,243,140,0.35);
+    background: linear-gradient(180deg, rgba(238,243,140,0.08), rgba(238,243,140,0.02));
+    color: var(--accent);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 0 24px rgba(238,243,140,0.10);
+  }
+  .card .num{
+    position:absolute;
+    top:26px; right:28px;
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--fg-30);
+    letter-spacing:0.08em;
+  }
+  .card.feature .num{ color:var(--accent); }
+  .card h3{
+    font-family:var(--serif);
+    font-style:italic;
+    font-weight:400;
+    font-size:23px;
+    line-height:1.12;
+    color:var(--fg-95);
+    margin-top:64px;
+    margin-bottom:12px;
+    letter-spacing:-0.01em;
+  }
+  .card p{
+    font-family:var(--sans);
+    font-size:13.5px;
+    line-height:1.55;
+    color:var(--fg-60);
+    max-width:28ch;
+  }
+  .card .underline{
+    height:1px; background:var(--accent);
+    width:18px; transition:width .35s ease;
+    margin-top:18px;
+    opacity:0.0;
+  }
+  .card:hover .underline{ width:42px; opacity:1; }
+  .card.feature .underline{ opacity:1; }
+
+  /* ── TOOLS MARQUEE ───────────────────────────────────────── */
+  .tools{
+    margin-top:56px;
+    padding:22px 0;
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    overflow:hidden;
+    position:relative;
+  }
+  .tools::before, .tools::after{
+    content:"";
+    position:absolute; top:0; bottom:0; width:120px; z-index:2;
+    pointer-events:none;
+  }
+  .tools::before{ left:0; background:linear-gradient(90deg, var(--bg), transparent); }
+  .tools::after { right:0; background:linear-gradient(-90deg, var(--bg), transparent); }
+
+  .tools-track{
+    display:flex; gap:0;
+    width:max-content;
+    animation: marquee 38s linear infinite;
+  }
+  .tools-track .group{
+    display:flex; align-items:center; gap:44px;
+    padding-right:44px;
+  }
+  .tool{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--fg-60);
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    display:inline-flex; align-items:center; gap:44px;
+    white-space:nowrap;
+    transition:color .2s ease;
+  }
+  .tool:hover{ color:var(--fg-95); }
+  .tool::after{
+    content:"";
+    width:4px; height:4px; border-radius:50%;
+    background:var(--fg-30);
+  }
+  .tool:last-child::after{ display:none; }
+  @keyframes marquee{
+    from{ transform:translateX(0); }
+    to  { transform:translateX(-50%); }
+  }
+
+  /* ── FOOTER ─────────────────────────────────────────────── */
+  footer{
+    padding:48px 0 40px;
+    margin-top:56px;
+    border-top:1px solid var(--border);
+  }
+  .foot{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    gap:32px; flex-wrap:wrap;
+  }
+  .foot-left .line1{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:clamp(28px, 4vw, 44px);
+    line-height:1.05;
+    color:var(--fg-95);
+    letter-spacing:-0.01em;
+  }
+  .foot-left .line1 a{
+    border-bottom:1.5px solid var(--accent);
+    padding-bottom:2px;
+  }
+  .foot-left .meta{
+    margin-top:18px;
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:var(--fg-30);
+    letter-spacing:0.04em;
+  }
+  .foot-right{
+    display:flex; flex-direction:column; gap:10px;
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--fg-60);
+    text-align:right;
+  }
+  .foot-right a{ transition:color .2s ease; }
+  .foot-right a:hover{ color:var(--fg-95); }
+  .foot-right .label{
+    color:var(--fg-30);
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    font-size:10.5px;
+    margin-bottom:4px;
+  }
+
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-row">
+    <a class="mark" href="#">
+      <span class="dot">S</span>
+      <span>shashi.eloelo</span>
+    </a>
+    <div class="nav-links">
+      <a href="#">Work</a>
+      <a href="#">Index</a>
+      <a href="#">Writing</a>
+      <a href="#" class="pill"><span class="ring"></span> Available · May ’26</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="status"><span>◐</span> Bengaluru — currently at Eloelo</div>
+    <div class="kicker">
+      <span class="bar"></span>
+      <span>Agentic Designer</span>
+      <span class="divider">/</span>
+      <span class="accent-text">No. 001</span>
+    </div>
+    <h1 class="hero-h">
+      Designing <em>systems</em><br/>
+      that <em>AI</em> can run.
+    </h1>
+    <p class="sub">
+      I instruct AI for a living. I build the agents that ship the work — <strong>833 thumbnails in 4.5 months</strong>, custom workflows, and a foundation in product, brand &amp; graphic design.
+    </p>
+    <div class="cta-row">
+      <a class="cta-primary" href="#">
+        Enter portfolio <span class="arrow">→</span>
+      </a>
+      <a class="cta-secondary" href="#">
+        Read about my agents →
+      </a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="section-label" style="margin-bottom:14px;">— Practice</div>
+        <div class="section-title">Four things I’m sharp at.</div>
+      </div>
+      <div class="section-meta">04 / disciplines</div>
+    </div>
+
+    <div class="grid">
+      <!-- 01 -->
+      <div class="card feature">
+        <div class="glyph" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 3h10v10H3z" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M5.5 6h5M5.5 8h5M5.5 10h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="num">01</span>
+        <h3>Instruction Quality</h3>
+        <p>Prompts as systems, not magic words. Specs, evals, guardrails.</p>
+        <span class="underline"></span>
+      </div>
+
+      <!-- 02 -->
+      <div class="card">
+        <div class="glyph" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="4.5" cy="4.5" r="2.2" stroke="currentColor" stroke-width="1.3"/>
+            <circle cx="11.5" cy="11.5" r="2.2" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M6.2 6.2l3.6 3.6" stroke="currentColor" stroke-width="1.3"/>
+          </svg>
+        </div>
+        <span class="num">02</span>
+        <h3>Agent Making</h3>
+        <p>Custom agent workflows that ship design at production scale.</p>
+        <span class="underline"></span>
+      </div>
+
+      <!-- 03 -->
+      <div class="card">
+        <div class="glyph" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 1.5v3.2M8 11.3v3.2M1.5 8h3.2M11.3 8h3.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            <circle cx="8" cy="8" r="2.6" stroke="currentColor" stroke-width="1.3"/>
+            <circle cx="8" cy="8" r="0.9" fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="num">03</span>
+        <h3>Instant Triage</h3>
+        <p>Fast problem-solving across product, brand, and graphic — under deadline.</p>
+        <span class="underline"></span>
+      </div>
+
+      <!-- 04 -->
+      <div class="card">
+        <div class="glyph" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2.5 12.5l5.5-9 5.5 9H2.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+            <path d="M6 12.5h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity="0.5"/>
+          </svg>
+        </div>
+        <span class="num">04</span>
+        <h3>Design Foundation</h3>
+        <p>Product · Brand · Graphic — grounded in years of hands-on craft.</p>
+        <span class="underline"></span>
+      </div>
+    </div>
+
+    <!-- TOOLS MARQUEE -->
+    <div class="tools" aria-hidden="true">
+      <div class="tools-track">
+        <div class="group">
+          <span class="tool">Claude</span>
+          <span class="tool">Midjourney</span>
+          <span class="tool">Figma</span>
+          <span class="tool">Geist</span>
+          <span class="tool">React</span>
+          <span class="tool">v0</span>
+          <span class="tool">Photoshop</span>
+          <span class="tool">Illustrator</span>
+          <span class="tool">After Effects</span>
+        </div>
+        <div class="group">
+          <span class="tool">Claude</span>
+          <span class="tool">Midjourney</span>
+          <span class="tool">Figma</span>
+          <span class="tool">Geist</span>
+          <span class="tool">React</span>
+          <span class="tool">v0</span>
+          <span class="tool">Photoshop</span>
+          <span class="tool">Illustrator</span>
+          <span class="tool">After Effects</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div class="foot-left">
+      <div class="line1">
+        Got a system worth designing?<br/>
+        <a href="mailto:shashi@eloelo.in">shashi@eloelo.in</a>
+      </div>
+      <div class="meta">© 2026 — Shashi · Built in Bengaluru</div>
+    </div>
+    <div class="foot-right">
+      <span class="label">Elsewhere</span>
+      <a href="#">Twitter / X</a>
+      <a href="#">Read.cv</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">Are.na</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

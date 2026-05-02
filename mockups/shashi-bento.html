@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shashi — Agentic Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Bebas+Neue&family=Archivo+Black&family=Tiro+Devanagari+Hindi:ital@0;1&family=Anek+Devanagari:wght@400;600;700;800&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000;
+    --ink:#fff;
+    --muted:#8a8a8a;
+    --line:rgba(255,255,255,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#000;color:#fff;font-family:'Geist',-apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{min-height:100vh;overflow-x:hidden}
+
+  /* Subtle ambient glow */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;
+    background:
+      radial-gradient(900px 500px at 12% 0%, rgba(255,90,30,.10), transparent 60%),
+      radial-gradient(800px 600px at 95% 35%, rgba(60,90,255,.10), transparent 60%),
+      radial-gradient(700px 500px at 50% 100%, rgba(255,60,150,.07), transparent 60%);
+    z-index:0;
+  }
+
+  .wrap{position:relative;z-index:1;max-width:1380px;margin:0 auto;padding:24px 36px 80px}
+
+  /* NAV */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:6px 0 0}
+  .mark{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em}
+  .mark .dot{width:22px;height:22px;border-radius:6px;background:conic-gradient(from 220deg,#ff5e3a,#ff2d95,#5b8cff,#22d3a4,#ff5e3a);box-shadow:0 0 0 1px rgba(255,255,255,.15) inset}
+  .mark span{font-family:'Geist';font-size:15px}
+  .links{display:flex;gap:28px;align-items:center;font-size:13.5px;color:#cfcfcf}
+  .links a{color:inherit;text-decoration:none;opacity:.85}
+  .links a:hover{opacity:1}
+  .pill{border:1px solid var(--line);padding:8px 14px;border-radius:999px;font-size:13px;color:#eaeaea;background:rgba(255,255,255,.02)}
+
+  /* HERO HEADER */
+  .kicker{display:flex;align-items:center;gap:14px;margin:36px 0 14px;color:#bdbdbd;font-size:13px;letter-spacing:.02em}
+  .kicker .live{width:7px;height:7px;border-radius:50%;background:#22d3a4;box-shadow:0 0 0 4px rgba(34,211,164,.18)}
+  .kicker em{font-style:normal;color:#fff;font-weight:500}
+  .kicker .sep{opacity:.35}
+  h1.title{
+    font-family:'Instrument Serif', serif;
+    font-weight:400;
+    font-size:clamp(36px,5.4vw,72px);
+    line-height:1.0;
+    letter-spacing:-.02em;
+    max-width:1080px;
+    margin:6px 0 6px;
+  }
+  h1.title em{font-style:italic;color:#ffb38a}
+  .sub{
+    color:#a9a9a9;font-size:14.5px;max-width:640px;line-height:1.5;margin-bottom:22px;
+    font-family:'Geist';
+  }
+  .sub b{color:#fff;font-weight:500}
+
+  /* BENTO GRID */
+  .bento{
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    grid-auto-rows:118px;
+    gap:14px;
+    margin-top:6px;
+  }
+  .cell{
+    position:relative;border-radius:18px;overflow:hidden;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.06) inset,
+      0 0 0 1px rgba(255,255,255,.05),
+      0 30px 60px -30px rgba(0,0,0,.7);
+    transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease, filter .35s ease;
+    cursor:pointer;
+    isolation:isolate;
+  }
+  .cell:hover{transform:translateY(-4px) scale(1.012);box-shadow:0 1px 0 rgba(255,255,255,.10) inset,0 0 0 1px rgba(255,255,255,.10),0 50px 80px -30px rgba(0,0,0,.8)}
+  .cell .label{
+    position:absolute;left:14px;bottom:12px;
+    display:flex;align-items:center;gap:8px;
+    font-size:11px;letter-spacing:.04em;color:rgba(255,255,255,.85);
+    font-family:'Geist';font-weight:500;
+    text-transform:uppercase;
+    z-index:5;
+  }
+  .cell .label .tag{padding:3px 8px;border-radius:999px;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.16)}
+  .cell .corner{
+    position:absolute;top:12px;right:12px;font-size:11px;color:rgba(255,255,255,.85);
+    background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.18);
+    border-radius:999px;padding:3px 9px;backdrop-filter:blur(6px);z-index:5;
+    font-family:'Geist';font-weight:500
+  }
+  .cell .grain{position:absolute;inset:0;pointer-events:none;opacity:.45;mix-blend-mode:overlay;background-image:radial-gradient(rgba(255,255,255,.18) 1px, transparent 1px);background-size:3px 3px;z-index:3}
+  .cell .vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,.48));z-index:3}
+
+  /* GRID LAYOUT — 12 col, rows fill cleanly
+     Row 1 (rows 1-4): hero c1 [span 6 x 4] + c2 [3x2] + c3 [3x2] + c4 [3x2] + c5 [3x2]
+     Row 2 (rows 5-7):                 c6 [4x3] + c7 [4x3] + c8 [4x3]
+     Row 3 (row 8): c9 [12x1] not used — instead final compact: c9 [4x2] + c10 [4x2] + c11 [4x2] = simpler
+  */
+  .c1{grid-column:span 6;grid-row:span 4} /* hero 6x4 */
+  .c2{grid-column:span 3;grid-row:span 2}
+  .c3{grid-column:span 3;grid-row:span 2}
+  .c4{grid-column:span 3;grid-row:span 2}
+  .c5{grid-column:span 3;grid-row:span 2}
+
+  .c6{grid-column:span 4;grid-row:span 3}
+  .c7{grid-column:span 4;grid-row:span 3}
+  .c8{grid-column:span 4;grid-row:span 3}
+
+  /* INDIVIDUAL CELL ART */
+
+  /* C1 — HERO: STRESS KAM KARTI HAI? — devotion/saffron */
+  .c1{background:radial-gradient(120% 100% at 25% 10%, #ffc06b 0%, #ff7a36 35%, #c4250f 70%, #4d0a02 100%)}
+  .c1 .art{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:42px 40px;z-index:4}
+  .c1 .glyph{position:absolute;top:-30px;right:-40px;font-family:'Tiro Devanagari Sanskrit','Tiro Devanagari Hindi', serif;font-size:520px;line-height:.9;color:rgba(255,255,255,.13);font-style:normal;letter-spacing:-.04em;z-index:1;user-select:none;font-weight:400}
+  .c1 .om{position:absolute;left:36px;top:34px;font-family:'Tiro Devanagari Sanskrit',serif;font-size:64px;color:#ffe7b8;opacity:.92;z-index:4;line-height:1}
+  .c1 h2{font-family:'Anek Devanagari','Archivo Black',sans-serif;font-weight:800;font-size:88px;line-height:.92;letter-spacing:-.025em;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.18)}
+  .c1 h2 span{display:block;color:#ffe6a8}
+  .c1 h2 b{display:block;font-family:'Instrument Serif',serif;font-style:italic;font-size:38px;font-weight:400;color:#ffd7a3;margin-bottom:8px;letter-spacing:0;text-transform:none}
+  .c1 .kicker2{font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,235,200,.92);margin-bottom:14px;font-weight:600}
+  .c1 .stat{position:absolute;right:40px;bottom:42px;text-align:right;z-index:4}
+  .c1 .stat b{display:block;font-family:'Archivo Black',sans-serif;font-size:30px;color:#fff;line-height:1}
+  .c1 .stat span{font-family:'Geist';font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,235,200,.85)}
+
+  /* C2 — Bhishma Ke Guru Thein? — deep navy → teal mythological */
+  .c2{background:linear-gradient(135deg,#06122e 0%,#0f3a5f 45%,#1d9494 100%)}
+  .c2 .art{position:absolute;inset:0;padding:16px;display:flex;flex-direction:column;justify-content:flex-end;z-index:4;gap:6px}
+  .c2 .meta-top{position:absolute;top:16px;left:16px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,220,180,.85);font-weight:600;z-index:4}
+  .c2 .ringwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1;opacity:.85}
+  .c2 .ring{width:240px;height:240px;border-radius:50%;border:1px solid rgba(255,210,140,.4);box-shadow:0 0 90px rgba(255,180,90,.22) inset}
+  .c2 .ring.b{width:160px;height:160px;border-color:rgba(255,210,140,.6);position:absolute}
+  .c2 .ring.c{width:90px;height:90px;border-color:rgba(255,220,160,.85);position:absolute;background:radial-gradient(circle,rgba(255,200,120,.25),transparent 70%)}
+  .c2 h3{font-family:'Anek Devanagari','Archivo Black',sans-serif;font-weight:800;font-size:22px;line-height:.95;color:#ffe4b8;letter-spacing:-.02em;margin-bottom:18px}
+  .c2 h3 b{color:#fff;display:block;font-weight:800}
+  .c2 .meta{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,220,180,.8);font-weight:600}
+
+  /* C3 — Ne Iran Ka Oil Blockade — geopolitical news, red/black */
+  .c3{background:linear-gradient(140deg,#1a0606 0%,#3a0a0a 40%,#8a1010 100%)}
+  .c3 .art{position:absolute;inset:0;padding:16px;display:flex;flex-direction:column;justify-content:flex-end;z-index:4}
+  .c3 .breaking{position:absolute;top:16px;left:16px;background:#ff2d2d;color:#fff;font-family:'Geist';font-size:9.5px;font-weight:800;letter-spacing:.2em;padding:4px 8px;border-radius:3px;z-index:4}
+  .c3 h3{font-family:'Anek Devanagari','Archivo Black',sans-serif;font-size:21px;line-height:.95;color:#fff;letter-spacing:-.01em;font-weight:800;margin-bottom:18px}
+  .c3 h3 b{color:#ffb84d;display:block}
+  .c3 .scan{position:absolute;left:0;right:0;bottom:38px;height:1.5px;background:linear-gradient(90deg,transparent,#ff5050 50%,transparent);opacity:.7;z-index:2}
+  .c3 .map{position:absolute;right:-30px;top:-20px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle at 40% 40%,rgba(255,140,80,.6),rgba(120,20,20,0) 60%);filter:blur(2px);z-index:1}
+
+  /* C4 — Loan Ka Fayda? — finance, cream→mint */
+  .c4{background:linear-gradient(155deg,#fff5d6 0%,#f3c969 40%,#1d5b3c 100%)}
+  .c4 .art{position:absolute;inset:0;padding:18px;display:flex;flex-direction:column;justify-content:space-between;z-index:4;color:#0e2a1c}
+  .c4 .pct{font-family:'Archivo Black',sans-serif;font-size:74px;line-height:.85;color:#0e2a1c;letter-spacing:-.04em;font-weight:900}
+  .c4 .pct sup{font-size:28px;vertical-align:top;color:#0e2a1c}
+  .c4 h3{font-family:'Anek Devanagari','Archivo Black',sans-serif;font-size:16px;line-height:1;color:#0e2a1c;font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+  .c4 .arrow{position:absolute;top:14px;right:16px;font-size:32px;color:#0e2a1c;font-family:'Instrument Serif',serif;line-height:1}
+
+  /* C5 — Ritam News — magenta → black */
+  .c5{background:linear-gradient(140deg,#2a0214 0%,#83113f 50%,#0a0008 100%)}
+  .c5 .art{position:absolute;inset:0;padding:18px;display:flex;flex-direction:column;justify-content:space-between;z-index:4}
+  .c5 h3{font-family:'Bebas Neue',sans-serif;font-size:46px;line-height:.85;color:#ffd1e1;letter-spacing:.02em}
+  .c5 h3 span{color:#ff4f8b;display:block}
+  .c5 .barcode{display:flex;gap:2px;height:14px;align-items:flex-end}
+  .c5 .barcode i{display:block;width:2px;background:#ffd1e1;height:100%}
+  .c5 .barcode i:nth-child(2n){height:60%}
+  .c5 .barcode i:nth-child(3n){height:80%}
+  .c5 .star{position:absolute;right:-10px;top:-10px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(255,80,140,.45),transparent 70%);filter:blur(4px);z-index:1}
+
+  /* C6 — Compostable Cups — sage→forest */
+  .c6{background:linear-gradient(160deg,#e7f4dc 0%,#86b67e 50%,#1e3d22 100%)}
+  .c6 .art{position:absolute;inset:0;padding:26px;display:flex;flex-direction:column;justify-content:space-between;z-index:4;color:#0d2410}
+  .c6 .stamp{align-self:flex-start;font-family:'Geist';font-weight:700;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#0d2410;border:1.4px solid #0d2410;padding:6px 11px;border-radius:999px}
+  .c6 h3{font-family:'Archivo Black',sans-serif;font-size:46px;line-height:.92;color:#0d2410;letter-spacing:-.02em;text-transform:uppercase}
+  .c6 h3 em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;text-transform:none;color:#0d2410;display:block;font-size:50px;letter-spacing:0}
+  .c6 .leaf{position:absolute;right:-50px;bottom:-50px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#cfe6a8,#5d8a51 60%,#1c3a20);opacity:.55;filter:blur(2px);z-index:1}
+  .c6 .leaf2{position:absolute;left:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,#fff,transparent 60%);opacity:.45;z-index:1}
+
+  /* C7 — Nammatales — kids/storytelling, pastel cream→peach */
+  .c7{background:linear-gradient(140deg,#fff3e8 0%,#ffc59a 50%,#ff8a5e 100%)}
+  .c7 .art{position:absolute;inset:0;padding:26px;display:flex;flex-direction:column;justify-content:space-between;z-index:4;color:#3a1907}
+  .c7 .badge{align-self:flex-start;font-family:'Geist';font-weight:700;font-size:10px;letter-spacing:.22em;text-transform:uppercase;background:#3a1907;color:#fff3e8;padding:5px 11px;border-radius:999px}
+  .c7 h3{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;font-size:42px;line-height:.95;color:#3a1907;letter-spacing:-.01em}
+  .c7 h3 b{font-family:'Archivo Black',sans-serif;font-style:normal;display:block;letter-spacing:-.025em;font-size:60px;text-transform:uppercase;color:#3a1907;line-height:.85;margin-top:6px}
+  .c7 .moon{position:absolute;right:-30px;top:-30px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,#ffd9a8 55%,#ff8a5e);opacity:.85;z-index:1}
+  .c7 .star{position:absolute;left:42px;top:96px;font-size:24px;color:#3a1907;opacity:.85;z-index:2}
+  .c7 .star.b{left:auto;right:60px;top:140px;font-size:18px;opacity:.6}
+
+  /* C8 — Gamma AI — agentic / electric blue */
+  .c8{background:radial-gradient(120% 100% at 100% 0%, #6e9cff 0%, #2247c7 45%, #0a1248 100%)}
+  .c8 .art{position:absolute;inset:0;padding:26px;display:flex;flex-direction:column;justify-content:space-between;z-index:4}
+  .c8 .grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:36px 36px;mask-image:radial-gradient(circle at 70% 30%,#000 40%,transparent 75%);z-index:1}
+  .c8 .blob{position:absolute;right:-50px;top:-50px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#cad9ff,#3a5dd1 50%,#0a1248 100%);opacity:.85;z-index:1}
+  .c8 .meta{font-family:'Geist';font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#bcd0ff;font-weight:600}
+  .c8 h3{font-family:'Geist',sans-serif;font-weight:800;font-size:44px;line-height:.95;color:#fff;letter-spacing:-.025em}
+  .c8 h3 em{font-style:italic;font-family:'Instrument Serif',serif;font-weight:400;color:#cfd9ff;font-size:54px;display:inline-block;line-height:1}
+  .c8 .row{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+  .c8 .chip{font-size:10.5px;color:#dde6ff;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:4px 10px;backdrop-filter:blur(8px);font-family:'Geist';font-weight:500}
+
+  /* FOOT */
+  .foot{display:flex;align-items:center;justify-content:space-between;margin-top:34px;flex-wrap:wrap;gap:18px}
+  .foot p{color:#bdbdbd;font-size:14.5px;max-width:560px;line-height:1.55}
+  .foot p b{color:#fff;font-weight:500}
+  .cta{display:inline-flex;align-items:center;gap:10px;padding:13px 18px;border-radius:999px;background:#fff;color:#0b0b0b;font-family:'Geist';font-weight:600;font-size:14px;text-decoration:none;transition:transform .25s ease, box-shadow .25s ease;box-shadow:0 12px 36px -10px rgba(255,255,255,.18)}
+  .cta:hover{transform:translateY(-2px);box-shadow:0 18px 40px -10px rgba(255,255,255,.28)}
+  .cta .arr{display:inline-block;transition:transform .25s ease}
+  .cta:hover .arr{transform:translateX(3px)}
+
+  /* TAGS ROW */
+  .tags{margin-top:26px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .tags .t{font-family:'Geist';font-size:12px;letter-spacing:.04em;color:#cfcfcf;border:1px solid var(--line);padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.02)}
+  .tags .t.dot::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:8px;vertical-align:middle;opacity:.5}
+  .tags .t.active{background:#fff;color:#0b0b0b;border-color:#fff}
+
+  @media (max-width:980px){
+    .bento{grid-auto-rows:120px;gap:10px}
+    .c1{grid-column:span 12;grid-row:span 4}
+    .c2,.c3,.c4,.c5{grid-column:span 6;grid-row:span 2}
+    .c6,.c7,.c8{grid-column:span 12;grid-row:span 3}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- NAV -->
+  <nav>
+    <div class="mark"><span class="dot"></span><span>Shashi</span></div>
+    <div class="links">
+      <a href="#">Work</a>
+      <a href="#">Process</a>
+      <a href="#">About</a>
+      <a class="pill" href="#">Get in touch ↗</a>
+    </div>
+  </nav>
+
+  <!-- KICKER -->
+  <div class="kicker">
+    <span class="live"></span>
+    <em>Shashi</em><span class="sep">·</span>
+    Agentic Designer at Eloelo<span class="sep">·</span>
+    <em>833 thumbnails shipped</em> in 4.5 months
+  </div>
+
+  <!-- TITLE -->
+  <h1 class="title">Designer who instructs <em>AI agents</em>, ships at volume,<br/>and lives at the edge of brand &amp; product.</h1>
+  <p class="sub">A working wall from <b>Eloelo</b> — thumbnails for creators, identities for founders, product UI, and the agent workflows that ship them. Tap any tile to wander in.</p>
+
+  <!-- BENTO -->
+  <section class="bento">
+
+    <!-- C1 HERO -->
+    <article class="cell c1">
+      <span class="glyph">श्री</span>
+      <span class="om">ॐ</span>
+      <div class="art">
+        <span class="kicker2">● Devotion · Series 04 · 2.4M views</span>
+        <h2><b>क्या आप जानते हैं?</b>Stress Kam<span>Karti Hai?</span></h2>
+      </div>
+      <div class="vignette"></div>
+      <div class="grain"></div>
+      <div class="stat"><b>2.4M</b><span>views · top 1%</span></div>
+      <span class="label"><span class="tag">Thumbnail</span> Devotion · Hero</span>
+    </article>
+
+    <!-- C2 Bhishma -->
+    <article class="cell c2">
+      <div class="ringwrap"><div class="ring"></div><div class="ring b"></div><div class="ring c"></div></div>
+      <span class="meta-top">● Mythology</span>
+      <div class="art">
+        <h3>Bhishma Ke<b>Guru Thein?</b></h3>
+      </div>
+      <div class="vignette"></div>
+      <div class="grain"></div>
+      <span class="corner">Ep. 12</span>
+      <span class="label"><span class="tag">Thumb</span> Myth</span>
+    </article>
+
+    <!-- C3 Iran -->
+    <article class="cell c3">
+      <div class="map"></div>
+      <span class="breaking">● BREAKING</span>
+      <div class="art">
+        <h3>Iran Ka Oil<b>Blockade Plan</b></h3>
+      </div>
+      <div class="scan"></div>
+      <div class="vignette"></div>
+      <div class="grain"></div>
+      <span class="label"><span class="tag">Thumb</span> News</span>
+    </article>
+
+    <!-- C4 Loan -->
+    <article class="cell c4">
+      <span class="arrow">↗</span>
+      <div class="art">
+        <div class="pct">7.2<sup>%</sup></div>
+        <h3>Loan Ka Fayda?</h3>
+      </div>
+      <div class="vignette"></div>
+      <span class="label"><span class="tag">Thumb</span> Finance</span>
+    </article>
+
+    <!-- C5 Ritam -->
+    <article class="cell c5">
+      <div class="star"></div>
+      <div class="art">
+        <h3>RITAM<span>NEWS.</span></h3>
+        <div class="barcode">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+      </div>
+      <div class="vignette"></div>
+      <div class="grain"></div>
+      <span class="corner">Identity</span>
+      <span class="label"><span class="tag">Brand</span> Editorial</span>
+    </article>
+
+    <!-- C6 Compostable -->
+    <article class="cell c6">
+      <div class="leaf"></div>
+      <div class="leaf2"></div>
+      <div class="art">
+        <span class="stamp">● Brand · 2024</span>
+        <h3>Compostable<em>cups</em></h3>
+      </div>
+      <div class="vignette"></div>
+      <span class="label"><span class="tag">Identity</span> Sustainability</span>
+    </article>
+
+    <!-- C7 Nammatales -->
+    <article class="cell c7">
+      <div class="moon"></div>
+      <span class="star">✦</span>
+      <span class="star b">✦</span>
+      <div class="art">
+        <span class="badge">● Storytelling for kids</span>
+        <h3>once upon<b>NAMMA<br/>TALES</b></h3>
+      </div>
+      <div class="vignette"></div>
+      <span class="label"><span class="tag">Identity</span> Kids · Brand</span>
+    </article>
+
+    <!-- C8 Gamma -->
+    <article class="cell c8">
+      <div class="grid-bg"></div>
+      <div class="blob"></div>
+      <div class="art">
+        <span class="meta">● Agentic · System</span>
+        <div>
+          <h3>Gamma <em>AI</em><br/>workflows.</h3>
+          <div class="row">
+            <span class="chip">Claude</span><span class="chip">Figma MCP</span><span class="chip">n8n</span><span class="chip">+4</span>
+          </div>
+        </div>
+      </div>
+      <div class="vignette"></div>
+      <span class="corner">Live</span>
+      <span class="label"><span class="tag">Product</span> AI Agents</span>
+    </article>
+
+  </section>
+
+  <!-- TAGS -->
+  <div class="tags">
+    <span class="t active">All work · 833</span>
+    <span class="t dot">Devotion</span>
+    <span class="t dot">Finance</span>
+    <span class="t dot">Tech</span>
+    <span class="t dot">Brand</span>
+    <span class="t dot">Astrology</span>
+    <span class="t dot">Trending</span>
+  </div>
+
+  <!-- FOOT -->
+  <div class="foot">
+    <p>I design at <b>volume and velocity</b> — thumbnails for creators, brands for founders, and AI agents that ship the work alongside me.</p>
+    <a class="cta" href="#">Enter portfolio <span class="arr">→</span></a>
+  </div>
+
+</div>
+</body>
+</html>

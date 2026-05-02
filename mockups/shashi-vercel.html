@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Shashi — Agentic Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAFAF7;
+    --ink:#0A0A0A;
+    --muted:#6B6B66;
+    --line:#E8E6DF;
+    --chip:#F2F0E9;
+    --btn:#0A0A0A;
+    --btn-ink:#FAFAF7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Geist',ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01","cv11"}
+  body{min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+
+  /* NAV */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:22px 40px;border-bottom:1px solid var(--line);background:rgba(250,250,247,.7);backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
+  .mark{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.02em;font-size:15px}
+  .mark .dot{width:18px;height:18px;border-radius:5px;background:
+    conic-gradient(from 210deg at 50% 50%, #ff3b8b, #ffb13b, #3bd4ff, #8a3bff, #ff3b8b);
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+  .nav-links{display:flex;gap:28px;font-size:14px;color:var(--muted)}
+  .nav-links a{color:inherit;text-decoration:none;transition:color .2s}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-cta{font-size:13px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;color:var(--ink);text-decoration:none;background:#fff;transition:transform .15s ease, box-shadow .15s ease}
+  .nav-cta:hover{transform:translateY(-1px);box-shadow:0 6px 18px -10px rgba(0,0,0,.2)}
+
+  /* HERO */
+  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px 40px;text-align:center;position:relative}
+  .kicker{font-family:'Geist Mono',ui-monospace,monospace;font-size:11.5px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;display:inline-flex;align-items:center;gap:10px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:#fff}
+  .kicker::before{content:"";width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,#ff3b8b,#3bd4ff);box-shadow:0 0 8px rgba(59,212,255,.6)}
+
+  h1{font-size:clamp(40px,6.2vw,80px);line-height:1.0;letter-spacing:-.045em;font-weight:600;margin-top:22px;max-width:16ch}
+  h1 .grad{background:linear-gradient(100deg,#9A9A93 0%,#3A3A35 60%);-webkit-background-clip:text;background-clip:text;color:transparent;font-style:normal}
+  .sub{margin-top:22px;font-size:clamp(15px,1.25vw,18px);color:var(--muted);max-width:54ch;line-height:1.55}
+
+  /* PRISM ARTWORK */
+  .stage{position:relative;width:420px;height:380px;margin:54px auto 10px;display:grid;place-items:center;perspective:1400px}
+  .glow{position:absolute;inset:-20px;background:
+     radial-gradient(closest-side at 35% 45%,rgba(255,59,139,.45),transparent 60%),
+     radial-gradient(closest-side at 70% 55%,rgba(59,212,255,.45),transparent 60%),
+     radial-gradient(closest-side at 50% 70%,rgba(138,59,255,.35),transparent 65%),
+     radial-gradient(closest-side at 55% 35%,rgba(255,225,74,.30),transparent 60%);
+     filter:blur(40px);opacity:.9;z-index:0}
+  .floor{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);width:240px;height:20px;border-radius:50%;background:radial-gradient(ellipse at center, rgba(0,0,0,.28), transparent 70%);filter:blur(8px);z-index:0}
+
+  .cube{position:relative;width:200px;height:200px;transform-style:preserve-3d;transform:rotateX(-18deg) rotateY(-28deg);animation:spin 26s linear infinite;z-index:2}
+  @keyframes spin{from{transform:rotateX(-18deg) rotateY(-28deg)}to{transform:rotateX(-18deg) rotateY(332deg)}}
+  .face{position:absolute;inset:0;border-radius:4px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18), inset 0 0 40px rgba(255,255,255,.08)}
+  /* Prismatic gradients on each face */
+  .f1{background:
+       conic-gradient(from 220deg at 30% 30%, #ff3b8b, #ffb13b, #ffe24a, #3bd4ff, #8a3bff, #ff3b8b);
+       transform:translateZ(100px)}
+  .f2{background:
+       conic-gradient(from 40deg at 70% 30%, #3bd4ff, #8a3bff, #ff3b8b, #ffb13b, #3bd4ff);
+       transform:rotateY(180deg) translateZ(100px)}
+  .f3{background:
+       linear-gradient(135deg,#ffb13b,#ff3b8b 40%,#8a3bff 75%,#3bd4ff);
+       transform:rotateY(90deg) translateZ(100px)}
+  .f4{background:
+       linear-gradient(135deg,#3bd4ff,#8a3bff 45%,#ff3b8b 80%,#ffb13b);
+       transform:rotateY(-90deg) translateZ(100px)}
+  .f5{background:
+       conic-gradient(from 0deg at 50% 50%, #ffe24a, #3bd4ff, #8a3bff, #ff3b8b, #ffb13b, #ffe24a);
+       transform:rotateX(90deg) translateZ(100px)}
+  .f6{background:
+       conic-gradient(from 180deg at 50% 50%, #8a3bff, #ff3b8b, #ffb13b, #3bd4ff, #8a3bff);
+       transform:rotateX(-90deg) translateZ(100px)}
+  /* gloss highlight overlay using mix-blend */
+  .face::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 35%, rgba(255,255,255,0) 70%, rgba(0,0,0,.25) 100%);mix-blend-mode:overlay;pointer-events:none}
+  .face::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 20% 10%, rgba(255,255,255,.65), rgba(255,255,255,0) 45%);mix-blend-mode:screen;pointer-events:none}
+
+  /* CTA */
+  .cta{display:flex;gap:12px;margin-top:38px;flex-wrap:wrap;justify-content:center}
+  .btn{font:inherit;font-size:14px;font-weight:500;letter-spacing:-.005em;padding:12px 20px;border-radius:10px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:transform .15s ease, box-shadow .2s ease, background .2s ease;border:1px solid transparent}
+  .btn-primary{background:var(--btn);color:var(--btn-ink)}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 14px 30px -14px rgba(0,0,0,.5)}
+  .btn-primary svg{transition:transform .2s}
+  .btn-primary:hover svg{transform:translateX(3px)}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line);background:#fff}
+  .btn-ghost:hover{border-color:#cfcdc4}
+
+  /* tools row */
+  .tools{margin-top:64px;display:flex;flex-direction:column;align-items:center;gap:18px}
+  .tools-label{font-family:'Geist Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+  .tools-row{display:flex;align-items:center;gap:36px;flex-wrap:wrap;justify-content:center;color:#3a3a35;font-weight:500;font-size:15px;letter-spacing:-.01em}
+  .tools-row span{opacity:.78;display:inline-flex;align-items:center;gap:8px}
+  .tools-row .sep{width:3px;height:3px;border-radius:50%;background:#cfcdc4;opacity:1}
+
+  footer{padding:24px 40px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted)}
+  footer a{color:inherit;text-decoration:none;margin-left:22px}
+  footer a:hover{color:var(--ink)}
+
+  @media (max-width:640px){
+    nav{padding:16px 20px}
+    .nav-links{display:none}
+    .stage{width:300px;height:300px}
+    .cube{width:170px;height:170px}
+    .f1,.f2,.f3,.f4,.f5,.f6{}
+    footer{flex-direction:column;gap:10px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="mark"><span class="dot"></span> shashi</div>
+  <div class="nav-links">
+    <a href="#">Work</a>
+    <a href="#">Index</a>
+    <a href="#">Writing</a>
+  </div>
+  <a class="nav-cta" href="#">Get in touch &rarr;</a>
+</nav>
+
+<main>
+  <span class="kicker">The Personal Cloud</span>
+  <h1>Build agents.<br/>Ship design <span class="grad">at any scale.</span></h1>
+  <p class="sub">Shashi is an agentic designer at Eloelo — instructing AI, shipping volume, and turning brand and product systems into living, self-running tools.</p>
+
+  <div class="stage" aria-hidden="true">
+    <div class="glow"></div>
+    <div class="cube">
+      <div class="face f1"></div>
+      <div class="face f2"></div>
+      <div class="face f3"></div>
+      <div class="face f4"></div>
+      <div class="face f5"></div>
+      <div class="face f6"></div>
+    </div>
+    <div class="floor"></div>
+  </div>
+
+  <div class="cta">
+    <a class="btn btn-primary" href="#">Start exploring
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </a>
+    <a class="btn btn-ghost" href="#">Book a chat</a>
+  </div>
+
+  <div class="tools">
+    <div class="tools-label">Develop with your favourite tools</div>
+    <div class="tools-row">
+      <span>Claude</span><span class="sep"></span>
+      <span>Figma</span><span class="sep"></span>
+      <span>Midjourney</span><span class="sep"></span>
+      <span>n8n</span><span class="sep"></span>
+      <span>Geist</span>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div>&copy; 2026 Shashi — Agentic Designer at Eloelo</div>
+  <div>
+    <a href="#">Twitter</a><a href="#">Read.cv</a><a href="#">Email</a>
+  </div>
+</footer>
+
+</body>
+</html>

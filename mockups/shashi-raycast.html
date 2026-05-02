@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Shashi — Agentic Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000000;
+    --ink: #ffffff;
+    --ink-2: rgba(255,255,255,0.62);
+    --ink-3: rgba(255,255,255,0.38);
+    --line: rgba(255,255,255,0.08);
+    --line-2: rgba(255,255,255,0.14);
+    --card: #0a0a0c;
+    --card-2: #0d0d10;
+    --cyan: #4cc9ff;
+    --purple: #a78bfa;
+    --pink: #f472b6;
+    --blue: #5b8def;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --red: #f87171;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Geist', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* Ambient background glow behind hero */
+  .ambient {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .ambient::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 62%;
+    width: 1500px;
+    height: 1100px;
+    transform: translate(-50%, -50%);
+    background:
+      radial-gradient(closest-side, rgba(76,201,255,0.32), transparent 70%),
+      radial-gradient(closest-side, rgba(91,141,239,0.22), transparent 75%);
+    filter: blur(30px);
+  }
+  .ambient::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 90%;
+    width: 1200px;
+    height: 700px;
+    transform: translate(-50%, -50%);
+    background:
+      radial-gradient(closest-side, rgba(244,114,182,0.20), transparent 70%),
+      radial-gradient(closest-side at 20% 50%, rgba(167,139,250,0.22), transparent 70%);
+    filter: blur(40px);
+  }
+
+  /* Subtle grid */
+  .grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse at 50% 40%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 30%, transparent 75%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  nav {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+  }
+  .mark-dot {
+    width: 22px; height: 22px;
+    border-radius: 7px;
+    background: linear-gradient(135deg, #4cc9ff, #a78bfa 60%, #f472b6);
+    box-shadow:
+      0 0 24px rgba(167,139,250,0.55),
+      inset 0 0 0 1px rgba(255,255,255,0.18);
+    position: relative;
+  }
+  .mark-dot::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border-radius: 4px;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(2px);
+  }
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    font-size: 13.5px;
+    color: var(--ink-2);
+  }
+  .nav-links a {
+    color: inherit;
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta {
+    font-size: 13px;
+    font-family: 'Geist Mono', monospace;
+    color: var(--ink);
+    border: 1px solid var(--line-2);
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  /* Hero */
+  main { position: relative; z-index: 2; }
+  .hero {
+    position: relative;
+    text-align: center;
+    padding: 80px 24px 40px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    border: 1px solid var(--line-2);
+    background: rgba(255,255,255,0.03);
+    padding: 6px 12px;
+    border-radius: 999px;
+    margin-bottom: 28px;
+  }
+  .pill-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+  }
+  h1 {
+    font-size: clamp(44px, 7.2vw, 96px);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    font-weight: 600;
+    margin: 0 0 26px;
+    background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.78) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  h1 .accent {
+    background: linear-gradient(90deg, #4cc9ff, #a78bfa 50%, #f472b6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .sub {
+    font-size: clamp(15px, 1.4vw, 18px);
+    line-height: 1.55;
+    color: var(--ink-2);
+    max-width: 600px;
+    margin: 0 auto;
+    font-weight: 400;
+  }
+
+  /* Floating composition */
+  .stage {
+    position: relative;
+    height: 760px;
+    margin: 20px auto 40px;
+    max-width: 1320px;
+    perspective: 1800px;
+  }
+
+  .card {
+    position: absolute;
+    background: linear-gradient(180deg, #0d0d10 0%, #08080a 100%);
+    border: 1px solid var(--line-2);
+    border-radius: 14px;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), transparent 30%);
+    pointer-events: none;
+  }
+
+  /* Card chrome */
+  .card-chrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,0.015);
+  }
+  .card-title-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .traffic {
+    display: flex; gap: 6px;
+  }
+  .traffic span {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+  }
+  .traffic span:nth-child(1) { background: #ff5f57; opacity: 0.8; }
+  .traffic span:nth-child(2) { background: #febc2e; opacity: 0.8; }
+  .traffic span:nth-child(3) { background: #28c840; opacity: 0.8; }
+  .card-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    color: var(--ink-2);
+    text-transform: uppercase;
+  }
+  .card-status {
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-3);
+  }
+  .card-status .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+  }
+
+  /* FOREGROUND: Brand Critic */
+  .card-brand {
+    width: 680px;
+    left: 50%;
+    top: 30px;
+    transform: translateX(-50%);
+    z-index: 5;
+    box-shadow:
+      0 30px 80px rgba(0,0,0,0.7),
+      0 0 0 1px rgba(255,255,255,0.05),
+      0 0 140px rgba(76,201,255,0.42),
+      0 0 260px rgba(91,141,239,0.32),
+      0 0 380px rgba(167,139,250,0.24);
+    filter: drop-shadow(0 40px 80px rgba(76,201,255,0.18));
+  }
+  .card-brand .body { padding: 14px 16px 16px; }
+  .review-row {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    gap: 12px;
+    align-items: start;
+    padding: 12px 4px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .review-row:last-child { border-bottom: 0; }
+  .review-icon {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: grid; place-items: center;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .ic-color { background: rgba(76,201,255,0.10); color: var(--cyan); border: 1px solid rgba(76,201,255,0.25); }
+  .ic-type  { background: rgba(167,139,250,0.10); color: var(--purple); border: 1px solid rgba(167,139,250,0.25); }
+  .ic-grid  { background: rgba(244,114,182,0.10); color: var(--pink); border: 1px solid rgba(244,114,182,0.25); }
+  .ic-spacing { background: rgba(52,211,153,0.10); color: var(--green); border: 1px solid rgba(52,211,153,0.25); }
+
+  .review-title { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 3px; letter-spacing: -0.005em; }
+  .review-desc  { font-size: 12px; color: var(--ink-2); line-height: 1.45; }
+  .review-desc code {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    background: rgba(255,255,255,0.05);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--ink);
+  }
+  .pillet {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .pillet.warn { background: rgba(251,191,36,0.10); color: var(--amber); border: 1px solid rgba(251,191,36,0.30); }
+  .pillet.crit { background: rgba(248,113,113,0.10); color: var(--red);   border: 1px solid rgba(248,113,113,0.30); }
+  .pillet.info { background: rgba(76,201,255,0.10); color: var(--cyan);  border: 1px solid rgba(76,201,255,0.30); }
+  .pillet.ok   { background: rgba(52,211,153,0.10); color: var(--green); border: 1px solid rgba(52,211,153,0.30); }
+
+  .card-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px;
+    border-top: 1px solid var(--line);
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    background: rgba(255,255,255,0.01);
+  }
+  .card-foot kbd {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-2);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--line-2);
+    border-bottom-width: 2px;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  /* LEFT BACKGROUND: Thumbnail Pipeline */
+  .card-thumb {
+    width: 400px;
+    left: 2%;
+    top: 150px;
+    transform: rotate(-5deg) scale(0.98);
+    z-index: 3;
+    opacity: 0.96;
+    box-shadow:
+      0 30px 60px rgba(0,0,0,0.6),
+      0 0 100px rgba(167,139,250,0.45),
+      0 0 200px rgba(167,139,250,0.28),
+      0 0 300px rgba(244,114,182,0.18);
+  }
+  .card-thumb .body { padding: 12px; }
+  .variant-row {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.015);
+    margin-bottom: 8px;
+  }
+  .variant-row:last-child { margin-bottom: 0; }
+  .variant-thumb {
+    width: 56px; height: 36px;
+    border-radius: 5px;
+    border: 1px solid var(--line-2);
+    position: relative;
+    overflow: hidden;
+  }
+  .variant-thumb::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.10), transparent 50%);
+  }
+  .vt-1 { background: linear-gradient(135deg, #6b21a8, #db2777); }
+  .vt-2 { background: linear-gradient(135deg, #1e3a8a, #0891b2); }
+  .vt-3 { background: linear-gradient(135deg, #831843, #7c2d12); }
+  .vt-4 { background: linear-gradient(135deg, #064e3b, #0f766e); }
+  .variant-meta { display: flex; flex-direction: column; gap: 3px; }
+  .variant-name {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  .variant-sub {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+  }
+  .variant-score {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-2);
+    text-align: right;
+  }
+  .variant-score b { color: var(--ink); font-weight: 600; }
+  .bar {
+    width: 44px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.06);
+    margin-top: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar i {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+    border-radius: 2px;
+  }
+
+  /* RIGHT BACKGROUND: Research Agent */
+  .card-research {
+    width: 410px;
+    right: 1%;
+    top: 180px;
+    transform: rotate(4.5deg) scale(0.97);
+    z-index: 3;
+    opacity: 0.96;
+    box-shadow:
+      0 30px 60px rgba(0,0,0,0.6),
+      0 0 100px rgba(76,201,255,0.45),
+      0 0 200px rgba(76,201,255,0.28),
+      0 0 300px rgba(91,141,239,0.20);
+  }
+  .card-research .body { padding: 12px; }
+  .search-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--line-2);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+    margin-bottom: 10px;
+  }
+  .search-bar svg { width: 13px; height: 13px; opacity: 0.55; }
+  .search-bar span {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink);
+  }
+  .search-bar .caret {
+    width: 1.5px; height: 12px;
+    background: var(--cyan);
+    margin-left: 1px;
+    animation: blink 1s infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .search-bar kbd {
+    margin-left: auto;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .result-row {
+    display: grid;
+    grid-template-columns: 16px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 9px 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .result-row:last-child { border-bottom: 0; }
+  .favicon {
+    width: 16px; height: 16px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #4cc9ff, #5b8def);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15);
+  }
+  .favicon.fav-2 { background: linear-gradient(135deg, #f472b6, #a78bfa); }
+  .favicon.fav-3 { background: linear-gradient(135deg, #34d399, #0891b2); }
+  .favicon.fav-4 { background: linear-gradient(135deg, #fbbf24, #f87171); }
+  .result-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .result-title {
+    font-size: 11.5px;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: -0.005em;
+  }
+  .result-url {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+  }
+  .result-tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9.5px;
+    color: var(--ink-2);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line);
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* CTA */
+  .cta-wrap {
+    position: relative;
+    z-index: 6;
+    text-align: center;
+    margin-top: -10px;
+    padding-bottom: 100px;
+  }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 22px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line-2);
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all .2s;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.06) inset,
+      0 0 40px rgba(167,139,250,0.18);
+  }
+  .cta:hover {
+    background: rgba(255,255,255,0.07);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.1) inset, 0 0 60px rgba(167,139,250,0.3);
+  }
+  .cta-mono {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-top: 14px;
+  }
+  .cta-arrow { transition: transform .2s; }
+  .cta:hover .cta-arrow { transform: translateX(3px); }
+
+  /* Tiny floating tag chips on the stage */
+  .tag-chip {
+    position: absolute;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-2);
+    padding: 5px 9px;
+    border-radius: 999px;
+    border: 1px solid var(--line-2);
+    background: rgba(10,10,12,0.7);
+    backdrop-filter: blur(6px);
+    z-index: 4;
+    letter-spacing: 0.04em;
+  }
+  .tag-chip .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient"></div>
+<div class="grid"></div>
+
+<nav>
+  <div class="mark">
+    <div class="mark-dot"></div>
+    <span>shashi</span>
+  </div>
+  <div class="nav-links">
+    <a href="#">Agents</a>
+    <a href="#">Work</a>
+    <a href="#">Notes</a>
+  </div>
+  <a class="nav-cta" href="#">⌘ Open</a>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="pill"><span class="pill-dot"></span> Agentic Designer · Eloelo</div>
+    <h1>The agents that<br><span class="accent">ship the work.</span></h1>
+    <p class="sub">I instruct AI, build agents, and ship volume — brand, product, and graphic design at the speed of intent.</p>
+  </section>
+
+  <section class="stage">
+
+    <!-- Floating tag chips -->
+    <div class="tag-chip" style="left: 22%; top: 60px;"><span class="dot" style="background:var(--cyan); box-shadow:0 0 6px var(--cyan)"></span>v0.4 · running</div>
+    <div class="tag-chip" style="right: 24%; top: 80px;"><span class="dot" style="background:var(--purple); box-shadow:0 0 6px var(--purple)"></span>3 agents · synced</div>
+
+    <!-- LEFT: Thumbnail Pipeline -->
+    <div class="card card-thumb">
+      <div class="card-chrome">
+        <div class="card-title-wrap">
+          <div class="traffic"><span></span><span></span><span></span></div>
+          <span class="card-label">Thumbnail Pipeline</span>
+        </div>
+        <span class="card-status"><span class="dot"></span>4/4</span>
+      </div>
+      <div class="body">
+        <div class="variant-row">
+          <div class="variant-thumb vt-1"></div>
+          <div class="variant-meta">
+            <span class="variant-name">variant_01.png</span>
+            <span class="variant-sub">1280×720 · YT</span>
+          </div>
+          <div class="variant-score">
+            <b>92</b><div class="bar"><i style="width:92%"></i></div>
+          </div>
+        </div>
+        <div class="variant-row">
+          <div class="variant-thumb vt-2"></div>
+          <div class="variant-meta">
+            <span class="variant-name">variant_02.png</span>
+            <span class="variant-sub">1280×720 · YT</span>
+          </div>
+          <div class="variant-score">
+            <b>87</b><div class="bar"><i style="width:87%"></i></div>
+          </div>
+        </div>
+        <div class="variant-row">
+          <div class="variant-thumb vt-3"></div>
+          <div class="variant-meta">
+            <span class="variant-name">variant_03.png</span>
+            <span class="variant-sub">1280×720 · YT</span>
+          </div>
+          <div class="variant-score">
+            <b>78</b><div class="bar"><i style="width:78%"></i></div>
+          </div>
+        </div>
+        <div class="variant-row">
+          <div class="variant-thumb vt-4"></div>
+          <div class="variant-meta">
+            <span class="variant-name">variant_04.png</span>
+            <span class="variant-sub">1280×720 · YT</span>
+          </div>
+          <div class="variant-score">
+            <b>71</b><div class="bar"><i style="width:71%"></i></div>
+          </div>
+        </div>
+      </div>
+      <div class="card-foot">
+        <span>render → score → export</span>
+        <span>1.4s</span>
+      </div>
+    </div>
+
+    <!-- CENTER: Brand Critic Agent -->
+    <div class="card card-brand">
+      <div class="card-chrome">
+        <div class="card-title-wrap">
+          <div class="traffic"><span></span><span></span><span></span></div>
+          <span class="card-label">Brand Critic Agent</span>
+        </div>
+        <span class="card-status"><span class="dot"></span>review · 12 issues</span>
+      </div>
+      <div class="body">
+        <div class="review-row">
+          <div class="review-icon ic-color">C</div>
+          <div>
+            <div class="review-title">Off-brand color in hero CTA</div>
+            <div class="review-desc">Detected <code>#3B82F6</code> — palette expects <code>brand/blue-500 #4C7CF6</code>. Drift = 8.4%.</div>
+          </div>
+          <span class="pillet crit">Critical</span>
+        </div>
+        <div class="review-row">
+          <div class="review-icon ic-type">T</div>
+          <div>
+            <div class="review-title">Heading line-height too tight</div>
+            <div class="review-desc">Geist 600 / 64px is set to <code>0.92</code>. Brand spec is <code>0.98</code>. Cap-height collision on /g/.</div>
+          </div>
+          <span class="pillet warn">Fix</span>
+        </div>
+        <div class="review-row">
+          <div class="review-icon ic-grid">G</div>
+          <div>
+            <div class="review-title">Hero grid out of 8pt rhythm</div>
+            <div class="review-desc">Container padding is <code>22px</code>. Snap to <code>24px</code> to match the 8pt baseline used across the system.</div>
+          </div>
+          <span class="pillet warn">Fix</span>
+        </div>
+        <div class="review-row">
+          <div class="review-icon ic-spacing">S</div>
+          <div>
+            <div class="review-title">Logo clear-space honored</div>
+            <div class="review-desc">Min clear-space = <code>1x mark height</code>. Measured <code>1.18x</code>. Pass.</div>
+          </div>
+          <span class="pillet ok">Pass</span>
+        </div>
+      </div>
+      <div class="card-foot">
+        <span>brand · v3.2 · auto-review</span>
+        <span><kbd>⌘</kbd> <kbd>↵</kbd> apply fixes</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: Research Agent -->
+    <div class="card card-research">
+      <div class="card-chrome">
+        <div class="card-title-wrap">
+          <div class="traffic"><span></span><span></span><span></span></div>
+          <span class="card-label">Research Agent</span>
+        </div>
+        <span class="card-status"><span class="dot"></span>14 sources</span>
+      </div>
+      <div class="body">
+        <div class="search-bar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <span>premium dark dashboard ui</span><span class="caret"></span>
+          <kbd>⌘K</kbd>
+        </div>
+        <div class="result-row">
+          <div class="favicon"></div>
+          <div class="result-meta">
+            <span class="result-title">Linear — Built for modern software teams</span>
+            <span class="result-url">linear.app · landing</span>
+          </div>
+          <span class="result-tag">UI</span>
+        </div>
+        <div class="result-row">
+          <div class="favicon fav-2"></div>
+          <div class="result-meta">
+            <span class="result-title">Vercel — Frontend cloud, dark hero</span>
+            <span class="result-url">vercel.com</span>
+          </div>
+          <span class="result-tag">UI</span>
+        </div>
+        <div class="result-row">
+          <div class="favicon fav-3"></div>
+          <div class="result-meta">
+            <span class="result-title">Arc Browser — product page reference</span>
+            <span class="result-url">arc.net · product</span>
+          </div>
+          <span class="result-tag">REF</span>
+        </div>
+        <div class="result-row">
+          <div class="favicon fav-4"></div>
+          <div class="result-meta">
+            <span class="result-title">Raycast — Extensions launch</span>
+            <span class="result-url">raycast.com/blog</span>
+          </div>
+          <span class="result-tag">REF</span>
+        </div>
+      </div>
+      <div class="card-foot">
+        <span>summarize · cluster · save</span>
+        <span>0.8s</span>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="cta-wrap">
+    <a class="cta" href="#">
+      Try one
+      <span class="cta-arrow">→</span>
+    </a>
+    <div class="cta-mono">— or press <span style="color:var(--ink-2)">⌘K</span> to open the agent shelf</div>
+  </div>
+</main>
+
+</body>
+</html>

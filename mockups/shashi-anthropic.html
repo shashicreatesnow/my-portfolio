@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shashi — Agentic Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Surface */
+    --bg:           #F2EBDD;
+    --bg-soft:      #EFE7D6;
+    --bg-card:      #FBF6EA;
+    --line:         rgba(34, 28, 20, 0.10);
+    --line-strong:  rgba(34, 28, 20, 0.18);
+
+    /* Ink */
+    --ink:          #1F1A14;
+    --ink-soft:     #4A4135;
+    --ink-mute:     #7A6E5E;
+
+    /* Accent (used <5% of pixels) */
+    --accent:       #B85C38;
+    --accent-soft:  #D88A66;
+
+    /* Type */
+    --serif: "Instrument Serif", "Iowan Old Style", "Apple Garamond", Georgia, serif;
+    --sans:  "Geist", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+    /* Rhythm */
+    --maxw: 1240px;
+    --gutter: clamp(20px, 4vw, 56px);
+
+    /* Shadow */
+    --shadow-card: 0 1px 0 rgba(34,28,20,0.04), 0 18px 40px -28px rgba(34,28,20,0.18);
+    --shadow-card-hover: 0 1px 0 rgba(34,28,20,0.06), 0 30px 50px -28px rgba(34,28,20,0.28);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "ss01", "ss02";
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+  }
+
+  /* Subtle grain so the cream doesn't read flat on big screens */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(rgba(34,28,20,0.025) 1px, transparent 1px);
+    background-size: 3px 3px;
+    mix-blend-mode: multiply;
+    z-index: 0;
+  }
+
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Nav ───────────────────────────────────────────────────────── */
+  nav.top {
+    padding-top: 28px;
+    padding-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .mark {
+    font-family: var(--serif);
+    font-size: 28px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .mark em {
+    font-style: italic;
+  }
+  .mark .dot {
+    width: 5px; height: 5px;
+    background: var(--accent);
+    border-radius: 999px;
+    display: inline-block;
+    transform: translateY(-2px);
+  }
+
+  nav.top ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 28px;
+  }
+  nav.top a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    transition: color 160ms ease;
+  }
+  nav.top a:hover { color: var(--ink); }
+  nav.top .sep {
+    color: var(--ink-mute);
+    opacity: 0.5;
+    font-size: 14px;
+  }
+
+  /* ── Hero ──────────────────────────────────────────────────────── */
+  header.hero {
+    padding-top: clamp(36px, 5.5vw, 72px);
+    padding-bottom: clamp(48px, 8vw, 104px);
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 28px;
+  }
+  .eyebrow .pulse {
+    width: 7px; height: 7px;
+    border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 0 0 rgba(184, 92, 56, 0.55);
+    animation: pulse 2.2s ease-out infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(184, 92, 56, 0.45); }
+    70%  { box-shadow: 0 0 0 10px rgba(184, 92, 56, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(184, 92, 56, 0); }
+  }
+
+  h1.headline {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(56px, 7.6vw, 96px);
+    line-height: 0.98;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    margin: 0;
+    max-width: 16ch;
+  }
+  h1.headline em {
+    font-style: italic;
+    position: relative;
+  }
+  h1.headline em.under {
+    /* The single brand underline — used once */
+  }
+  h1.headline em.under::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 0.04em;
+    height: 0.06em;
+    background: var(--accent);
+    opacity: 0.85;
+    border-radius: 2px;
+  }
+
+  .sub {
+    margin-top: 28px;
+    font-size: 17.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 58ch;
+    letter-spacing: -0.005em;
+  }
+  .sub b {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* ── Featured work ─────────────────────────────────────────────── */
+  section.work {
+    padding-top: 24px;
+    padding-bottom: 96px;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-top: 1px solid var(--line);
+    padding-top: 22px;
+    margin-bottom: 36px;
+  }
+  .section-head h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(22px, 2.4vw, 28px);
+    margin: 0;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .section-head .meta {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
+    font-weight: 500;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+  }
+  @media (max-width: 960px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px 14px 22px;
+    box-shadow: var(--shadow-card);
+    transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
+    cursor: pointer;
+    position: relative;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card-hover);
+    border-color: var(--line-strong);
+  }
+  .thumb {
+    aspect-ratio: 4 / 3;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 22px;
+  }
+  .thumb::after {
+    /* subtle inner shadow line */
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 1px rgba(34,28,20,0.06);
+    pointer-events: none;
+  }
+
+  /* Three distinct project moods — terracotta · ochre · ink */
+  .thumb.t1 {
+    /* Nammatales — warm earthy terracotta + cream */
+    background:
+      radial-gradient(140% 90% at 15% 20%, #F4DDC2 0%, transparent 55%),
+      radial-gradient(120% 80% at 85% 85%, #8C3F22 0%, transparent 60%),
+      linear-gradient(135deg, #D89569 0%, #A14A26 100%);
+  }
+  .thumb.t2 {
+    /* Master Thumbnails — saturated golden ochre */
+    background:
+      radial-gradient(120% 80% at 75% 25%, #F8E6B8 0%, transparent 55%),
+      radial-gradient(140% 90% at 20% 90%, #6E3A0E 0%, transparent 65%),
+      linear-gradient(160deg, #D89043 0%, #7A3F12 100%);
+  }
+  .thumb.t3 {
+    /* VR Green ERP — calm graphite + sage, the "system" project */
+    background:
+      radial-gradient(110% 80% at 30% 25%, #C6CCB8 0%, transparent 55%),
+      radial-gradient(140% 100% at 80% 90%, #1A1F1B 0%, transparent 65%),
+      linear-gradient(160deg, #5A675B 0%, #232825 100%);
+  }
+  .thumb.t1::before, .thumb.t2::before, .thumb.t3::before {
+    /* a faint diagonal sheen to give the gradient a sense of light */
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(120deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 40%);
+    pointer-events: none;
+  }
+
+  .thumb-num {
+    position: absolute;
+    top: 14px; left: 14px;
+    font-family: var(--serif);
+    font-style: italic;
+    color: rgba(255,247,232,0.85);
+    font-size: 18px;
+    letter-spacing: 0.02em;
+  }
+  .thumb-tag {
+    position: absolute;
+    bottom: 14px; left: 14px;
+    background: rgba(20,14,8,0.32);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: #F8F0DE;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 500;
+  }
+
+  .cat {
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin: 0 4px 10px;
+  }
+  .title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 1.05;
+    letter-spacing: -0.012em;
+    margin: 0 4px 10px;
+    color: var(--ink);
+  }
+  .desc {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin: 0 4px;
+    max-width: 34ch;
+  }
+
+  /* ── Footer ────────────────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--line);
+    padding-top: 28px;
+    padding-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 16px;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+  footer a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 1px;
+    transition: border-color 160ms ease, color 160ms ease;
+  }
+  footer a:hover {
+    border-bottom-color: var(--accent);
+    color: var(--ink);
+  }
+  footer .socials {
+    display: inline-flex;
+    gap: 22px;
+  }
+  footer .left em {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--ink);
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- NAV -->
+  <nav class="top">
+    <a href="#" class="mark" aria-label="Shashi"><em>S</em><span class="dot"></span></a>
+    <ul>
+      <li><a href="#work">Work</a></li>
+      <li><span class="sep">·</span></li>
+      <li><a href="#about">About</a></li>
+      <li><span class="sep">·</span></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="eyebrow">
+      <span class="pulse" aria-hidden="true"></span>
+      Available for select work · Bengaluru, IST
+    </div>
+
+    <h1 class="headline">
+      I <em class="under">instruct</em> AI and <em>build</em> the agents that ship design at scale.
+    </h1>
+
+    <p class="sub">
+      Agentic designer at Eloelo, Bengaluru. Foundation in product, brand, and graphic design — now spending most days teaching models how to do the work, and shipping the systems that prove it. <b>833 thumbnails in four and a half months</b>, and counting.
+    </p>
+  </header>
+
+  <!-- FEATURED WORK -->
+  <section class="work" id="work">
+    <div class="section-head">
+      <h2>Featured work</h2>
+      <span class="meta">2024 — 2026 · Selected</span>
+    </div>
+
+    <div class="grid">
+
+      <article class="card">
+        <div class="thumb t1">
+          <span class="thumb-num">01</span>
+          <span class="thumb-tag">Identity</span>
+        </div>
+        <p class="cat">Brand Identity</p>
+        <h3 class="title">Nammatales</h3>
+        <p class="desc">A warm, place-rooted identity for a Bengaluru food vlog — built around handfeel type and a city palette.</p>
+      </article>
+
+      <article class="card">
+        <div class="thumb t2">
+          <span class="thumb-num">02</span>
+          <span class="thumb-tag">Volume</span>
+        </div>
+        <p class="cat">Agentic Design</p>
+        <h3 class="title">Master App Thumbnails</h3>
+        <p class="desc">833 production thumbnails in 4.5 months. A hand-tuned agent pipeline that lifts CTR without losing the brand.</p>
+      </article>
+
+      <article class="card">
+        <div class="thumb t3">
+          <span class="thumb-num">03</span>
+          <span class="thumb-tag">Systems</span>
+        </div>
+        <p class="cat">Product UI</p>
+        <h3 class="title">VR Green ERP</h3>
+        <p class="desc">Manufacturing operations rethought as a calm, dense, keyboard-first interface for daily floor users.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="contact">
+    <div class="left">
+      <em>Shashi</em> — agentic &amp; brand design, Bengaluru.
+      &nbsp;·&nbsp;
+      <a href="mailto:shashi@eloelo.in">shashi@eloelo.in</a>
+    </div>
+    <div class="socials">
+      <a href="#">Read.cv</a>
+      <a href="#">LinkedIn</a>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

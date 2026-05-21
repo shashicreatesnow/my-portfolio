@@ -6,6 +6,8 @@ import type * as THREE from "three";
 
 interface HeroBrainProps {
   eyebrow?: string;
+  title?: string;
+  titleAccent?: string;
   ledeText?: string;
   primaryHref?: string;
   primaryLabel?: string;
@@ -15,6 +17,8 @@ interface HeroBrainProps {
 
 export function HeroBrain({
   eyebrow = "Product & Brand Designer",
+  title = "A designer who can design",
+  titleAccent = "AI Systems",
   ledeText = "Anyone can design a screen. I design the system and the agent that runs it.",
   primaryHref = "/works",
   primaryLabel = "enter the work",
@@ -257,16 +261,20 @@ export function HeroBrain({
             letterSpacing: "-0.035em",
           }}
         >
-          A designer who can design
-          <br />
-          <span className="relative inline-block pb-[0.14em]">
-            <span
-              className="font-display italic font-normal text-[color:var(--accent)]"
-              style={{ fontSize: "1.08em", lineHeight: 0.95, letterSpacing: "-0.005em" }}
-            >
-              AI Systems
-            </span>
-          </span>
+          {title}
+          {titleAccent ? (
+            <>
+              <br />
+              <span className="relative inline-block pb-[0.14em]">
+                <span
+                  className="font-display italic font-normal text-[color:var(--accent)]"
+                  style={{ fontSize: "1.08em", lineHeight: 0.95, letterSpacing: "-0.005em" }}
+                >
+                  {titleAccent}
+                </span>
+              </span>
+            </>
+          ) : null}
         </h1>
 
         <p className="mx-auto mt-5 max-w-[50ch] text-[16.5px] font-normal leading-[1.6] text-[color:var(--ink-muted)]">

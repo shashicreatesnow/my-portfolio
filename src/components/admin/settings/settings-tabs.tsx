@@ -84,8 +84,18 @@ export function SettingsTabs({ settings }: { settings: typeof defaultSiteSetting
         <Card>
           <CardContent className="space-y-4 p-6">
             <div className="space-y-2">
-              <Label>Title</Label>
-              <Input {...heroForm.register("title")} />
+              <Label>Eyebrow (small label above headline)</Label>
+              <Input {...heroForm.register("eyebrow")} placeholder="Product & Brand Designer" />
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label>Title (regular)</Label>
+                <Input {...heroForm.register("title")} placeholder="A designer who can design" />
+              </div>
+              <div className="space-y-2">
+                <Label>Title accent (italic, terracotta)</Label>
+                <Input {...heroForm.register("title_accent")} placeholder="AI Systems" />
+              </div>
             </div>
             <div className="space-y-2">
               <Label>Subtitle</Label>
@@ -93,12 +103,20 @@ export function SettingsTabs({ settings }: { settings: typeof defaultSiteSetting
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label>CTA text</Label>
+                <Label>Primary CTA text</Label>
                 <Input {...heroForm.register("cta_text")} />
               </div>
               <div className="space-y-2">
-                <Label>CTA link</Label>
+                <Label>Primary CTA link</Label>
                 <Input {...heroForm.register("cta_link")} />
+              </div>
+              <div className="space-y-2">
+                <Label>Secondary CTA text</Label>
+                <Input {...heroForm.register("secondary_cta_text")} placeholder="say hello" />
+              </div>
+              <div className="space-y-2">
+                <Label>Secondary CTA link</Label>
+                <Input {...heroForm.register("secondary_cta_link")} placeholder="/about" />
               </div>
             </div>
             <Button disabled={isPending} onClick={heroForm.handleSubmit((values) => submit(() => saveHeroSettingsAction(values), "Hero settings saved"))}>

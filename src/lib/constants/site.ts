@@ -10,10 +10,15 @@ export const siteMetadata = {
 
 export const defaultSiteSettings = {
   hero: {
-    title: "Design Strategist & AI Systems Builder",
-    subtitle: "I don't just design — I engineer the system that designs.",
-    cta_text: "See My Work",
+    eyebrow: "Product & Brand Designer",
+    title: "A designer who can design",
+    title_accent: "AI Systems",
+    subtitle:
+      "Anyone can design a screen. I design the system and the agent that runs it.",
+    cta_text: "enter the work",
     cta_link: "/works",
+    secondary_cta_text: "say hello",
+    secondary_cta_link: "/about",
   },
   about: {
     headline: "Crafting the Vision",

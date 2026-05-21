@@ -1,10 +1,14 @@
 import { z } from "zod";
 
 export const heroSettingsSchema = z.object({
+  eyebrow: z.string().max(80).optional().default(""),
   title: z.string().min(1).max(200),
+  title_accent: z.string().max(80).optional().default(""),
   subtitle: z.string().min(1).max(300),
   cta_text: z.string().min(1).max(80),
   cta_link: z.string().min(1).max(160),
+  secondary_cta_text: z.string().max(80).optional().default(""),
+  secondary_cta_link: z.string().max(160).optional().default(""),
 });
 
 export const contactSettingsSchema = z.object({

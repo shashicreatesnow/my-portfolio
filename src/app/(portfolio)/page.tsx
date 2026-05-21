@@ -20,8 +20,14 @@ export default async function HomePage() {
   return (
     <div className="w-full">
       <HeroBrain
+        eyebrow={settings.hero.eyebrow || "Product & Brand Designer"}
+        title={settings.hero.title || "A designer who can design"}
+        titleAccent={settings.hero.title_accent || "AI Systems"}
+        ledeText={settings.hero.subtitle}
         primaryHref={settings.hero.cta_link || "/works"}
         primaryLabel={settings.hero.cta_text || "enter the work"}
+        secondaryHref={settings.hero.secondary_cta_link || "/about"}
+        secondaryLabel={settings.hero.secondary_cta_text || "say hello"}
       />
 
       <SkillsThree skills={skills} />

@@ -118,18 +118,18 @@ export async function BlockRenderer({
         />
       )}
       {block.block_type === "heading1" && (
-        <h1 id={`section-${block.id}`} className="scroll-mt-28 font-display text-5xl leading-none md:text-6xl">{content.text}</h1>
+        <h1 id={`section-${block.id}`} className="scroll-mt-28 text-[40px] font-medium leading-[1.1] tracking-[-0.03em] md:text-[56px]">{content.text}</h1>
       )}
       {block.block_type === "heading2" && (
-        <h2 id={`section-${block.id}`} className="scroll-mt-28 font-display text-4xl leading-none md:text-5xl">{content.text}</h2>
+        <h2 id={`section-${block.id}`} className="scroll-mt-28 text-[30px] font-medium leading-[1.15] tracking-[-0.025em] md:text-[42px]">{content.text}</h2>
       )}
       {block.block_type === "heading3" && (
-        <h3 id={`section-${block.id}`} className="scroll-mt-28 font-display text-3xl leading-none md:text-4xl">{content.text}</h3>
+        <h3 id={`section-${block.id}`} className="scroll-mt-28 text-[22px] font-medium leading-[1.25] tracking-[-0.02em] md:text-[28px]">{content.text}</h3>
       )}
       {block.block_type === "quote" && (
-        <blockquote className="border-l-2 border-primary pl-6">
-          <p className="font-display text-2xl italic leading-relaxed">{content.text}</p>
-          {content.attribution && <footer className="mt-4 text-sm text-muted-foreground">{content.attribution}</footer>}
+        <blockquote className="border-l-2 border-[color:var(--accent)] pl-6">
+          <p className="text-[20px] font-light leading-[1.45] tracking-[-0.005em] text-[color:var(--ink)] md:text-[24px]">{content.text}</p>
+          {content.attribution && <footer className="mt-4 text-sm text-[color:var(--ink-soft)]">{content.attribution}</footer>}
         </blockquote>
       )}
       {block.block_type === "image" && content.url && (
@@ -187,21 +187,21 @@ export async function BlockRenderer({
           content.style === "accent" ? "border-t-2 border-primary" :
           "border-l-2 border-primary"
         )}>
-          <p className="font-display text-4xl">{content.value}</p>
-          <p className={cn("mt-2 text-lg", content.style === "subtle" ? "text-muted-foreground" : "portfolio-meta")}>{content.label}</p>
-          {content.description && <p className="mt-4 text-sm text-muted-foreground">{content.description}</p>}
+          <p className="text-[40px] font-medium tracking-[-0.025em] leading-none text-[color:var(--ink)]">{content.value}</p>
+          <p className={cn("mt-2 text-[15px]", content.style === "subtle" ? "text-[color:var(--ink-muted)]" : "portfolio-meta")}>{content.label}</p>
+          {content.description && <p className="mt-4 text-sm text-[color:var(--ink-muted)]">{content.description}</p>}
         </div>
       )}
       {block.block_type === "metric_row" && (
         <div className="grid gap-4 md:grid-cols-3">
           {(content.metrics || []).map((metric: any, index: number) => (
             <div key={index} className="editorial-panel rounded-2xl p-6">
-              <p className="font-display text-4xl">
+              <p className="text-[36px] font-medium tracking-[-0.025em] leading-none text-[color:var(--ink)]">
                 {metric.prefix}
                 {metric.value}
                 {metric.suffix}
               </p>
-              <p className="mt-2 text-sm text-muted-foreground">{metric.label}</p>
+              <p className="mt-2 text-sm text-[color:var(--ink-muted)]">{metric.label}</p>
             </div>
           ))}
         </div>
@@ -284,7 +284,7 @@ export async function BlockRenderer({
                     <div dangerouslySetInnerHTML={{ __html: nestedBlock.content.html || "" }} />
                   )}
                   {nestedBlock.block_type === "heading2" || nestedBlock.block_type === "heading3" ? (
-                    <h4 className="font-display text-2xl">{nestedBlock.content.text}</h4>
+                    <h4 className="text-[20px] font-medium tracking-[-0.015em] text-[color:var(--ink)]">{nestedBlock.content.text}</h4>
                   ) : null}
                   {nestedBlock.block_type === "image" && nestedBlock.content.url ? (
                     <div className="relative min-h-48 overflow-hidden rounded-xl">
@@ -293,8 +293,8 @@ export async function BlockRenderer({
                   ) : null}
                   {nestedBlock.block_type === "callout" && (
                     <div className="editorial-panel rounded-xl p-4">
-                      <p className="font-display text-3xl">{nestedBlock.content.value}</p>
-                      <p className="text-sm text-muted-foreground">{nestedBlock.content.label}</p>
+                      <p className="text-[28px] font-medium tracking-[-0.02em] text-[color:var(--ink)]">{nestedBlock.content.value}</p>
+                      <p className="text-sm text-[color:var(--ink-muted)]">{nestedBlock.content.label}</p>
                     </div>
                   )}
                   {nestedBlock.block_type === "list" && (
@@ -354,7 +354,7 @@ export async function BlockRenderer({
       )}
       {block.block_type === "toggle" && content.title && (
         <details className="editorial-panel overflow-hidden rounded-2xl">
-          <summary className="flex cursor-pointer items-center gap-3 p-6 font-display text-xl [&::marker]:hidden [&::-webkit-details-marker]:hidden">
+          <summary className="flex cursor-pointer items-center gap-3 p-6 text-[17px] font-medium tracking-[-0.01em] text-[color:var(--ink)] [&::marker]:hidden [&::-webkit-details-marker]:hidden">
             <svg className="h-5 w-5 shrink-0 transition-transform [[open]>&]:rotate-90" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
             </svg>

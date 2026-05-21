@@ -1,11 +1,32 @@
 import type { Metadata } from "next";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 
 import { cn } from "@/lib/utils/cn";
 import { siteMetadata } from "@/lib/constants/site";
-import { ThemeProvider } from "@/providers/theme-provider";
 import { ToastProvider } from "@/providers/toast-provider";
 
 import "./globals.css";
+
+const geist = Geist({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteMetadata.siteUrl),
@@ -47,12 +68,15 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("h-full scroll-smooth antialiased")}
+      className={cn(
+        "h-full scroll-smooth antialiased",
+        geist.variable,
+        instrumentSerif.variable,
+        geistMono.variable,
+      )}
     >
       <body className="min-h-full bg-background text-foreground">
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <ToastProvider>{children}</ToastProvider>
-        </ThemeProvider>
+        <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
   );

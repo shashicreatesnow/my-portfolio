@@ -1,4 +1,9 @@
-import type { AboutBlockRecord, CollectionRecord } from "@/lib/types/database";
+import type {
+  AboutBlockRecord,
+  ClientRecord,
+  CollectionRecord,
+  SkillRecord,
+} from "@/lib/types/database";
 import type { ProjectRecord } from "@/lib/types/projects";
 import type { ProjectBlockRecord } from "@/lib/types/blocks";
 
@@ -93,6 +98,51 @@ export const mockCollections: CollectionRecord[] = [
     created_at: now,
     updated_at: now,
   },
+];
+
+export const mockSkills: SkillRecord[] = [
+  {
+    id: "mock-skill-1",
+    title: "Product Design",
+    description:
+      "Interfaces, flows, and design systems that scale across teams and platforms.",
+    icon_key: "product",
+    sort_order: 0,
+    is_published: true,
+    created_at: now,
+    updated_at: now,
+  },
+  {
+    id: "mock-skill-2",
+    title: "AI Automation",
+    description:
+      "Custom agents, prompt systems, and small choreographies that turn models into teammates.",
+    icon_key: "ai",
+    sort_order: 1,
+    is_published: true,
+    created_at: now,
+    updated_at: now,
+  },
+  {
+    id: "mock-skill-3",
+    title: "Brand Design",
+    description:
+      "Identity, typography, and visual systems with a clear point of view.",
+    icon_key: "brand",
+    sort_order: 2,
+    is_published: true,
+    created_at: now,
+    updated_at: now,
+  },
+];
+
+export const mockClients: ClientRecord[] = [
+  { id: "mock-client-1", name: "Eloelo",          logo_url: null, logo_dark_url: null, website_url: null, sort_order: 0, is_published: true, created_at: now, updated_at: now },
+  { id: "mock-client-2", name: "Acme Studio",     logo_url: null, logo_dark_url: null, website_url: null, sort_order: 1, is_published: true, created_at: now, updated_at: now },
+  { id: "mock-client-3", name: "Northwind Labs",  logo_url: null, logo_dark_url: null, website_url: null, sort_order: 2, is_published: true, created_at: now, updated_at: now },
+  { id: "mock-client-4", name: "Stellar Brands",  logo_url: null, logo_dark_url: null, website_url: null, sort_order: 3, is_published: true, created_at: now, updated_at: now },
+  { id: "mock-client-5", name: "Riverbed Coffee", logo_url: null, logo_dark_url: null, website_url: null, sort_order: 4, is_published: true, created_at: now, updated_at: now },
+  { id: "mock-client-6", name: "Foundry & Co",    logo_url: null, logo_dark_url: null, website_url: null, sort_order: 5, is_published: true, created_at: now, updated_at: now },
 ];
 
 export const mockAboutBlocks: AboutBlockRecord[] = [

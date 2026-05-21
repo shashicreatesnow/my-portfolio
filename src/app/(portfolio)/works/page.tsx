@@ -5,13 +5,19 @@ export default async function WorksPage() {
   const projects = await getPublishedProjects();
 
   return (
-    <div className="mx-auto max-w-7xl px-5 pt-32 pb-24 md:px-8">
-      <header className="mb-16 max-w-2xl space-y-4">
+    <div
+      className="relative z-[3] mx-auto max-w-[1080px]"
+      style={{ padding: "clamp(40px,5vw,72px) clamp(20px,4vw,40px) clamp(72px,8vw,104px)" }}
+    >
+      <header className="mb-12 max-w-[44ch] space-y-4">
         <p className="portfolio-kicker">Works</p>
-        <h1 className="font-display text-4xl md:text-5xl">From concept to system</h1>
-        <p className="text-base leading-8 text-muted-foreground">
-          Projects that helped products grow through strategy, systems, and crafted execution.
-        </p>
+        <h1
+          className="font-medium text-[color:var(--ink)]"
+          style={{ fontSize: "clamp(36px,5vw,56px)", lineHeight: 1.05, letterSpacing: "-0.035em" }}
+        >
+          From concept to{" "}
+          <span className="font-display italic font-normal text-[color:var(--accent)]">system</span>
+        </h1>
       </header>
       <ProjectGrid projects={projects} />
     </div>

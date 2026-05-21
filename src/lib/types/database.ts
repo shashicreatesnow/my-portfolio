@@ -15,6 +15,31 @@ export interface CollectionRecord {
   updated_at: string;
 }
 
+export type SkillIconKey = "product" | "ai" | "brand";
+
+export interface SkillRecord {
+  id: string;
+  title: string;
+  description: string | null;
+  icon_key: SkillIconKey | string | null;
+  sort_order: number;
+  is_published: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ClientRecord {
+  id: string;
+  name: string;
+  logo_url: string | null;
+  logo_dark_url: string | null;
+  website_url: string | null;
+  sort_order: number;
+  is_published: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export type AboutBlockRecord = Omit<ProjectBlockRecord, "project_id">;
 
 export interface SiteSettingRecord<T = unknown> {
@@ -33,6 +58,8 @@ export interface DatabaseTables {
   projects: ProjectRecord;
   project_blocks: ProjectBlockRecord;
   collections: CollectionRecord;
+  skills: SkillRecord;
+  clients: ClientRecord;
   about_blocks: AboutBlockRecord;
   site_settings: SiteSettingRecord;
 }

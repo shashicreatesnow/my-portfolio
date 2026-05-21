@@ -1284,7 +1284,7 @@ export function BlockEditor({
       <div>
       {editor.blocks.length === 0 ? (
         <Card className="flex min-h-72 flex-col items-center justify-center gap-4 border-dashed text-center">
-          <p className="font-display text-3xl">Start building your case study</p>
+          <p className="text-[24px] font-medium tracking-[-0.02em]">Start building your case study</p>
           <p className="max-w-md text-sm text-muted-foreground">
             Add your first block and shape the narrative section by section.
           </p>

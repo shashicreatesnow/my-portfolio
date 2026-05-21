@@ -56,7 +56,7 @@ export const DialogTitle = ({
   className,
   ...props
 }: React.ComponentProps<"h3">) => (
-  <h3 className={cn("font-display text-2xl", className)} {...props} />
+  <h3 className={cn("text-[18px] font-medium tracking-[-0.01em]", className)} {...props} />
 );
 
 export const DialogDescription = ({

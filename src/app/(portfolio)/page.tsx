@@ -1,55 +1,60 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 
+import { ClientsWall } from "@/components/portfolio/home/clients-wall";
+import { HeroBrain } from "@/components/portfolio/home/hero-brain";
+import { SkillsThree } from "@/components/portfolio/home/skills-three";
 import { ProjectCard } from "@/components/portfolio/projects/project-card";
-import { Button } from "@/components/ui/button";
+import { getPublishedClients } from "@/lib/queries/clients";
 import { getFeaturedProjects } from "@/lib/queries/projects";
 import { getSettings } from "@/lib/queries/settings";
+import { getPublishedSkills } from "@/lib/queries/skills";
 
 export default async function HomePage() {
-  const [settings, featuredProjects] = await Promise.all([
+  const [settings, featuredProjects, skills, clients] = await Promise.all([
     getSettings(),
     getFeaturedProjects(),
+    getPublishedSkills(),
+    getPublishedClients(),
   ]);
 
   return (
     <div className="w-full">
-      <section className="grid-pattern story-fade relative pt-48 pb-32 md:pt-56 md:pb-40">
-        <div className="mx-auto max-w-7xl px-5 md:px-8">
-          <div className="max-w-3xl space-y-8">
-            <p className="portfolio-kicker">Design systems thinking</p>
-            <h1 className="font-display text-4xl leading-[0.95] tracking-tight md:text-5xl">
-              {settings.hero.title}
-            </h1>
-            <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-              {settings.hero.subtitle}
-            </p>
-            <Button asChild size="lg" className="rounded-full">
-              <Link href={settings.hero.cta_link}>
-                {settings.hero.cta_text}
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      <HeroBrain
+        primaryHref={settings.hero.cta_link || "/works"}
+        primaryLabel={settings.hero.cta_text || "enter the work"}
+      />
 
-      <section className="mx-auto max-w-7xl px-5 pb-32 md:px-8">
-        <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="portfolio-kicker">Selected work</p>
-            <h2 className="mt-4 font-display text-3xl md:text-4xl">Systems that sharpen design output</h2>
+      <SkillsThree skills={skills} />
+
+      {featuredProjects.length > 0 ? (
+        <section
+          className="relative z-[3] mx-auto max-w-[1080px] border-t border-dashed border-[color:var(--rule)]"
+          style={{ padding: "clamp(56px, 6vw, 80px) clamp(20px, 4vw, 40px)" }}
+        >
+          <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <span className="portfolio-kicker">Selected work</span>
+              <h2 className="mt-3 text-[28px] font-medium leading-tight tracking-[-0.025em] text-[color:var(--ink)] md:text-[36px]">
+                Featured projects
+              </h2>
+            </div>
+            <Link
+              href="/works"
+              className="inline-flex items-center gap-2 self-start text-[13px] text-[color:var(--ink-muted)] transition hover:text-[color:var(--accent)] md:self-end"
+            >
+              View all work
+              <span className="font-display italic">→</span>
+            </Link>
           </div>
-          <Button asChild variant="ghost" className="w-fit rounded-full text-muted-foreground">
-            <Link href="/works">View all work</Link>
-          </Button>
-        </div>
-        <div className="grid gap-8 lg:grid-cols-2">
-          {featuredProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
-      </section>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {featuredProjects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      <ClientsWall clients={clients} />
     </div>
   );
 }

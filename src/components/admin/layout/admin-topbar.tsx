@@ -20,7 +20,7 @@ export function AdminTopbar({ pathname }: { pathname: string }) {
     <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-background/90 px-6 py-4 backdrop-blur">
       <div>
         <p className="text-sm text-muted-foreground">Private workspace</p>
-        <h1 className="font-display text-3xl text-foreground">{title}</h1>
+        <h1 className="text-[24px] font-medium tracking-[-0.02em] text-foreground">{title}</h1>
       </div>
       <div className="flex items-center gap-3">
         <Button asChild variant="outline">

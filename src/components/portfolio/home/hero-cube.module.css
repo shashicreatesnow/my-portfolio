@@ -1,0 +1,118 @@
+.stage {
+  margin: clamp(28px, 3.4vw, 44px) auto 0;
+  width: 180px;
+  height: 180px;
+  position: relative;
+  perspective: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floor {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(26, 26, 26, 0.16), transparent 70%);
+  filter: blur(6px);
+  z-index: 0;
+}
+
+.cube {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  transform-style: preserve-3d;
+  animation: cube-tumble 22s ease-in-out infinite;
+  z-index: 2;
+}
+
+@keyframes cube-tumble {
+  0%   { transform: rotateX(-18deg) rotateY(-28deg) rotateZ(0deg); }
+  20%  { transform: rotateX(25deg)  rotateY(75deg)  rotateZ(-8deg); }
+  40%  { transform: rotateX(-40deg) rotateY(160deg) rotateZ(12deg); }
+  60%  { transform: rotateX(15deg)  rotateY(245deg) rotateZ(-15deg); }
+  80%  { transform: rotateX(50deg)  rotateY(310deg) rotateZ(6deg); }
+  100% { transform: rotateX(-18deg) rotateY(332deg) rotateZ(0deg); }
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  border: 1.4px solid var(--ink, #1a1a1a);
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 0.5px rgba(26, 26, 26, 0.25);
+  background-color: var(--paper, #f4efe6);
+  background-blend-mode: multiply;
+  backface-visibility: hidden;
+}
+
+.f1 {
+  transform: translateZ(60px);
+  background:
+    radial-gradient(120% 90% at 20% 15%, rgba(212, 192, 121, 0.55), transparent 55%),
+    radial-gradient(120% 90% at 90% 80%, rgba(150, 132, 181, 0.50), transparent 60%),
+    linear-gradient(135deg, rgba(201, 122, 142, 0.65), rgba(122, 168, 181, 0.45) 60%, rgba(201, 154, 92, 0.40));
+}
+.f2 {
+  transform: rotateY(180deg) translateZ(60px);
+  background:
+    radial-gradient(120% 90% at 80% 20%, rgba(122, 168, 181, 0.55), transparent 55%),
+    radial-gradient(120% 90% at 15% 85%, rgba(201, 122, 142, 0.50), transparent 60%),
+    linear-gradient(225deg, rgba(150, 132, 181, 0.65), rgba(212, 192, 121, 0.45) 55%, rgba(184, 92, 56, 0.35));
+}
+.f3 {
+  transform: rotateY(90deg) translateZ(60px);
+  background:
+    radial-gradient(110% 90% at 25% 25%, rgba(212, 192, 121, 0.55), transparent 55%),
+    radial-gradient(110% 90% at 80% 80%, rgba(150, 132, 181, 0.50), transparent 60%),
+    linear-gradient(160deg, rgba(122, 168, 181, 0.70), rgba(201, 122, 142, 0.40) 55%, rgba(201, 154, 92, 0.40));
+}
+.f4 {
+  transform: rotateY(-90deg) translateZ(60px);
+  background:
+    radial-gradient(110% 90% at 75% 20%, rgba(201, 122, 142, 0.55), transparent 55%),
+    radial-gradient(110% 90% at 20% 80%, rgba(122, 168, 181, 0.50), transparent 60%),
+    linear-gradient(200deg, rgba(201, 154, 92, 0.65), rgba(212, 192, 121, 0.45) 50%, rgba(150, 132, 181, 0.40));
+}
+.f5 {
+  transform: rotateX(90deg) translateZ(60px);
+  background:
+    radial-gradient(120% 90% at 30% 30%, rgba(201, 122, 142, 0.50), transparent 55%),
+    radial-gradient(120% 90% at 80% 75%, rgba(122, 168, 181, 0.50), transparent 60%),
+    linear-gradient(135deg, rgba(212, 192, 121, 0.65), rgba(201, 154, 92, 0.45) 55%, rgba(150, 132, 181, 0.35));
+}
+.f6 {
+  transform: rotateX(-90deg) translateZ(60px);
+  background:
+    radial-gradient(120% 90% at 25% 20%, rgba(201, 154, 92, 0.50), transparent 55%),
+    radial-gradient(120% 90% at 80% 80%, rgba(212, 192, 121, 0.50), transparent 60%),
+    linear-gradient(135deg, rgba(184, 92, 56, 0.55), rgba(201, 122, 142, 0.40) 55%, rgba(122, 168, 181, 0.35));
+}
+
+@media (max-width: 880px) {
+  .stage {
+    width: 160px;
+    height: 160px;
+  }
+  .cube {
+    width: 110px;
+    height: 110px;
+  }
+  .f1 { transform: translateZ(55px); }
+  .f2 { transform: rotateY(180deg) translateZ(55px); }
+  .f3 { transform: rotateY(90deg)  translateZ(55px); }
+  .f4 { transform: rotateY(-90deg) translateZ(55px); }
+  .f5 { transform: rotateX(90deg)  translateZ(55px); }
+  .f6 { transform: rotateX(-90deg) translateZ(55px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cube {
+    animation: none;
+  }
+}

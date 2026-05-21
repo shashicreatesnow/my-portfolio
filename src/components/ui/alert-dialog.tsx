@@ -57,7 +57,7 @@ export const AlertDialogTitle = ({
   className,
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Title>) => (
-  <AlertDialogPrimitive.Title className={cn("font-display text-2xl", className)} {...props} />
+  <AlertDialogPrimitive.Title className={cn("text-[18px] font-medium tracking-[-0.01em]", className)} {...props} />
 );
 
 export const AlertDialogDescription = ({

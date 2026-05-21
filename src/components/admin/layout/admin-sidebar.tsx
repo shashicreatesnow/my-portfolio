@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Building2,
   ExternalLink,
   Images,
   LayoutDashboard,
   Settings,
+  Sparkles,
   User,
 } from "lucide-react";
 
@@ -14,6 +16,8 @@ import { cn } from "@/lib/utils/cn";
 
 const items = [
   { href: "/admin/projects", label: "Projects", icon: LayoutDashboard },
+  { href: "/admin/skills", label: "Skills", icon: Sparkles },
+  { href: "/admin/clients", label: "Clients", icon: Building2 },
   { href: "/admin/collections", label: "Collections", icon: Images },
   { href: "/admin/about", label: "About Page", icon: User },
   { href: "/admin/settings", label: "Settings", icon: Settings },

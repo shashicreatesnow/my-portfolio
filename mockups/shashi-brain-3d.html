@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Shashi — 3D Brain hero demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4EFE6;
+    --paper-2:#EFE8DC;
+    --ink:#1a1a1a;
+    --muted:#9b8e7c;
+    --muted-2:#6f6557;
+    --accent:#B85C38;
+    --rule:#dcd2c2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Geist","Inter",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    font-feature-settings:"ss01","cv11";
+  }
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #FAF6EE 0%, transparent 60%),
+      radial-gradient(900px 500px at 100% 100%, #ECE3D2 0%, transparent 55%),
+      var(--paper);
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";
+    position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.85;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.44  0 0 0 0 0.36  0 0 0 0.11 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  nav{
+    position:relative;z-index:5;
+    display:flex;justify-content:space-between;align-items:center;
+    max-width:1180px;margin:0 auto;
+    padding:24px clamp(20px,4vw,40px);
+    font-size:13px;color:var(--muted-2);
+  }
+  .mark{font-weight:500;color:var(--ink);display:inline-flex;align-items:center;gap:8px}
+  .mark .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  nav .links a{color:var(--muted-2);text-decoration:none;margin-left:18px}
+  nav .links .sep{color:var(--rule);margin-left:18px}
+
+  main{
+    position:relative;z-index:3;
+    max-width:1080px;margin:0 auto;
+    padding: clamp(20px,3vw,40px) clamp(20px,4vw,40px) clamp(36px,4vw,56px);
+    text-align:center;
+  }
+
+  .eyebrow{
+    font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--muted);font-weight:500;
+    display:inline-flex;align-items:center;gap:12px;
+    margin-bottom:20px;
+  }
+  .eyebrow::before, .eyebrow::after{
+    content:"";display:inline-block;width:22px;height:1px;background:var(--rule);
+  }
+
+  h1{
+    font-weight:500;
+    font-size:clamp(38px,5.4vw,60px);
+    line-height:1.05;
+    letter-spacing:-.035em;
+    color:var(--ink);
+    max-width:18ch;margin:0 auto;
+  }
+  h1 .ital{
+    font-family:"Instrument Serif",serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:1.08em;
+    line-height:.95;
+    color:var(--accent);
+  }
+
+  .lede{
+    margin: 18px auto 0;
+    max-width: 46ch;
+    font-size: 15.5px;line-height:1.6;
+    color:var(--muted-2);
+  }
+
+  /* ---------- Brain stage (canvas) ---------- */
+  .brain-stage{
+    margin: clamp(28px,3.4vw,44px) auto 0;
+    width: 280px;
+    height: 240px;
+    position: relative;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .brain-floor{
+    position:absolute;left:50%;bottom:8px;transform:translateX(-50%);
+    width:170px;height:14px;border-radius:50%;
+    background:radial-gradient(ellipse at center, rgba(26,26,26,.18), transparent 70%);
+    filter:blur(6px);
+    z-index:0;
+  }
+  #brain-canvas{
+    position:relative;z-index:2;
+    width:100%;height:100%;
+    cursor:grab;
+  }
+  #brain-canvas:active{ cursor:grabbing; }
+
+  .ctas{
+    margin-top: clamp(28px,3vw,40px);
+    display:inline-flex;align-items:center;gap:12px;
+    flex-wrap:wrap;justify-content:center;
+  }
+  .btn{
+    font:inherit;font-size:14px;font-weight:500;
+    padding: 12px 20px;border-radius: 999px;
+    cursor:pointer;text-decoration:none;
+    display:inline-flex;align-items:center;gap:8px;
+    transition: transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+    border:1px solid transparent;
+  }
+  .btn-primary{ background: var(--ink); color: var(--paper); }
+  .btn-primary:hover{ transform: translateY(-1px); box-shadow: 0 14px 30px -16px rgba(0,0,0,.4); background: var(--accent); }
+  .btn-primary .arr{ font-family:"Instrument Serif",serif; font-style:italic; font-size:17px; line-height:1; transform: translateY(-1px); }
+  .btn-ghost{ background:transparent;color:var(--ink);border-color:var(--ink); }
+  .btn-ghost:hover{ background:var(--ink);color:var(--paper); }
+</style>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+
+<nav>
+  <span class="mark"><span class="dot"></span>Shashi</span>
+  <span class="links">
+    <a href="#">Work</a>
+    <span class="sep">·</span>
+    <a href="#">About</a>
+  </span>
+</nav>
+
+<main>
+  <div class="eyebrow">Product &amp; Brand Designer</div>
+
+  <h1>
+    A designer who can design <span class="ital">AI Systems</span>
+  </h1>
+
+  <p class="lede">
+    Anyone can design a screen. I design the system and the agent that runs it.
+  </p>
+
+  <div class="brain-stage" aria-hidden="true">
+    <div class="brain-floor"></div>
+    <canvas id="brain-canvas"></canvas>
+  </div>
+
+  <div class="ctas">
+    <a class="btn btn-primary" href="#">enter the work <span class="arr">→</span></a>
+    <a class="btn btn-ghost" href="#">say hello</a>
+  </div>
+</main>
+
+<script type="module">
+import * as THREE from 'three';
+
+// ===== shaders =====
+// Ashima/Stefan Gustavson 3D simplex noise (MIT)
+const NOISE_GLSL = `
+  vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
+  vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
+  float snoise(vec3 v){
+    const vec2 C = vec2(1.0/6.0, 1.0/3.0) ;
+    const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+    vec3 i  = floor(v + dot(v, C.yyy) );
+    vec3 x0 =   v - i + dot(i, C.xxx) ;
+    vec3 g = step(x0.yzx, x0.xyz);
+    vec3 l = 1.0 - g;
+    vec3 i1 = min( g.xyz, l.zxy );
+    vec3 i2 = max( g.xyz, l.zxy );
+    vec3 x1 = x0 - i1 + 1.0 * C.xxx;
+    vec3 x2 = x0 - i2 + 2.0 * C.xxx;
+    vec3 x3 = x0 - 1. + 3.0 * C.xxx;
+    i = mod(i, 289.0 );
+    vec4 p = permute( permute( permute(
+              i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+            + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
+            + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+    float n_ = 1.0/7.0;
+    vec3  ns = n_ * D.wyz - D.xzx;
+    vec4 j = p - 49.0 * floor(p * ns.z *ns.z);
+    vec4 x_ = floor(j * ns.z);
+    vec4 y_ = floor(j - 7.0 * x_ );
+    vec4 x = x_ *ns.x + ns.yyyy;
+    vec4 y = y_ *ns.x + ns.yyyy;
+    vec4 h = 1.0 - abs(x) - abs(y);
+    vec4 b0 = vec4( x.xy, y.xy );
+    vec4 b1 = vec4( x.zw, y.zw );
+    vec4 s0 = floor(b0)*2.0 + 1.0;
+    vec4 s1 = floor(b1)*2.0 + 1.0;
+    vec4 sh = -step(h, vec4(0.0));
+    vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+    vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+    vec3 p0 = vec3(a0.xy,h.x);
+    vec3 p1 = vec3(a0.zw,h.y);
+    vec3 p2 = vec3(a1.xy,h.z);
+    vec3 p3 = vec3(a1.zw,h.w);
+    vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+    p0 *= norm.x;
+    p1 *= norm.y;
+    p2 *= norm.z;
+    p3 *= norm.w;
+    vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+    m = m * m;
+    return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1),
+                                  dot(p2,x2), dot(p3,x3) ) );
+  }
+`;
+
+const VERT = `
+  varying vec3 vNormal;
+  varying vec3 vWorldPos;
+  varying vec3 vViewDir;
+  varying float vDispl;
+
+  ${NOISE_GLSL}
+
+  void main() {
+    // brain shape: ovoid base (wider than tall, longer than wide)
+    vec3 p = position;
+
+    // displace along normal with multi-octave noise to create gyri/sulci
+    float n1 = snoise(p * 1.6);
+    float n2 = snoise(p * 3.5 + 11.3);
+    float n3 = snoise(p * 7.0 + 22.7);
+    float displ = n1 * 0.18 + n2 * 0.07 + n3 * 0.025;
+
+    // longitudinal fissure: dent along the central x=0 plane
+    float fissure = exp(-pow(p.x * 7.0, 2.0)) * 0.10;
+    displ -= fissure;
+
+    // small bottom flatten — brains aren't perfect spheres
+    float flatten = smoothstep(-1.0, -0.4, p.y) * -0.04;
+
+    vec3 displaced = p + normal * (displ + flatten);
+
+    vec4 worldPos = modelMatrix * vec4(displaced, 1.0);
+    vec4 viewPos  = viewMatrix  * worldPos;
+
+    vNormal   = normalize(normalMatrix * normal);
+    vWorldPos = worldPos.xyz;
+    vViewDir  = normalize(-viewPos.xyz);
+    vDispl    = displ;
+
+    gl_Position = projectionMatrix * viewPos;
+  }
+`;
+
+const FRAG = `
+  precision highp float;
+  varying vec3 vNormal;
+  varying vec3 vWorldPos;
+  varying vec3 vViewDir;
+  varying float vDispl;
+
+  uniform vec3 cRose;
+  uniform vec3 cOchre;
+  uniform vec3 cWheat;
+  uniform vec3 cSage;
+  uniform vec3 cPlum;
+  uniform vec3 cInk;
+  uniform vec3 cPaper;
+  uniform float uTime;
+
+  void main(){
+    // prismatic gradient blend — driven by world-space position
+    float fx = clamp((vWorldPos.x + 1.2) / 2.4, 0.0, 1.0);
+    float fy = clamp((vWorldPos.y + 1.0) / 2.0, 0.0, 1.0);
+    float fz = clamp((vWorldPos.z + 1.2) / 2.4, 0.0, 1.0);
+
+    vec3 col = mix(cRose,  cOchre, fx);
+    col      = mix(col,    cWheat, fy * 0.85);
+    col      = mix(col,    cSage,  (1.0 - fz) * 0.6);
+    col      = mix(col,    cPlum,  smoothstep(0.55, 1.0, fy * fx));
+
+    // soft directional light
+    vec3 lightDir = normalize(vec3(0.4, 0.7, 0.6));
+    float diff = max(dot(vNormal, lightDir), 0.0);
+    float ambient = 0.55;
+    col *= ambient + diff * 0.55;
+
+    // wrap toward paper at deep crevices (lower displacement -> push toward paper highlight)
+    col = mix(col, cPaper, smoothstep(-0.05, 0.18, vDispl) * 0.0); // disabled — kept for tuning
+    col = mix(col * 0.78, col, smoothstep(-0.20, 0.05, vDispl));
+
+    // fresnel rim — darkens the silhouette to fake an outline
+    float fres = 1.0 - max(dot(vNormal, vViewDir), 0.0);
+    col = mix(col, cInk, smoothstep(0.55, 1.0, fres) * 0.85);
+
+    // final paper tint
+    col = mix(col, cPaper, 0.04);
+
+    gl_FragColor = vec4(col, 1.0);
+  }
+`;
+
+// ===== scene setup =====
+const canvas = document.getElementById('brain-canvas');
+const stage  = canvas.parentElement;
+
+const renderer = new THREE.WebGLRenderer({
+  canvas,
+  alpha: true,
+  antialias: true,
+  powerPreference: 'high-performance',
+});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+camera.position.set(0, 0, 4.6);
+
+// brain mesh
+const geom = new THREE.IcosahedronGeometry(1.0, 7); // high-detail sphere base
+geom.computeVertexNormals();
+
+const mat = new THREE.ShaderMaterial({
+  vertexShader: VERT,
+  fragmentShader: FRAG,
+  uniforms: {
+    cRose:  { value: new THREE.Color('#C97A8E') },
+    cOchre: { value: new THREE.Color('#C99A5C') },
+    cWheat: { value: new THREE.Color('#D4C079') },
+    cSage:  { value: new THREE.Color('#7AA8B5') },
+    cPlum:  { value: new THREE.Color('#9684B5') },
+    cInk:   { value: new THREE.Color('#1a1a1a') },
+    cPaper: { value: new THREE.Color('#f4efe6') },
+    uTime:  { value: 0 },
+  },
+});
+
+const brain = new THREE.Mesh(geom, mat);
+// squash to brain-like proportions: longer (z) and wider (x), slightly flatter (y)
+brain.scale.set(1.18, 0.92, 1.05);
+scene.add(brain);
+
+// ===== resize =====
+function resize() {
+  const w = stage.clientWidth;
+  const h = stage.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+resize();
+window.addEventListener('resize', resize);
+
+// ===== interaction =====
+let dragging = false;
+let dragX = 0, dragY = 0;
+let userYaw = 0, userPitch = 0;
+canvas.addEventListener('pointerdown', (e) => { dragging = true; dragX = e.clientX; dragY = e.clientY; });
+window.addEventListener('pointerup',   () => { dragging = false; });
+window.addEventListener('pointermove', (e) => {
+  if (!dragging) return;
+  userYaw   += (e.clientX - dragX) * 0.005;
+  userPitch += (e.clientY - dragY) * 0.005;
+  userPitch = Math.max(-1.2, Math.min(1.2, userPitch));
+  dragX = e.clientX; dragY = e.clientY;
+});
+
+// ===== animation loop — same tumbling cadence as the cube =====
+const clock = new THREE.Clock();
+function animate() {
+  const t = clock.getElapsedTime();
+  // ambient tumble (slower than cube; brain reads better with gentler motion)
+  const autoYaw   = t * 0.4;
+  const autoPitch = Math.sin(t * 0.3) * 0.25;
+  const autoRoll  = Math.sin(t * 0.18) * 0.12;
+
+  brain.rotation.y = autoYaw + userYaw;
+  brain.rotation.x = autoPitch + userPitch;
+  brain.rotation.z = autoRoll;
+
+  mat.uniforms.uTime.value = t;
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>

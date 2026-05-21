@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Shashi — Brain hero demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4EFE6;
+    --paper-2:#EFE8DC;
+    --ink:#1a1a1a;
+    --muted:#9b8e7c;
+    --muted-2:#6f6557;
+    --accent:#B85C38;
+    --rule:#dcd2c2;
+    --prism-rose:#C97A8E;
+    --prism-ochre:#C99A5C;
+    --prism-wheat:#D4C079;
+    --prism-sage:#7AA8B5;
+    --prism-plum:#9684B5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Geist","Inter",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    font-feature-settings:"ss01","cv11";
+  }
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #FAF6EE 0%, transparent 60%),
+      radial-gradient(900px 500px at 100% 100%, #ECE3D2 0%, transparent 55%),
+      var(--paper);
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";
+    position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.85;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.44  0 0 0 0 0.36  0 0 0 0.11 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  nav{
+    position:relative;z-index:5;
+    display:flex;justify-content:space-between;align-items:center;
+    max-width:1180px;margin:0 auto;
+    padding:24px clamp(20px,4vw,40px);
+    font-size:13px;color:var(--muted-2);
+  }
+  .mark{font-weight:500;color:var(--ink);display:inline-flex;align-items:center;gap:8px}
+  .mark .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  nav .links a{color:var(--muted-2);text-decoration:none;margin-left:18px}
+  nav .links .sep{color:var(--rule);margin-left:18px}
+
+  main{
+    position:relative;z-index:3;
+    max-width:1080px;margin:0 auto;
+    padding: clamp(20px,3vw,40px) clamp(20px,4vw,40px) clamp(36px,4vw,56px);
+    text-align:center;
+  }
+
+  .eyebrow{
+    font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--muted);font-weight:500;
+    display:inline-flex;align-items:center;gap:12px;
+    margin-bottom:20px;
+  }
+  .eyebrow::before, .eyebrow::after{
+    content:"";display:inline-block;width:22px;height:1px;background:var(--rule);
+  }
+
+  h1{
+    font-weight:500;
+    font-size:clamp(38px,5.4vw,60px);
+    line-height:1.05;
+    letter-spacing:-.035em;
+    color:var(--ink);
+    max-width:18ch;margin:0 auto;
+  }
+  h1 .ital{
+    font-family:"Instrument Serif",serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:1.08em;
+    line-height:.95;
+    color:var(--accent);
+  }
+
+  .lede{
+    margin: 18px auto 0;
+    max-width: 46ch;
+    font-size: 15.5px;line-height:1.6;
+    color:var(--muted-2);
+  }
+
+  /* ---------- Brain stage ---------- */
+  .brain-stage{
+    margin: clamp(28px,3.4vw,44px) auto 0;
+    width: 240px;
+    height: 220px;
+    position: relative;
+    perspective: 1200px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .brain-floor{
+    position:absolute;left:50%;bottom:8px;transform:translateX(-50%);
+    width:160px;height:14px;border-radius:50%;
+    background:radial-gradient(ellipse at center, rgba(26,26,26,.18), transparent 70%);
+    filter:blur(6px);
+    z-index:0;
+  }
+  .brain-wrap{
+    position:relative;
+    width: 220px;height: 200px;
+    transform-style: preserve-3d;
+    animation: brain-bob 8s ease-in-out infinite;
+    z-index:2;
+  }
+  @keyframes brain-bob{
+    0%,100% { transform: rotateY(-12deg) rotateX(2deg) translateY(0); }
+    25%     { transform: rotateY( 6deg)  rotateX(-1deg) translateY(-3px); }
+    50%     { transform: rotateY( 14deg) rotateX(2deg) translateY(0); }
+    75%     { transform: rotateY( 0deg)  rotateX(-2deg) translateY(-2px); }
+  }
+  .brain-svg{
+    width:100%;height:100%;
+    filter: drop-shadow(0 6px 14px rgba(26,26,26,.12));
+  }
+
+  /* ---------- Buttons ---------- */
+  .ctas{
+    margin-top: clamp(28px,3vw,40px);
+    display:inline-flex;align-items:center;gap:12px;
+    flex-wrap:wrap;justify-content:center;
+  }
+  .btn{
+    font:inherit;font-size:14px;font-weight:500;
+    padding: 12px 20px;border-radius: 999px;
+    cursor:pointer;text-decoration:none;
+    display:inline-flex;align-items:center;gap:8px;
+    transition: transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+    border:1px solid transparent;
+  }
+  .btn-primary{ background: var(--ink); color: var(--paper); }
+  .btn-primary:hover{ transform: translateY(-1px); box-shadow: 0 14px 30px -16px rgba(0,0,0,.4); background: var(--accent); }
+  .btn-primary .arr{ font-family:"Instrument Serif",serif; font-style:italic; font-size:17px; line-height:1; transform: translateY(-1px); }
+  .btn-ghost{ background:transparent;color:var(--ink);border-color:var(--ink); }
+  .btn-ghost:hover{ background:var(--ink);color:var(--paper); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brain-wrap { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="mark"><span class="dot"></span>Shashi</span>
+  <span class="links">
+    <a href="#">Work</a>
+    <span class="sep">·</span>
+    <a href="#">About</a>
+  </span>
+</nav>
+
+<main>
+  <div class="eyebrow">Product &amp; Brand Designer</div>
+
+  <h1>
+    A designer who can design <span class="ital">AI Systems</span>
+  </h1>
+
+  <p class="lede">
+    Anyone can design a screen. I design the system and the agent that runs it.
+  </p>
+
+  <!-- ============ Brain (stylized 3D-feel SVG) ============ -->
+  <div class="brain-stage" aria-hidden="true">
+    <div class="brain-floor"></div>
+    <div class="brain-wrap">
+      <svg class="brain-svg" viewBox="0 0 220 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Multi-stop gradient mesh that mirrors the cube faces -->
+          <radialGradient id="bg-rose"  cx="35%" cy="38%" r="55%">
+            <stop offset="0%"  stop-color="#C97A8E" stop-opacity=".70"/>
+            <stop offset="55%" stop-color="#C97A8E" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="bg-ochre" cx="78%" cy="34%" r="50%">
+            <stop offset="0%"  stop-color="#C99A5C" stop-opacity=".62"/>
+            <stop offset="60%" stop-color="#C99A5C" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="bg-wheat" cx="50%" cy="78%" r="55%">
+            <stop offset="0%"  stop-color="#D4C079" stop-opacity=".58"/>
+            <stop offset="65%" stop-color="#D4C079" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="bg-sage" cx="20%" cy="80%" r="55%">
+            <stop offset="0%"  stop-color="#7AA8B5" stop-opacity=".62"/>
+            <stop offset="65%" stop-color="#7AA8B5" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="bg-plum" cx="82%" cy="80%" r="55%">
+            <stop offset="0%"  stop-color="#9684B5" stop-opacity=".58"/>
+            <stop offset="60%" stop-color="#9684B5" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="bg-base" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"   stop-color="#C97A8E" stop-opacity=".30"/>
+            <stop offset="40%"  stop-color="#D4C079" stop-opacity=".22"/>
+            <stop offset="80%"  stop-color="#7AA8B5" stop-opacity=".22"/>
+            <stop offset="100%" stop-color="#9684B5" stop-opacity=".25"/>
+          </linearGradient>
+
+          <!-- Brain silhouette path used both for clip and outline -->
+          <path id="brain-shape" d="
+            M 35 102
+            C 28 78, 38 56, 60 50
+            C 66 38, 84 30, 100 36
+            C 108 26, 124 26, 134 36
+            C 152 30, 174 40, 182 60
+            C 200 64, 210 82, 204 102
+            C 212 118, 204 138, 186 144
+            C 180 160, 158 168, 140 162
+            C 128 174, 108 174, 96 162
+            C 78 168, 56 160, 50 144
+            C 32 140, 24 120, 35 102 Z
+          "/>
+
+          <clipPath id="brain-clip">
+            <use href="#brain-shape"/>
+          </clipPath>
+        </defs>
+
+        <!-- soft paper base inside the brain -->
+        <use href="#brain-shape" fill="#F4EFE6"/>
+
+        <!-- gradient mesh fill, clipped to brain shape, blend-multiplied -->
+        <g clip-path="url(#brain-clip)" style="mix-blend-mode: multiply">
+          <rect width="220" height="200" fill="url(#bg-base)"/>
+          <rect width="220" height="200" fill="url(#bg-rose)"/>
+          <rect width="220" height="200" fill="url(#bg-ochre)"/>
+          <rect width="220" height="200" fill="url(#bg-wheat)"/>
+          <rect width="220" height="200" fill="url(#bg-sage)"/>
+          <rect width="220" height="200" fill="url(#bg-plum)"/>
+        </g>
+
+        <!-- cortex folds (gyri) — gentle wavy strokes inside, ink color -->
+        <g stroke="#1a1a1a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".55" clip-path="url(#brain-clip)">
+          <!-- central longitudinal fissure -->
+          <path d="M 117 40 C 114 70, 122 100, 116 130 C 110 150, 118 162, 116 168" opacity=".75"/>
+          <!-- left hemisphere folds -->
+          <path d="M 60 70 C 76 66, 88 78, 84 96 C 80 112, 92 122, 86 138"/>
+          <path d="M 48 110 C 64 108, 78 124, 70 142"/>
+          <path d="M 76 56 C 88 54, 96 64, 92 78"/>
+          <!-- right hemisphere folds -->
+          <path d="M 162 70 C 146 66, 134 78, 138 96 C 142 112, 130 122, 136 138"/>
+          <path d="M 174 110 C 158 108, 144 124, 152 142"/>
+          <path d="M 146 56 C 134 54, 126 64, 130 78"/>
+          <!-- bottom curves -->
+          <path d="M 78 158 C 96 168, 124 168, 144 158" opacity=".7"/>
+        </g>
+
+        <!-- outer outline -->
+        <use href="#brain-shape" stroke="#1a1a1a" stroke-width="1.5" fill="none"/>
+
+        <!-- subtle highlight gloss (top-left) -->
+        <ellipse cx="78" cy="62" rx="22" ry="10" fill="#ffffff" opacity=".35" transform="rotate(-25 78 62)"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="ctas">
+    <a class="btn btn-primary" href="#">enter the work <span class="arr">→</span></a>
+    <a class="btn btn-ghost" href="#">say hello</a>
+  </div>
+</main>
+
+</body>
+</html>

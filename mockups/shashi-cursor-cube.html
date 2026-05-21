@@ -44,7 +44,8 @@
   nav{
     position:relative;z-index:5;
     display:flex;justify-content:space-between;align-items:center;
-    padding:28px 40px;
+    max-width:1180px;margin:0 auto;
+    padding:24px clamp(20px,4vw,40px);
     font-size:13px;letter-spacing:.01em;
     color:var(--muted-2);
   }
@@ -63,15 +64,15 @@
   main{
     position:relative;z-index:3;
     max-width:1080px;margin:0 auto;
-    padding: clamp(40px,7vw,90px) 32px 60px;
+    padding: clamp(20px,3vw,40px) clamp(20px,4vw,40px) clamp(36px,4vw,56px);
     text-align:center;
   }
 
   .eyebrow{
-    font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+    font-size:11px;letter-spacing:.2em;text-transform:uppercase;
     color:var(--muted);font-weight:500;
-    display:inline-flex;align-items:center;gap:10px;
-    margin-bottom:28px;
+    display:inline-flex;align-items:center;gap:12px;
+    margin-bottom:20px;
   }
   .eyebrow::before, .eyebrow::after{
     content:"";display:inline-block;width:22px;height:1px;background:var(--rule);
@@ -80,51 +81,51 @@
   h1{
     font-family:"Inter",sans-serif;
     font-weight:500;
-    font-size:clamp(44px,7.4vw,76px);
-    line-height:1.02;
+    font-size:clamp(38px,5.4vw,60px);
+    line-height:1.05;
     letter-spacing:-.035em;
     color:var(--ink);
-    max-width:14ch;margin:0 auto;
+    max-width:15ch;margin:0 auto;
   }
   h1 .ital{
     font-family:"Instrument Serif",serif;
     font-style:italic;
     font-weight:400;
     letter-spacing:-.005em;
-    font-size:1.06em;
+    font-size:1.08em;
     line-height:.95;
   }
   h1 .ital-accent{ color:var(--accent); }
-  h1 .word-wrap{position:relative;display:inline-block}
+  h1 .word-wrap{position:relative;display:inline-block;padding-bottom:.16em}
 
   .lede{
-    margin: 24px auto 0;
+    margin: 18px auto 0;
     max-width: 46ch;
-    font-size: 16.5px;line-height:1.65;
+    font-size: 15.5px;line-height:1.6;
     color:var(--muted-2);
     font-weight:400;
   }
 
   /* ---------- Cube stage ---------- */
   .cube-stage{
-    margin: clamp(40px, 6vw, 72px) auto 0;
-    width: 220px;
-    height: 240px;
+    margin: clamp(28px, 3.4vw, 44px) auto 0;
+    width: 180px;
+    height: 180px;
     position: relative;
-    perspective: 1200px;
+    perspective: 1000px;
     display:flex;align-items:center;justify-content:center;
   }
   /* faint floor shadow ellipse — paper-toned, no color */
   .cube-floor{
-    position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
-    width:180px;height:14px;border-radius:50%;
+    position:absolute;left:50%;bottom:6px;transform:translateX(-50%);
+    width:140px;height:12px;border-radius:50%;
     background:radial-gradient(ellipse at center, rgba(26,26,26,.16), transparent 70%);
     filter:blur(6px);
     z-index:0;
   }
   .cube{
     position:relative;
-    width:160px;height:160px;
+    width:120px;height:120px;
     transform-style:preserve-3d;
     animation: cube-tumble 22s ease-in-out infinite;
     z-index:2;
@@ -143,36 +144,38 @@
     border: 1.4px solid var(--ink);
     border-radius: 2px;
     box-shadow: inset 0 0 0 0.5px rgba(26,26,26,.25);
-    /* soft paper-light wash on top of each tint so it stays in-theme */
+    /* opaque paper base so back faces don't bleed through */
+    background-color: var(--paper);
     background-blend-mode: multiply;
+    backface-visibility: hidden;
   }
   /* muted prismatic gradients — each face blends 3-4 hues, washed not saturated */
-  .f1{ transform: translateZ(80px);
+  .f1{ transform: translateZ(60px);
        background:
          radial-gradient(120% 90% at 20% 15%, rgba(212,192,121,.55), transparent 55%),
          radial-gradient(120% 90% at 90% 80%, rgba(150,132,181,.50), transparent 60%),
          linear-gradient(135deg, rgba(201,122,142,.65), rgba(122,168,181,.45) 60%, rgba(201,154,92,.40)); }
-  .f2{ transform: rotateY(180deg) translateZ(80px);
+  .f2{ transform: rotateY(180deg) translateZ(60px);
        background:
          radial-gradient(120% 90% at 80% 20%, rgba(122,168,181,.55), transparent 55%),
          radial-gradient(120% 90% at 15% 85%, rgba(201,122,142,.50), transparent 60%),
          linear-gradient(225deg, rgba(150,132,181,.65), rgba(212,192,121,.45) 55%, rgba(184,92,56,.35)); }
-  .f3{ transform: rotateY( 90deg) translateZ(80px);
+  .f3{ transform: rotateY( 90deg) translateZ(60px);
        background:
          radial-gradient(110% 90% at 25% 25%, rgba(212,192,121,.55), transparent 55%),
          radial-gradient(110% 90% at 80% 80%, rgba(150,132,181,.50), transparent 60%),
          linear-gradient(160deg, rgba(122,168,181,.70), rgba(201,122,142,.40) 55%, rgba(201,154,92,.40)); }
-  .f4{ transform: rotateY(-90deg) translateZ(80px);
+  .f4{ transform: rotateY(-90deg) translateZ(60px);
        background:
          radial-gradient(110% 90% at 75% 20%, rgba(201,122,142,.55), transparent 55%),
          radial-gradient(110% 90% at 20% 80%, rgba(122,168,181,.50), transparent 60%),
          linear-gradient(200deg, rgba(201,154,92,.65), rgba(212,192,121,.45) 50%, rgba(150,132,181,.40)); }
-  .f5{ transform: rotateX( 90deg) translateZ(80px);
+  .f5{ transform: rotateX( 90deg) translateZ(60px);
        background:
          radial-gradient(120% 90% at 30% 30%, rgba(201,122,142,.50), transparent 55%),
          radial-gradient(120% 90% at 80% 75%, rgba(122,168,181,.50), transparent 60%),
          linear-gradient(135deg, rgba(212,192,121,.65), rgba(201,154,92,.45) 55%, rgba(150,132,181,.35)); }
-  .f6{ transform: rotateX(-90deg) translateZ(80px);
+  .f6{ transform: rotateX(-90deg) translateZ(60px);
        background:
          radial-gradient(120% 90% at 25% 20%, rgba(201,154,92,.50), transparent 55%),
          radial-gradient(120% 90% at 80% 80%, rgba(212,192,121,.50), transparent 60%),
@@ -180,8 +183,8 @@
 
   /* ---------- Buttons ---------- */
   .ctas{
-    margin-top: clamp(36px, 5vw, 56px);
-    display:inline-flex; align-items:center; gap:14px;
+    margin-top: clamp(28px, 3vw, 40px);
+    display:inline-flex; align-items:center; gap:12px;
     flex-wrap:wrap; justify-content:center;
   }
   .btn{
@@ -201,41 +204,85 @@
   .btn-ghost{ background:transparent; color:var(--ink); border-color: var(--ink); }
   .btn-ghost:hover{ background:var(--ink); color:var(--paper); }
 
-  /* hand-drawn SVG accents */
+  /* hand-drawn SVG accents — anchored to corners, kept off the headline */
   .sketch{position:absolute;pointer-events:none;z-index:2;color:var(--muted)}
   .sketch.flow{
-    top: 9%;
-    right: 4%;
-    width: 300px;
+    top: 80px;
+    right: clamp(20px, 4vw, 56px);
+    width: 200px;
     color: var(--muted-2);
-    opacity:.85;
-    transform: rotate(-3deg);
+    opacity:.65;
+    transform: rotate(-2deg);
   }
   .sketch.dots{
-    top: 14%;
-    left: 5%;
-    width: 130px;
+    top: 96px;
+    left: clamp(20px, 4vw, 56px);
+    width: 100px;
     color: var(--accent);
-    opacity:.7;
-    transform: rotate(-6deg);
+    opacity:.5;
+    transform: rotate(-4deg);
   }
   .sketch.arrow{
-    top: 62%;
-    right: 6%;
-    width: 150px;
+    top: 48%;
+    right: clamp(20px, 4vw, 64px);
+    width: 110px;
     color: var(--muted-2);
-    opacity:.8;
-    transform: rotate(8deg);
+    opacity:.65;
+    transform: rotate(6deg);
   }
   .sketch.underline{
     position:absolute;
     left:50%;transform:translateX(-50%);
-    bottom:-10px;
-    width: 180px;
+    bottom:-2px;
+    width: 92%;
+    max-width: 220px;
     color: var(--accent);
-    opacity:.55;
+    opacity:.6;
     z-index:1;
   }
+  /* sparkles next to "AI" word */
+  .sketch.sparkles{
+    position:absolute;
+    top:-22px;right:-34px;
+    width: 38px;
+    color: var(--accent);
+    opacity:.75;
+    transform: rotate(8deg);
+  }
+  /* loose hand-drawn circle around the primary CTA */
+  .sketch.circle-mark{
+    position:absolute;
+    inset:-10px -14px;
+    color: var(--accent);
+    opacity:.55;
+    pointer-events:none;
+  }
+  .ctas{position:relative;}
+  .cta-wrap{position:relative;display:inline-flex}
+  /* bottom-left wavy squiggle */
+  .sketch.squiggle{
+    bottom: 18%;
+    left: clamp(20px,4vw,56px);
+    width: 130px;
+    color: var(--muted-2);
+    opacity:.45;
+    transform: rotate(-4deg);
+  }
+  /* curly-bracket annotation by the three-column section */
+  .sketch.bracket{
+    position:absolute;
+    top:-22px;left:50%;transform:translateX(-50%) rotate(0deg);
+    width: 180px;
+    color: var(--muted-2);
+    opacity:.55;
+  }
+  /* tiny plus marks scattered */
+  .sketch.plus{
+    width:14px;color:var(--muted);opacity:.5;
+  }
+  .sketch.plus.p1{ top: 22%; left: 18%; transform: rotate(8deg); }
+  .sketch.plus.p2{ top: 38%; right: 16%; transform: rotate(-12deg); }
+  .sketch.plus.p3{ bottom: 12%; right: 22%; transform: rotate(20deg); }
 
   .sketch path, .sketch circle, .sketch line{
     stroke-dasharray: 4 3;
@@ -244,42 +291,48 @@
   /* second section */
   section.three{
     position:relative;z-index:3;
-    max-width:1080px;margin:40px auto 0;
-    padding: 60px 32px 100px;
-    display:grid;grid-template-columns:repeat(3,1fr);gap:56px;
+    max-width:1080px;margin:0 auto;
+    padding: clamp(56px,6vw,80px) clamp(20px,4vw,40px) clamp(72px,8vw,104px);
+    display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(32px,4vw,56px);
     border-top:1px dashed var(--rule);
   }
   .blurb h3{
-    font-size:14px;font-weight:500;letter-spacing:.02em;color:var(--ink);
-    margin: 18px 0 8px;
+    font-size:14px;font-weight:500;letter-spacing:.01em;color:var(--ink);
+    margin: 16px 0 6px;
   }
   .blurb p{
-    font-size:13.5px;line-height:1.6;color:var(--muted-2);max-width:30ch;
+    font-size:13.5px;line-height:1.65;color:var(--muted-2);max-width:32ch;
   }
-  .blurb .ico{width:42px;height:42px;color:var(--muted-2)}
+  .blurb .ico{width:38px;height:38px;color:var(--muted-2)}
   .blurb .ico path,.blurb .ico circle,.blurb .ico line{stroke-dasharray:3 2.5}
 
   footer{
     position:relative;z-index:3;
-    padding: 0 40px 28px;
-    display:flex;justify-content:space-between;
+    max-width:1180px;margin:0 auto;
+    padding: 24px clamp(20px,4vw,40px) 32px;
+    display:flex;justify-content:space-between;align-items:center;
+    border-top:1px dashed var(--rule);
     font-size:12px;color:var(--muted);letter-spacing:.02em;
   }
   footer .right span{font-family:"Instrument Serif",serif;font-style:italic;color:var(--muted-2)}
 
-  @media (max-width: 760px){
-    .sketch.flow{display:none}
-    .sketch.dots{display:none}
-    .sketch.arrow{display:none}
+  @media (max-width: 1100px){
+    .sketch.flow{ width:180px; opacity:.55 }
+    .sketch.arrow{ width:110px; opacity:.55 }
+    .sketch.dots{ width:90px; opacity:.45 }
+  }
+  @media (max-width: 880px){
+    .sketch.flow,.sketch.dots,.sketch.arrow,.sketch.squiggle,.sketch.plus{display:none}
     section.three{grid-template-columns:1fr;gap:36px}
-    .cube-stage{ width:180px; height:200px }
-    .cube{ width:130px; height:130px }
-    .f1{ transform: translateZ(65px); }
-    .f2{ transform: rotateY(180deg) translateZ(65px); }
-    .f3{ transform: rotateY( 90deg) translateZ(65px); }
-    .f4{ transform: rotateY(-90deg) translateZ(65px); }
-    .f5{ transform: rotateX( 90deg) translateZ(65px); }
-    .f6{ transform: rotateX(-90deg) translateZ(65px); }
+    .cube-stage{ width:160px; height:160px }
+    .cube{ width:110px; height:110px }
+    .f1{ transform: translateZ(55px); }
+    .f2{ transform: rotateY(180deg) translateZ(55px); }
+    .f3{ transform: rotateY( 90deg) translateZ(55px); }
+    .f4{ transform: rotateY(-90deg) translateZ(55px); }
+    .f5{ transform: rotateX( 90deg) translateZ(55px); }
+    .f6{ transform: rotateX(-90deg) translateZ(55px); }
+    footer{flex-direction:column;gap:8px;text-align:center}
   }
 </style>
 </head>
@@ -331,10 +384,20 @@
   <text x="60" y="100" font-family="Instrument Serif, serif" font-style="italic" font-size="16" fill="currentColor" stroke="none">it spins</text>
 </svg>
 
+<!-- bottom-left wavy squiggle -->
+<svg class="sketch squiggle" viewBox="0 0 140 30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="position:absolute">
+  <path d="M4 16 C 14 6, 22 26, 32 16 C 42 6, 50 26, 60 16 C 70 6, 78 26, 88 16 C 98 6, 106 26, 116 16 C 124 10, 132 18, 136 14" stroke-dasharray="0"/>
+</svg>
+
+<!-- tiny plus marks scattered -->
+<svg class="sketch plus p1" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" style="position:absolute"><path d="M7 1 L 7 13 M 1 7 L 13 7" stroke-dasharray="0"/></svg>
+<svg class="sketch plus p2" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" style="position:absolute"><path d="M7 1 L 7 13 M 1 7 L 13 7" stroke-dasharray="0"/></svg>
+<svg class="sketch plus p3" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" style="position:absolute"><path d="M7 1 L 7 13 M 1 7 L 13 7" stroke-dasharray="0"/></svg>
+
 <main>
   <div class="eyebrow">Agentic Designer · Eloelo</div>
 
-  <h1>Designs <span class="word-wrap"><span class="ital ital-accent">systems</span><svg class="sketch underline" viewBox="0 0 200 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 11 C 40 4, 80 16, 120 8 C 150 2, 180 12, 196 8" stroke-dasharray="0"/></svg></span> that <span class="ital">AI</span> can run.</h1>
+  <h1>Designs <span class="word-wrap"><span class="ital ital-accent">systems</span><svg class="sketch underline" viewBox="0 0 200 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 11 C 40 4, 80 16, 120 8 C 150 2, 180 12, 196 8" stroke-dasharray="0"/></svg></span> that <span class="ital" style="position:relative;display:inline-block">AI<svg class="sketch sparkles" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M20 6 L 20 16 M 14 11 L 26 11" stroke-dasharray="0"/><path d="M8 26 L 8 32 M 5 29 L 11 29" stroke-dasharray="0" opacity=".8"/><path d="M30 22 L 30 28 M 27 25 L 33 25" stroke-dasharray="0" opacity=".7"/></svg></span> can run.</h1>
 
   <p class="lede">
     Shashi builds quiet little agents that take a brief and ship the work — grounded in twelve years of product, brand and graphic craft.
@@ -361,6 +424,11 @@
 </main>
 
 <section class="three">
+  <!-- curly bracket annotation -->
+  <svg class="sketch bracket" viewBox="0 0 200 36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 28 C 6 18, 14 14, 30 14 L 90 14 C 96 14, 100 10, 100 4 C 100 10, 104 14, 110 14 L 170 14 C 186 14, 194 18, 194 28" stroke-dasharray="0"/>
+    <text x="74" y="34" font-family="Instrument Serif, serif" font-style="italic" font-size="13" fill="currentColor" stroke="none">what I do</text>
+  </svg>
   <div class="blurb">
     <svg class="ico" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
       <circle cx="20" cy="20" r="13"/>

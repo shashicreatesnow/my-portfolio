@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Shashi — 3D Brain v3 (real mesh)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4EFE6;
+    --ink:#1a1a1a;
+    --muted:#9b8e7c;
+    --muted-2:#6f6557;
+    --accent:#B85C38;
+    --rule:#dcd2c2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Geist","Inter",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #FAF6EE 0%, transparent 60%),
+      radial-gradient(900px 500px at 100% 100%, #ECE3D2 0%, transparent 55%),
+      var(--paper);
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.85;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.44  0 0 0 0 0.36  0 0 0 0.11 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  nav{
+    position:relative;z-index:5;
+    display:flex;justify-content:space-between;align-items:center;
+    max-width:1180px;margin:0 auto;padding:24px clamp(20px,4vw,40px);
+    font-size:13px;color:var(--muted-2);
+  }
+  .mark{font-weight:500;color:var(--ink);display:inline-flex;align-items:center;gap:8px}
+  .mark .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  main{
+    position:relative;z-index:3;max-width:1080px;margin:0 auto;
+    padding: clamp(20px,3vw,40px) clamp(20px,4vw,40px) clamp(36px,4vw,56px);
+    text-align:center;
+  }
+  .eyebrow{
+    font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--muted);font-weight:500;display:inline-flex;align-items:center;gap:12px;margin-bottom:20px;
+  }
+  .eyebrow::before, .eyebrow::after{content:"";display:inline-block;width:22px;height:1px;background:var(--rule);}
+  h1{
+    font-weight:500;font-size:clamp(38px,5.4vw,60px);line-height:1.05;letter-spacing:-.035em;
+    color:var(--ink);max-width:18ch;margin:0 auto;
+  }
+  h1 .ital{font-family:"Instrument Serif",serif;font-style:italic;font-weight:400;font-size:1.08em;color:var(--accent);}
+  .lede{margin:18px auto 0;max-width:46ch;font-size:15.5px;line-height:1.6;color:var(--muted-2);}
+  .brain-stage{
+    margin: clamp(28px,3.4vw,44px) auto 0;
+    width: 440px;height: 380px;
+    position: relative;display:flex;align-items:center;justify-content:center;
+  }
+  .brain-floor{
+    position:absolute;left:50%;bottom:8px;transform:translateX(-50%);
+    width:200px;height:14px;border-radius:50%;
+    background:radial-gradient(ellipse at center, rgba(26,26,26,.22), transparent 70%);
+    filter:blur(6px);z-index:0;
+  }
+  #brain-canvas{position:relative;z-index:2;width:100%;height:100%;cursor:grab;}
+  #brain-canvas:active{cursor:grabbing;}
+  .connections{
+    position:absolute;inset:0;
+    z-index:1;
+    pointer-events:none;
+    overflow:visible;
+  }
+  .connections .line{stroke:var(--ink);stroke-width:1.4;stroke-linecap:round;fill:none;opacity:.55}
+  .connections .node{fill:var(--accent);stroke:none}
+  .connections .node-soft{fill:var(--ink);stroke:none;opacity:.45}
+  .connections .node-ring{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.6}
+  .loading{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:var(--muted-2);font-size:13px;letter-spacing:.05em;z-index:3;pointer-events:none;
+  }
+  .ctas{margin-top: clamp(28px,3vw,40px);display:inline-flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+  .btn{
+    font:inherit;font-size:14px;font-weight:500;padding:12px 20px;border-radius:999px;
+    text-decoration:none;display:inline-flex;align-items:center;gap:8px;border:1px solid transparent;
+    transition: transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+  }
+  .btn-primary{background:var(--ink);color:var(--paper);}
+  .btn-primary:hover{transform:translateY(-1px);background:var(--accent);box-shadow:0 14px 30px -16px rgba(0,0,0,.4);}
+  .btn-primary .arr{font-family:"Instrument Serif",serif;font-style:italic;font-size:17px;}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--ink);}
+  .btn-ghost:hover{background:var(--ink);color:var(--paper);}
+</style>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+<nav>
+  <span class="mark"><span class="dot"></span>Shashi</span>
+</nav>
+
+<main>
+  <div class="eyebrow">Product &amp; Brand Designer</div>
+  <h1>A designer who can design <span class="ital">AI Systems</span></h1>
+  <p class="lede">Anyone can design a screen. I design the system and the agent that runs it.</p>
+
+  <div class="brain-stage" aria-hidden="true">
+    <div class="brain-floor"></div>
+    <canvas id="brain-canvas"></canvas>
+    <!-- AI connection lines radiating around the brain -->
+    <svg class="connections" viewBox="0 0 440 380" preserveAspectRatio="none">
+      <!-- 8 connections: lines from near brain edge out to floating nodes -->
+      <!-- top-left -->
+      <path class="line" d="M 175 120 C 150 95, 110 75, 80 60"/>
+      <circle class="node" cx="80" cy="60" r="3.2"/>
+      <circle class="node-ring" cx="80" cy="60" r="6"/>
+
+      <!-- top -->
+      <path class="line" d="M 220 110 C 218 80, 212 45, 218 25"/>
+      <circle class="node" cx="218" cy="25" r="3"/>
+
+      <!-- top-right -->
+      <path class="line" d="M 265 120 C 295 95, 330 80, 360 55"/>
+      <circle class="node-soft" cx="360" cy="55" r="3.4"/>
+
+      <!-- right (slightly higher) -->
+      <path class="line" d="M 295 175 C 340 165, 380 155, 415 145"/>
+      <circle class="node" cx="415" cy="145" r="3"/>
+      <circle class="node-ring" cx="415" cy="145" r="6.5"/>
+
+      <!-- right-low -->
+      <path class="line" d="M 295 220 C 345 230, 385 245, 410 270"/>
+      <circle class="node-soft" cx="410" cy="270" r="2.8"/>
+
+      <!-- bottom -->
+      <path class="line" d="M 230 270 C 235 305, 240 335, 232 358"/>
+      <circle class="node" cx="232" cy="358" r="3"/>
+
+      <!-- bottom-left -->
+      <path class="line" d="M 175 260 C 130 280, 90 305, 55 330"/>
+      <circle class="node-soft" cx="55" cy="330" r="3"/>
+      <circle class="node-ring" cx="55" cy="330" r="6"/>
+
+      <!-- left -->
+      <path class="line" d="M 145 195 C 100 200, 60 195, 25 188"/>
+      <circle class="node" cx="25" cy="188" r="3"/>
+    </svg>
+    <div class="loading" id="loading">loading brain…</div>
+  </div>
+
+  <div class="ctas">
+    <a class="btn btn-primary" href="#">enter the work <span class="arr">→</span></a>
+    <a class="btn btn-ghost" href="#">say hello</a>
+  </div>
+</main>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+// --- prism shader: gradient driven by MESH-LOCAL NORMAL, fresnel rim outline ---
+const VERT = `
+  varying vec3 vWorldNormal;
+  varying vec3 vLocalNormal;
+  varying vec3 vViewDir;
+
+  void main() {
+    vec4 worldPos = modelMatrix * vec4(position, 1.0);
+    vec4 viewPos  = viewMatrix  * worldPos;
+    vWorldNormal = normalize(normalMatrix * normal);
+    vLocalNormal = normalize(normal);
+    vViewDir     = normalize(-viewPos.xyz);
+    gl_Position  = projectionMatrix * viewPos;
+  }
+`;
+
+const FRAG = `
+  precision highp float;
+  varying vec3 vWorldNormal;
+  varying vec3 vLocalNormal;
+  varying vec3 vViewDir;
+
+  uniform vec3 cRose;
+  uniform vec3 cOchre;
+  uniform vec3 cWheat;
+  uniform vec3 cSage;
+  uniform vec3 cPlum;
+  uniform vec3 cInk;
+  uniform vec3 cPaper;
+
+  void main(){
+    // Make the shader robust to reversed-winding meshes (common in medical exports)
+    // by using absolute values everywhere a normal direction is involved.
+    vec3 N = normalize(vWorldNormal);
+    if (!gl_FrontFacing) N = -N;
+
+    vec3 LN = normalize(vLocalNormal);
+    if (!gl_FrontFacing) LN = -LN;
+
+    // map mesh-local normal components to 0..1
+    float fx = LN.x * 0.5 + 0.5;
+    float fy = LN.y * 0.5 + 0.5;
+    float fz = LN.z * 0.5 + 0.5;
+
+    vec3 col = mix(cRose,  cOchre, fx);
+    col      = mix(col,    cWheat, fy * 0.85);
+    col      = mix(col,    cSage,  (1.0 - fz) * 0.65);
+    col      = mix(col,    cPlum,  smoothstep(0.55, 1.0, fy * fx));
+
+    // diffuse — lit from above + slightly forward
+    vec3 lightDir = normalize(vec3(0.3, 0.85, 0.5));
+    float diff = max(dot(N, lightDir), 0.0);
+    col *= 0.55 + diff * 0.55;
+
+    // soft AO: undersides slightly darker
+    float ao = smoothstep(-1.0, 1.0, N.y);
+    col *= 0.82 + ao * 0.18;
+
+    // fresnel rim — tighter band, ink darken at the silhouette only
+    float fres = 1.0 - max(dot(N, vViewDir), 0.0);
+    col = mix(col, cInk, smoothstep(0.78, 1.0, fres) * 0.7);
+
+    col = mix(col, cPaper, 0.04);
+
+    gl_FragColor = vec4(col, 1.0);
+  }
+`;
+
+const canvas = document.getElementById('brain-canvas');
+const stage  = canvas.parentElement;
+const loadingEl = document.getElementById('loading');
+
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+camera.position.set(0, 0, 4.6);
+
+// Lights — brighter so vivid colors don't get muddied.
+scene.add(new THREE.HemisphereLight('#ffffff', '#444444', 1.1));
+const keyLight = new THREE.DirectionalLight('#ffffff', 1.5);
+keyLight.position.set(2.5, 4, 3);
+scene.add(keyLight);
+const fillLight = new THREE.DirectionalLight('#7C4DFF', 0.4);
+fillLight.position.set(-3, 1, -2);
+scene.add(fillLight);
+const rimLight = new THREE.DirectionalLight('#FFCB29', 0.35);
+rimLight.position.set(0, -2, -3);
+scene.add(rimLight);
+
+const uniforms = {
+  cRose:  { value: new THREE.Color('#C97A8E') },
+  cOchre: { value: new THREE.Color('#C99A5C') },
+  cWheat: { value: new THREE.Color('#D4C079') },
+  cSage:  { value: new THREE.Color('#7AA8B5') },
+  cPlum:  { value: new THREE.Color('#9684B5') },
+  cInk:   { value: new THREE.Color('#1a1a1a') },
+  cPaper: { value: new THREE.Color('#f4efe6') },
+};
+
+const group = new THREE.Group();
+scene.add(group);
+
+const loader = new GLTFLoader();
+loader.load('./assets/brain.glb', (gltf) => {
+  const root = gltf.scene;
+
+  // ---- Bake the prismatic gradient into per-vertex colors. ----
+  // We compute a combined bbox across all meshes (to share a coordinate space),
+  // then for each vertex we pick a color blended from the prism palette
+  // based on normalized position. The colors stay glued to the surface as
+  // the brain rotates, while three.js standard lighting handles shading.
+  const palette = {
+    rose:  new THREE.Color('#FF4D7E'),
+    ochre: new THREE.Color('#FF7A2E'),
+    wheat: new THREE.Color('#FFCB29'),
+    sage:  new THREE.Color('#1FB8C9'),
+    plum:  new THREE.Color('#7C4DFF'),
+  };
+
+  function smoothstep(a, b, x) {
+    const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
+    return t * t * (3 - 2 * t);
+  }
+  function lerpC(out, c, k) {
+    out.r += (c.r - out.r) * k;
+    out.g += (c.g - out.g) * k;
+    out.b += (c.b - out.b) * k;
+  }
+  function prismAt(tx, ty, tz, out) {
+    // start fully saturated, blend across full strength so colors stay vivid
+    out.copy(palette.rose);
+    lerpC(out, palette.ochre, tx);
+    lerpC(out, palette.wheat, ty);
+    lerpC(out, palette.sage,  (1 - tz));
+    lerpC(out, palette.plum,  smoothstep(0.45, 1.0, ty * tx));
+  }
+
+  // Compute combined bbox over all meshes BEFORE any orientation rotation,
+  // so the gradient coordinate space is the model's own.
+  const sharedBox = new THREE.Box3().setFromObject(root);
+  const sharedSize = new THREE.Vector3(); sharedBox.getSize(sharedSize);
+  const sharedMin = sharedBox.min;
+
+  let meshCount = 0;
+  const tmpV = new THREE.Vector3();
+  const tmpC = new THREE.Color();
+
+  root.traverse((o) => {
+    if (o.isMesh && o.geometry) {
+      meshCount += 1;
+      const geom = o.geometry;
+      geom.computeVertexNormals();
+
+      const posAttr = geom.attributes.position;
+      const colors = new Float32Array(posAttr.count * 3);
+
+      // Each mesh may live in its own local frame. We need positions in the
+      // shared root-space — apply matrixWorld of this mesh.
+      o.updateMatrixWorld(true);
+      const mw = o.matrixWorld;
+
+      for (let i = 0; i < posAttr.count; i++) {
+        tmpV.fromBufferAttribute(posAttr, i).applyMatrix4(mw);
+        const tx = sharedSize.x > 0 ? (tmpV.x - sharedMin.x) / sharedSize.x : 0.5;
+        const ty = sharedSize.y > 0 ? (tmpV.y - sharedMin.y) / sharedSize.y : 0.5;
+        const tz = sharedSize.z > 0 ? (tmpV.z - sharedMin.z) / sharedSize.z : 0.5;
+        prismAt(tx, ty, tz, tmpC);
+        colors[i * 3 + 0] = tmpC.r;
+        colors[i * 3 + 1] = tmpC.g;
+        colors[i * 3 + 2] = tmpC.b;
+      }
+
+      geom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      o.material = new THREE.MeshStandardMaterial({
+        vertexColors: true,
+        roughness: 0.35,
+        metalness: 0.05,
+        side: THREE.DoubleSide,
+        flatShading: false,
+      });
+    }
+  });
+
+  // Orient: brainstem points down. Single -90° rotation around X for this Z-up GLB.
+  root.rotation.x = -Math.PI / 2;
+  root.rotation.y = 0;
+  root.rotation.z = 0;
+
+  // Add to group first so transforms compose correctly
+  group.add(root);
+
+  // Compute world-space bbox after parenting, center + scale via the group
+  const box = new THREE.Box3().setFromObject(root);
+  const size = new THREE.Vector3(); box.getSize(size);
+  const center = new THREE.Vector3(); box.getCenter(center);
+  console.log('[brain] meshes:', meshCount, 'bbox size:', size, 'center:', center);
+
+  if (meshCount === 0) {
+    loadingEl.textContent = 'GLB has no meshes';
+    return;
+  }
+
+  // Center: translate root so its bbox center is at origin
+  root.position.sub(center);
+
+  // Scale: fit largest dim to 2.4 units
+  const maxDim = Math.max(size.x, size.y, size.z) || 1;
+  const k = 2.4 / maxDim;
+  root.scale.setScalar(k);
+  // Re-center after scale (scale doesn't change centered position, but the stored offset above was pre-scale,
+  // so apply the scale to that offset too)
+  root.position.multiplyScalar(k);
+
+  loadingEl.remove();
+}, (xhr) => {
+  if (xhr.total) {
+    loadingEl.textContent = `loading brain… ${Math.round((xhr.loaded / xhr.total) * 100)}%`;
+  }
+}, (err) => {
+  loadingEl.textContent = 'failed to load brain.glb';
+  console.error('[brain] load error:', err);
+});
+
+// resize
+function resize(){
+  const w = stage.clientWidth, h = stage.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+resize();
+window.addEventListener('resize', resize);
+
+// drag to rotate
+let dragging = false, dragX=0, dragY=0;
+let userYaw=0, userPitch=0;
+canvas.addEventListener('pointerdown', e => { dragging=true; dragX=e.clientX; dragY=e.clientY; });
+window.addEventListener('pointerup',   () => dragging=false);
+window.addEventListener('pointermove', e => {
+  if(!dragging) return;
+  userYaw   += (e.clientX - dragX) * 0.005;
+  userPitch += (e.clientY - dragY) * 0.005;
+  userPitch = Math.max(-1.2, Math.min(1.2, userPitch));
+  dragX = e.clientX; dragY = e.clientY;
+});
+
+// auto-tumble + user nudge
+const clock = new THREE.Clock();
+function animate(){
+  const t = clock.getElapsedTime();
+  // Slow yaw + tiny pitch wobble keeps the brain mostly upright
+  group.rotation.y = t * 0.35 + userYaw;
+  group.rotation.x = Math.sin(t * 0.25) * 0.08 + userPitch;
+  group.rotation.z = 0;
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>

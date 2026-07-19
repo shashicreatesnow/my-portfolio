@@ -18,8 +18,8 @@ interface HeroBrainProps {
 export function HeroBrain({
   eyebrow = "Product & Brand Designer",
   title = "A designer who can design",
-  titleAccent = "AI Systems",
-  ledeText = "Anyone can design a screen. I design the system and the agent that runs it.",
+  titleAccent = "",
+  ledeText = "",
   primaryHref = "/works",
   primaryLabel = "enter the work",
   secondaryHref = "/about",
@@ -277,9 +277,11 @@ export function HeroBrain({
           ) : null}
         </h1>
 
-        <p className="mx-auto mt-5 max-w-[50ch] text-[16.5px] font-normal leading-[1.6] text-[color:var(--ink-muted)]">
-          {ledeText}
-        </p>
+        {ledeText ? (
+          <p className="mx-auto mt-5 max-w-[50ch] text-[16.5px] font-normal leading-[1.6] text-[color:var(--ink-muted)]">
+            {ledeText}
+          </p>
+        ) : null}
 
         {/* brain stage */}
         <div

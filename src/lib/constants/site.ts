@@ -27,6 +27,7 @@ export const defaultSiteSettings = {
   },
   contact: {
     email: "shashiprofessionalacc@gmail.com",
+    phone: "",
     linkedin: "https://www.linkedin.com/in/shashi-pratap-singh-3957b922b",
     behance: "https://www.behance.net/shashipsingh",
     twitter: "",

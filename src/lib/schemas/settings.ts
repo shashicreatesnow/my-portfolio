@@ -13,6 +13,7 @@ export const heroSettingsSchema = z.object({
 
 export const contactSettingsSchema = z.object({
   email: z.string().email(),
+  phone: z.string().max(24).optional().or(z.literal("")),
   linkedin: z.string().url(),
   behance: z.string().url(),
   twitter: z.string().url().optional().or(z.literal("")),

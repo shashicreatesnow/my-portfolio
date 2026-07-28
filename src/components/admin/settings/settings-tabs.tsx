@@ -9,14 +9,12 @@ import { toast } from "sonner";
 
 import { defaultSiteSettings } from "@/lib/constants/site";
 import {
-  aboutSettingsSchema,
   contactSettingsSchema,
   heroSettingsSchema,
   navigationSettingsSchema,
   seoSettingsSchema,
 } from "@/lib/schemas/settings";
 import {
-  saveAboutSettingsAction,
   saveContactSettingsAction,
   saveHeroSettingsAction,
   saveNavigationSettingsAction,
@@ -49,10 +47,6 @@ export function SettingsTabs({ settings }: { settings: typeof defaultSiteSetting
     resolver: zodResolver(navigationSettingsSchema),
     defaultValues: settings.navigation,
   });
-  const aboutForm = useForm({
-    resolver: zodResolver(aboutSettingsSchema),
-    defaultValues: settings.about,
-  });
 
   const navigationFieldArray = useFieldArray({
     control: navigationForm.control,
@@ -77,7 +71,6 @@ export function SettingsTabs({ settings }: { settings: typeof defaultSiteSetting
         <TabsTrigger value="contact">Contact</TabsTrigger>
         <TabsTrigger value="seo">SEO</TabsTrigger>
         <TabsTrigger value="navigation">Navigation</TabsTrigger>
-        <TabsTrigger value="about">About</TabsTrigger>
       </TabsList>
 
       <TabsContent value="hero">
@@ -129,7 +122,7 @@ export function SettingsTabs({ settings }: { settings: typeof defaultSiteSetting
       <TabsContent value="contact">
         <Card>
           <CardContent className="grid gap-4 p-6 md:grid-cols-2">
-            {(["email", "linkedin", "behance", "twitter", "github"] as const).map((field) => (
+            {(["email", "phone", "linkedin", "behance", "twitter", "github"] as const).map((field) => (
               <div key={field} className="space-y-2">
                 <Label>{field}</Label>
                 <Input {...contactForm.register(field)} />
@@ -203,31 +196,6 @@ export function SettingsTabs({ settings }: { settings: typeof defaultSiteSetting
         </Card>
       </TabsContent>
 
-      <TabsContent value="about">
-        <Card>
-          <CardContent className="space-y-4 p-6">
-            <div className="space-y-2">
-              <Label>Headline</Label>
-              <Input {...aboutForm.register("headline")} />
-            </div>
-            <div className="space-y-2">
-              <Label>Subheadline</Label>
-              <Textarea {...aboutForm.register("subheadline")} />
-            </div>
-            <div className="space-y-2">
-              <Label>Profile image</Label>
-              <ImageUploader
-                context="about"
-                value={aboutForm.watch("profile_image_url")}
-                onChange={(value) => aboutForm.setValue("profile_image_url", value, { shouldDirty: true })}
-              />
-            </div>
-            <Button disabled={isPending} onClick={aboutForm.handleSubmit((values) => submit(() => saveAboutSettingsAction(values), "About settings saved"))}>
-              Save about settings
-            </Button>
-          </CardContent>
-        </Card>
-      </TabsContent>
     </Tabs>
   );
 }

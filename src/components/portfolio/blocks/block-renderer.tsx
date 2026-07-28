@@ -145,7 +145,7 @@ export async function BlockRenderer({
           {(content.images || []).filter((i: any) => i.url).map((image: any, index: number) => (
             <figure key={index} className="w-[80%] flex-none snap-center space-y-2 md:w-[45%]">
               <div className={cn("editorial-panel relative overflow-hidden rounded-2xl", galleryAspectClass(content.aspect_ratio))}>
-                <Image src={image.url} alt={image.alt || ""} fill className="object-cover" />
+                <Image src={image.url} alt={image.alt || ""} fill className={cn("object-cover", content.image_align === "left" && "object-left")} />
               </div>
               {image.caption && <figcaption className="text-sm text-muted-foreground">{image.caption}</figcaption>}
             </figure>
@@ -173,7 +173,7 @@ export async function BlockRenderer({
           {(content.images || []).filter((i: any) => i.url).map((image: any, index: number) => (
             <figure key={index} className="space-y-2">
               <div className={cn("editorial-panel relative overflow-hidden rounded-2xl", galleryAspectClass(content.aspect_ratio))}>
-                <Image src={image.url} alt={image.alt || ""} fill className="object-cover" />
+                <Image src={image.url} alt={image.alt || ""} fill className={cn("object-cover", content.image_align === "left" && "object-left")} />
               </div>
               {image.caption && <figcaption className="text-sm text-muted-foreground">{image.caption}</figcaption>}
             </figure>

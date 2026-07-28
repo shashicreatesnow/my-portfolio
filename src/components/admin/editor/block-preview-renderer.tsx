@@ -80,7 +80,7 @@ export function BlockPreviewRenderer({
           {(content.images || []).filter((i: any) => i.url).map((image: any, index: number) => (
             <figure key={index} className={cn("space-y-2", content.layout === "carousel" && "w-[80%] flex-none snap-center md:w-[45%]")}>
               <div className={cn("editorial-panel relative overflow-hidden rounded-2xl", galleryAspectClass(content.aspect_ratio))}>
-                <img src={image.url} alt={image.alt || ""} className="h-full w-full object-cover" />
+                <img src={image.url} alt={image.alt || ""} className={cn("h-full w-full object-cover", content.image_align === "left" && "object-left")} />
               </div>
               {image.caption && <figcaption className="text-sm text-muted-foreground">{image.caption}</figcaption>}
             </figure>

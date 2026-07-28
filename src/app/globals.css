@@ -108,6 +108,29 @@
   --primary-foreground: #ffffff;
 }
 
+/* public-theme scope — re-enters the portfolio look inside the admin (block editor Preview).
+   Mirrors the .light overrides back to the site's carbon tokens; must list every var
+   that .light overrides, or the admin values leak through. */
+.dark {
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper-2);
+  --card-foreground: var(--ink);
+  --popover: #1b1a18;
+  --popover-foreground: var(--ink);
+  --secondary: var(--paper-2);
+  --secondary-foreground: var(--ink);
+  --muted: var(--paper-2);
+  --muted-foreground: var(--ink-muted);
+  --border: var(--rule);
+  --input: var(--rule);
+  --accent: #c8f03f;
+  --accent-foreground: var(--paper);
+  --primary: #c8f03f;
+  --primary-foreground: var(--paper);
+  --ring: #c8f03f;
+}
+
 * {
   border-color: var(--border);
 }

@@ -62,23 +62,23 @@ export function HeroBrain({
       const keyLight = new THREE.DirectionalLight("#ffffff", 1.5);
       keyLight.position.set(2.5, 4, 3);
       scene.add(keyLight);
-      const fillLight = new THREE.DirectionalLight("#7C4DFF", 0.4);
+      const fillLight = new THREE.DirectionalLight("#9A7BFF", 0.4);
       fillLight.position.set(-3, 1, -2);
       scene.add(fillLight);
-      const rimLight = new THREE.DirectionalLight("#FFCB29", 0.35);
+      const rimLight = new THREE.DirectionalLight("#FFD84D", 0.35);
       rimLight.position.set(0, -2, -3);
       scene.add(rimLight);
 
       const group = new THREE.Group();
       scene.add(group);
 
-      // Vibrant prism palette
+      // Saturated prism palette (Ink & Signal Lime v2 — see DESIGN.md)
       const palette = {
-        rose: new THREE.Color("#FF4D7E"),
-        ochre: new THREE.Color("#FF7A2E"),
-        wheat: new THREE.Color("#FFCB29"),
-        sage: new THREE.Color("#1FB8C9"),
-        plum: new THREE.Color("#7C4DFF"),
+        rose: new THREE.Color("#FF6F91"),
+        ochre: new THREE.Color("#FFA14E"),
+        wheat: new THREE.Color("#FFD84D"),
+        sage: new THREE.Color("#35B6C9"),
+        plum: new THREE.Color("#9A7BFF"),
       };
 
       const smoothstep = (a: number, b: number, x: number) => {
@@ -297,7 +297,7 @@ export function HeroBrain({
               bottom: 8,
               width: 200,
               height: 14,
-              background: "radial-gradient(ellipse at center, rgba(26,26,26,.22), transparent 70%)",
+              background: "radial-gradient(ellipse at center, rgba(0,0,0,.55), transparent 70%)",
               filter: "blur(6px)",
             }}
           />
@@ -398,9 +398,9 @@ export function HeroBrain({
         <div className="mt-7 inline-flex flex-wrap items-center justify-center gap-3">
           <Link
             href={primaryHref}
-            className="hero-cta-primary inline-flex items-center gap-2 rounded-full border border-transparent px-6 py-3.5 text-[15px] font-medium transition hover:-translate-y-px hover:shadow-[0_14px_30px_-16px_rgba(0,0,0,0.4)]"
+            className="hero-cta-primary inline-flex items-center gap-2 rounded-full border border-transparent px-6 py-3.5 text-[15px] font-medium transition hover:-translate-y-px hover:shadow-[0_14px_30px_-16px_rgba(200,240,63,0.35)]"
             style={{
-              backgroundColor: "var(--ink)",
+              backgroundColor: "var(--accent)",
               color: "var(--paper)",
             }}
           >

@@ -5,28 +5,28 @@
   --font-display: "Instrument Serif", "Iowan Old Style", "Palatino Linotype", serif;
   --font-mono: "Geist Mono", "JetBrains Mono", "SFMono-Regular", monospace;
 
-  /* paper theme — public site */
-  --paper: #f4efe6;
-  --paper-2: #efe8dc;
-  --ink: #1a1a1a;
-  --ink-muted: #6f6557;
-  --ink-soft: #9b8e7c;
-  --rule: #dcd2c2;
-  --accent: #b85c38;
+  /* ink & signal lime theme — public site (v2, see DESIGN.md) */
+  --paper: #0a0a09;      /* carbon base (neutral warm black) — var name kept for compatibility */
+  --paper-2: #141312;    /* carbon surface */
+  --ink: #f2efe9;        /* bone */
+  --ink-muted: #a9a69a;
+  --ink-soft: #7e7b6f;
+  --rule: #262421;
+  --accent: #c8f03f;     /* signal lime */
 
-  /* muted prismatic palette for accents/cube */
-  --prism-rose: #c97a8e;
-  --prism-ochre: #c99a5c;
-  --prism-wheat: #d4c079;
-  --prism-sage: #7aa8b5;
-  --prism-plum: #9684b5;
+  /* saturated prismatic palette for the brain */
+  --prism-rose: #ff6f91;
+  --prism-ochre: #ffa14e;
+  --prism-wheat: #ffd84d;
+  --prism-sage: #35b6c9;
+  --prism-plum: #9a7bff;
 
   /* shadcn-compatible tokens (mapped to paper) */
   --background: var(--paper);
   --foreground: var(--ink);
   --card: var(--paper-2);
   --card-foreground: var(--ink);
-  --popover: #ffffff;
+  --popover: #1b1a18;
   --popover-foreground: var(--ink);
   --primary: var(--accent);
   --primary-foreground: var(--paper);
@@ -35,7 +35,7 @@
   --muted: var(--paper-2);
   --muted-foreground: var(--ink-muted);
   --accent-foreground: var(--paper);
-  --destructive: #c0392b;
+  --destructive: #ff4557;
   --destructive-foreground: var(--paper);
   --border: var(--rule);
   --input: var(--rule);
@@ -48,15 +48,15 @@
   --admin-card: #ffffff;
   --admin-border: #e2e8f0;
 
-  /* legacy portfolio tokens — re-aimed at paper so old class names still render correctly */
+  /* legacy portfolio tokens — re-aimed at carbon so old class names still render correctly */
   --portfolio-panel:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.25)),
+    linear-gradient(180deg, rgba(242, 239, 233, 0.04), rgba(242, 239, 233, 0.01)),
     linear-gradient(180deg, var(--paper-2), var(--paper));
-  --portfolio-glass: rgba(244, 239, 230, 0.72);
-  --portfolio-line: rgba(26, 26, 26, 0.10);
-  --portfolio-line-soft: rgba(26, 26, 26, 0.05);
-  --portfolio-glow: rgba(184, 92, 56, 0.12);
-  --portfolio-shadow: 0 12px 40px -16px rgba(26, 26, 26, 0.18);
+  --portfolio-glass: rgba(10, 10, 9, 0.72);
+  --portfolio-line: rgba(242, 239, 233, 0.10);
+  --portfolio-line-soft: rgba(242, 239, 233, 0.05);
+  --portfolio-glow: rgba(200, 240, 63, 0.10);
+  --portfolio-shadow: 0 12px 40px -16px rgba(0, 0, 0, 0.55);
 }
 
 @theme inline {
@@ -125,16 +125,17 @@ body {
   min-height: 100vh;
 }
 
-/* paper-grain noise overlay on public site only (admin opts out via .light scope) */
+/* film-grain noise overlay on public site only (admin opts out via .light scope)
+   dark theme: light bone speckle, screen-blended so it lifts the carbon slightly */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.85;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.44  0 0 0 0 0.36  0 0 0 0.11 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.7;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.94  0 0 0 0 0.92  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 
 .light body::before {
@@ -165,8 +166,8 @@ select {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(1200px 600px at 50% -10%, #faf6ee 0%, transparent 60%),
-    radial-gradient(900px 500px at 100% 100%, #ece3d2 0%, transparent 55%);
+    radial-gradient(1200px 600px at 50% -10%, #151413 0%, transparent 60%),
+    radial-gradient(900px 500px at 100% 100%, #060606 0%, transparent 55%);
   z-index: -2;
 }
 
@@ -176,9 +177,9 @@ select {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 18% 12%, rgba(184, 92, 56, 0.05), transparent 0 22%),
-    radial-gradient(circle at 78% 10%, rgba(150, 132, 181, 0.05), transparent 0 18%),
-    radial-gradient(circle at 70% 70%, rgba(122, 168, 181, 0.05), transparent 0 20%);
+    radial-gradient(circle at 18% 12%, rgba(200, 240, 63, 0.04), transparent 0 22%),
+    radial-gradient(circle at 78% 10%, rgba(154, 123, 255, 0.04), transparent 0 18%),
+    radial-gradient(circle at 70% 70%, rgba(53, 182, 201, 0.04), transparent 0 20%);
   z-index: -1;
 }
 
@@ -197,15 +198,15 @@ select {
   border-radius: inherit;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(26, 26, 26, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(26, 26, 26, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(242, 239, 233, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242, 239, 233, 0.06) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: radial-gradient(circle at center, black 38%, transparent 86%);
   z-index: 0;
 }
 
 .story-fade {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), transparent 20%);
+  background: linear-gradient(180deg, rgba(242, 239, 233, 0.05), transparent 20%);
 }
 
 .portfolio-kicker {
@@ -445,7 +446,7 @@ select {
   display: inline-block;
 }
 .hero-cta-primary:hover {
-  background-color: var(--accent) !important;
+  background-color: var(--ink) !important;
 }
 .hero-cta-primary:hover > span:last-child {
   transform: translateX(4px) translateY(-1px);

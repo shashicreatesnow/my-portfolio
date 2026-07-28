@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, useTransition } from "react";
-import { Copy, Eye, EyeOff, MoreHorizontal, Search, Star, Trash2 } from "lucide-react";
+import { useEffect, useMemo, useState, useTransition } from "react";
+import { ArrowDown, ArrowUp, Copy, Eye, EyeOff, MoreHorizontal, Search, Star, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import type { ProjectRecord } from "@/lib/types/projects";
-import { deleteProjectAction, duplicateProjectAction, updateProjectAction } from "@/lib/actions/projects";
+import { deleteProjectAction, duplicateProjectAction, reorderProjectsAction, updateProjectAction } from "@/lib/actions/projects";
 import { formatRelativeDate, truncate } from "@/lib/utils/format";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -23,10 +23,37 @@ import { StatusBadge } from "@/components/admin/shared/status-badge";
 export function ProjectList({ projects }: { projects: ProjectRecord[] }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "published" | "draft" | "featured">("all");
+  const [ordered, setOrdered] = useState(projects);
   const [isPending, startTransition] = useTransition();
 
+  useEffect(() => {
+    setOrdered(projects);
+  }, [projects]);
+
+  // ranking only makes sense on the unfiltered list — neighbors must be real neighbors
+  const canReorder = search === "" && filter === "all";
+
+  function moveProject(index: number, direction: -1 | 1) {
+    const target = index + direction;
+    if (target < 0 || target >= ordered.length) return;
+    const next = [...ordered];
+    [next[index], next[target]] = [next[target], next[index]];
+    setOrdered(next);
+    startTransition(async () => {
+      const result = await reorderProjectsAction(
+        next.map((project, sortIndex) => ({ id: project.id, sort_order: sortIndex })),
+      );
+      if (!result.success) {
+        setOrdered(ordered);
+        toast.error(result.error || "Could not save the new order");
+        return;
+      }
+      toast.success("Order saved — live on Works and Home");
+    });
+  }
+
   const filteredProjects = useMemo(() => {
-    return projects.filter((project) => {
+    return ordered.filter((project) => {
       const matchesSearch =
         project.title.toLowerCase().includes(search.toLowerCase()) ||
         (project.description || "").toLowerCase().includes(search.toLowerCase());
@@ -40,7 +67,7 @@ export function ProjectList({ projects }: { projects: ProjectRecord[] }) {
 
       return matchesSearch && matchesFilter;
     });
-  }, [filter, projects, search]);
+  }, [filter, ordered, search]);
 
   function mutate(message: string, task: () => Promise<void>) {
     startTransition(async () => {
@@ -83,11 +110,44 @@ export function ProjectList({ projects }: { projects: ProjectRecord[] }) {
           ))}
         </div>
         <div className="grid gap-4">
-          {filteredProjects.map((project) => (
+          {filteredProjects.map((project, index) => (
             <div
               key={project.id}
-              className="grid gap-4 rounded-2xl border border-border bg-background p-5 md:grid-cols-[1fr_auto]"
+              className="grid gap-4 rounded-2xl border border-border bg-background p-5 md:grid-cols-[auto_1fr_auto]"
             >
+              <div className="flex flex-row items-center gap-1 md:w-12 md:flex-col md:justify-center">
+                {canReorder ? (
+                  <>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7"
+                      disabled={isPending || index === 0}
+                      title="Move up"
+                      onClick={() => moveProject(index, -1)}
+                    >
+                      <ArrowUp className="h-4 w-4" />
+                    </Button>
+                    <span className="text-xs font-medium text-muted-foreground">#{index + 1}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7"
+                      disabled={isPending || index === filteredProjects.length - 1}
+                      title="Move down"
+                      onClick={() => moveProject(index, 1)}
+                    >
+                      <ArrowDown className="h-4 w-4" />
+                    </Button>
+                  </>
+                ) : (
+                  <span className="text-xs text-muted-foreground" title="Clear search/filter to reorder">
+                    —
+                  </span>
+                )}
+              </div>
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center gap-3">
                   <Link href={`/admin/projects/${project.id}`} className="text-lg font-semibold hover:text-primary">

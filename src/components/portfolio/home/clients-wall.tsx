@@ -21,19 +21,22 @@ export function ClientsWall({ clients, heading = "Worked with" }: ClientsWallPro
         <span className="portfolio-kicker">{heading}</span>
       </div>
 
-      <div className="mt-10 grid grid-cols-2 items-center justify-items-center gap-x-8 gap-y-10 sm:grid-cols-3 md:grid-cols-6">
+      <div className="mt-10 flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
         {clients.map((client) => {
-          const inner = client.logo_url ? (
-            <Image
-              src={client.logo_url}
-              alt={client.name}
-              width={140}
-              height={48}
-              className="h-10 w-auto opacity-70 grayscale transition hover:opacity-100 hover:grayscale-0"
-            />
-          ) : (
-            <span className="font-display text-[18px] italic text-[color:var(--ink-muted)] transition hover:text-[color:var(--ink)]">
-              {client.name}
+          const inner = (
+            <span className="group inline-flex items-center gap-3">
+              {client.logo_url ? (
+                <Image
+                  src={client.logo_url}
+                  alt={client.name}
+                  width={140}
+                  height={40}
+                  className="h-8 w-auto transition group-hover:scale-[1.04]"
+                />
+              ) : null}
+              <span className="text-[15px] font-medium text-[color:var(--ink-muted)] transition group-hover:text-[color:var(--ink)]">
+                {client.name}
+              </span>
             </span>
           );
 
@@ -43,6 +46,7 @@ export function ClientsWall({ clients, heading = "Worked with" }: ClientsWallPro
               href={client.website_url}
               target="_blank"
               rel="noreferrer"
+              aria-label={`Visit ${client.name}`}
               className="flex items-center justify-center"
             >
               {inner}

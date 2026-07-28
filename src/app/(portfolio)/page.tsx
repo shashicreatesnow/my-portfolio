@@ -30,7 +30,7 @@ export default async function HomePage() {
         secondaryLabel={settings.hero.secondary_cta_text || "say hello"}
       />
 
-      <SkillsThree skills={skills} />
+      <ClientsWall clients={clients} />
 
       {featuredProjects.length > 0 ? (
         <section
@@ -60,7 +60,7 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      <ClientsWall clients={clients} />
+      <SkillsThree skills={skills} />
     </div>
   );
 }

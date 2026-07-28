@@ -31,17 +31,8 @@ export function Navbar({
           className="group inline-flex items-center gap-2 text-[13px] font-medium tracking-[-0.01em]"
           style={{ color: "var(--ink)" }}
         >
-          <span
-            className="relative inline-block h-[7px] w-[7px] translate-y-[0.5px] rounded-full transition-transform duration-300 group-hover:scale-125"
-            style={{ backgroundColor: "var(--accent)" }}
-          >
-            <span
-              className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:animate-[brand-pulse_1.4s_ease-out_infinite]"
-              style={{ backgroundColor: "var(--accent)" }}
-            />
-          </span>
           <span className="relative">
-            Shashi
+            Shashi Pratap Singh
             <span
               className="absolute -bottom-0.5 left-0 h-px w-0 transition-all duration-300 group-hover:w-full"
               style={{ backgroundColor: "var(--accent)" }}
